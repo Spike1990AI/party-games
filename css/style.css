@@ -1,0 +1,355 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.screen {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Welcome Screen */
+.welcome-screen h1 {
+    font-size: 3em;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #667eea;
+}
+
+.welcome-screen > p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.player-setup,
+.difficulty-select,
+.category-select {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.info {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.info p {
+    margin: 8px 0;
+    color: #555;
+}
+
+/* Loading Screen */
+#loadingScreen {
+    text-align: center;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #667eea;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Game Screen */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-info span:first-child {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #667eea;
+}
+
+#scoreDisplay {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #333;
+}
+
+.question-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#questionNumber {
+    font-size: 0.9em;
+    color: #999;
+}
+
+#timer {
+    font-size: 2em;
+    font-weight: 700;
+    color: #667eea;
+    min-width: 50px;
+    text-align: right;
+}
+
+#timer.warning {
+    color: #f44336;
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.category {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+#question {
+    font-size: 1.4em;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 25px;
+    min-height: 80px;
+}
+
+.answers-container {
+    display: grid;
+    gap: 12px;
+}
+
+.answer-btn {
+    padding: 20px;
+    font-size: 16px;
+    text-align: left;
+    background: #f8f9fa;
+    border: 3px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.answer-btn:hover {
+    background: #e9ecef;
+    border-color: #667eea;
+    transform: translateX(5px);
+}
+
+.answer-btn.correct {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+.answer-btn.incorrect {
+    background: #f44336;
+    color: white;
+    border-color: #f44336;
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.feedback {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.feedback.correct {
+    background: #4caf50;
+    color: white;
+}
+
+.feedback.incorrect {
+    background: #f44336;
+    color: white;
+}
+
+/* Results Screen */
+#resultsScreen h1 {
+    text-align: center;
+    color: #667eea;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.final-score {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.final-score p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.final-score h2 {
+    font-size: 3em;
+    margin: 10px 0;
+}
+
+.stats {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stat:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #666;
+}
+
+.stat span:last-child {
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .screen {
+        padding: 20px;
+    }
+
+    .welcome-screen h1 {
+        font-size: 2.5em;
+    }
+
+    #question {
+        font-size: 1.2em;
+    }
+
+    .answer-btn {
+        padding: 16px;
+        font-size: 15px;
+    }
+}

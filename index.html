@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Trivia</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-screen">
+            <h1>🎉 Party Trivia</h1>
+            <p>Test your knowledge with friends!</p>
+
+            <div class="player-setup">
+                <label for="playerName">Your Name:</label>
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="15">
+            </div>
+
+            <div class="difficulty-select">
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="category-select">
+                <label for="category">Category:</label>
+                <select id="category">
+                    <option value="any">Any Category</option>
+                    <option value="9">General Knowledge</option>
+                    <option value="11">Film</option>
+                    <option value="12">Music</option>
+                    <option value="17">Science & Nature</option>
+                    <option value="21">Sports</option>
+                    <option value="22">Geography</option>
+                    <option value="23">History</option>
+                </select>
+            </div>
+
+            <button id="startBtn" class="btn-primary">Start Game</button>
+
+            <div class="info">
+                <p>📱 Each player opens this page on their phone</p>
+                <p>⏱️ 10 questions, 20 seconds each</p>
+                <p>⚡ Points for correct + fast answers!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const playerNameInput = document.getElementById('playerName');
+        const difficultySelect = document.getElementById('difficulty');
+        const categorySelect = document.getElementById('category');
+
+        startBtn.addEventListener('click', () => {
+            const playerName = playerNameInput.value.trim() || 'Player';
+            const difficulty = difficultySelect.value;
+            const category = categorySelect.value;
+
+            // Store player info
+            localStorage.setItem('playerName', playerName);
+            localStorage.setItem('difficulty', difficulty);
+            localStorage.setItem('category', category);
+            localStorage.setItem('score', '0');
+
+            // Go to game
+            window.location.href = 'game.html';
+        });
+
+        // Enter key to start
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startBtn.click();
+        });
+    </script>
+</body>
+</html>
