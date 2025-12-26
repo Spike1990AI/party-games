@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="css/territory.css">
 </head>
 <body>
-    <nav class="game-nav">
-        <a href="index.html" class="nav-home">🏠 Home</a>
-        <span class="nav-title">Territory Wars</span>
-    </nav>
     <div class="container">
         <!-- Join Screen -->
         <div id="joinScreen" class="screen">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1>🏰 Territory Wars</h1>
             <p class="game-description">Capture territory by placing tiles. Surround opponents to flip their tiles!</p>
 
@@ -34,11 +34,14 @@
                 <button id="joinRoomConfirmBtn" class="btn-primary">Join</button>
             </div>
 
-            <a href="index.html" class="btn-back">← Back to Menu</a>
         </div>
 
         <!-- Lobby Screen -->
     <div id="lobbyScreen" class="screen hidden">
+            <a href="index.html" class="nav-home nav-home-light">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <div class="room-code-header">
                 <span>Room Code</span>
                 <h2 id="roomCode">----</h2>
@@ -55,6 +58,10 @@
 
         <!-- Game Screen -->
     <div id="gameScreen" class="screen hidden">
+            <a href="index.html" class="nav-home nav-home-light">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <div class="room-code-header">
                 <span>Room</span>
                 <h3 id="gameRoomCode">----</h3>
@@ -81,6 +88,10 @@
 
         <!-- Results Screen -->
     <div id="resultsScreen" class="screen hidden">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1>🏆 Game Over!</h1>
 
             <div class="winner-announcement">
@@ -95,7 +106,6 @@
 
             <div class="button-group">
                 <button id="playAgainBtn" class="btn-primary">Play Again</button>
-                <a href="index.html" class="btn-secondary">Back to Menu</a>
             </div>
     </div>
 
