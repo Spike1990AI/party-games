@@ -418,22 +418,27 @@ select:focus {
    ======================================== */
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-lg);
     margin: var(--space-lg) 0;
+    align-items: stretch;
 }
 
 .game-card {
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    padding: var(--space-lg);
+    padding: var(--space-xl);
     border-radius: var(--border-radius-lg);
     color: var(--color-white);
     box-shadow: var(--shadow-md);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
     background: var(--gradient-card);
-    min-height: var(--touch-min);
+    min-height: 140px;
+    border: var(--border-width-thick) solid var(--color-accent);
 }
 
 .game-card h2 {
@@ -449,8 +454,9 @@ select:focus {
 }
 
 .game-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: var(--shadow-yellow);
+    border-color: var(--color-warning);
 }
 
 .game-card:active {
