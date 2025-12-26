@@ -63,9 +63,9 @@ elements.startGameBtn.addEventListener('click', startGame);
 elements.leaveLobbyBtn.addEventListener('click', leaveLobby);
 elements.playAgainBtn.addEventListener('click', playAgain);
 
-elements.moveUpLeftBtn.addEventListener('click', () => makeMove(-1, -1));
-elements.moveUpBtn.addEventListener('click', () => makeMove(-1, 0));
-elements.moveUpRightBtn.addEventListener('click', () => makeMove(-1, 1));
+elements.moveUpLeftBtn.addEventListener('click', () => makeMove(1, -1));
+elements.moveUpBtn.addEventListener('click', () => makeMove(1, 0));
+elements.moveUpRightBtn.addEventListener('click', () => makeMove(1, 1));
 
 // Initialize
 loadPlayerName();
