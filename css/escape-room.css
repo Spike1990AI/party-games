@@ -1,0 +1,436 @@
+/* Escape Room Specific Styles */
+
+.room-code-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 8px 15px;
+    margin: -25px -25px 20px -25px;
+    border-radius: 20px 20px 0 0;
+    font-weight: 700;
+    font-size: 0.95em;
+    text-align: center;
+}
+
+.room-code-header span {
+    font-size: 1.3em;
+    letter-spacing: 3px;
+    margin-left: 5px;
+}
+
+/* Lobby */
+.players-list {
+    margin: 30px 0;
+}
+
+.players-list h3 {
+    color: #1a1a2e;
+    margin-bottom: 15px;
+}
+
+#playersList {
+    display: grid;
+    gap: 10px;
+}
+
+.player-item {
+    padding: 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 20%);
+    border-radius: 10px;
+    border-left: 4px solid #e74c3c;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-item.host {
+    border-left-color: #c0392b;
+    background: linear-gradient(135deg, #ffe7e7 0%, #ffb3b3 20%);
+}
+
+.player-item .badge {
+    font-size: 0.8em;
+    padding: 4px 10px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 12px;
+}
+
+/* Role Assignments */
+.role-assignments {
+    margin: 30px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 15px;
+    border: 3px solid #f39c12;
+}
+
+.role-card {
+    text-align: center;
+}
+
+.role-icon {
+    font-size: 4em;
+    margin-bottom: 10px;
+}
+
+.role-name {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.role-description {
+    color: #2d3436;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+/* Game Header */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    border-radius: 15px;
+}
+
+.timer-section {
+    text-align: center;
+}
+
+.timer {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #e74c3c;
+    font-family: 'Courier New', monospace;
+}
+
+.timer.warning {
+    animation: pulse 1s infinite;
+    color: #ff6b6b;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.timer-label {
+    font-size: 0.8em;
+    color: #dfe6e9;
+    margin-top: 5px;
+}
+
+.progress-section {
+    text-align: right;
+}
+
+.progress-section p {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.hints-remaining {
+    font-size: 0.95em;
+    color: #fdcb6e;
+}
+
+/* Room Info */
+.room-info {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.room-info h2 {
+    color: #fdcb6e;
+    margin-bottom: 10px;
+}
+
+.room-info p {
+    line-height: 1.5;
+    color: #dfe6e9;
+}
+
+/* Clue Section */
+.clue-section {
+    margin-bottom: 25px;
+}
+
+.clue-section h3 {
+    color: #1a1a2e;
+    margin-bottom: 12px;
+}
+
+.clue-card {
+    padding: 25px;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 12px;
+    border: 3px solid #f39c12;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.clue-card p {
+    font-size: 1.05em;
+    line-height: 1.6;
+    color: #2d3436;
+    font-weight: 600;
+}
+
+.clue-card ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.clue-card li {
+    margin: 8px 0;
+    color: #2d3436;
+    font-weight: 600;
+}
+
+/* Team Communication */
+.team-communication {
+    margin-bottom: 25px;
+}
+
+.team-communication h3 {
+    color: #1a1a2e;
+    margin-bottom: 12px;
+}
+
+#teamCluesShared {
+    display: grid;
+    gap: 10px;
+}
+
+.shared-clue {
+    padding: 12px;
+    background: #ecf0f1;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.shared-clue .player-name {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.shared-clue .clue-text {
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Answer Section */
+.answer-section {
+    margin-bottom: 25px;
+}
+
+#answerInput {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    border: 3px solid #1a1a2e;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+#answerInput:focus {
+    outline: none;
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.button-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 18px 24px;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(127, 140, 141, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(127, 140, 141, 0.3);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Hint Display */
+.hint-display {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+    border-radius: 12px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hint-display h4 {
+    margin-bottom: 10px;
+}
+
+.hint-display p {
+    line-height: 1.5;
+}
+
+/* Victory Screen */
+.victory-animation {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.victory-animation h1 {
+    font-size: 6em;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.victory-animation h2 {
+    color: #27ae60;
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.victory-message {
+    font-size: 1.2em;
+    color: #2d3436;
+}
+
+.stats {
+    margin: 30px 0;
+    padding: 20px;
+    background: #ecf0f1;
+    border-radius: 12px;
+}
+
+.stats h3 {
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #bdc3c7;
+    font-size: 1.05em;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-item span:last-child {
+    font-weight: 700;
+    color: #27ae60;
+}
+
+/* Failure Screen */
+.failure-animation {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.failure-animation h1 {
+    font-size: 6em;
+    animation: flash 0.5s infinite;
+}
+
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.failure-animation h2 {
+    color: #e74c3c;
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.failure-message {
+    font-size: 1.2em;
+    color: #2d3436;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .screen {
+        padding: 15px;
+    }
+
+    .timer {
+        font-size: 2em;
+    }
+
+    .role-icon {
+        font-size: 3em;
+    }
+
+    .victory-animation h1,
+    .failure-animation h1 {
+        font-size: 4em;
+    }
+
+    .button-row {
+        grid-template-columns: 1fr;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .progress-section {
+        text-align: center;
+    }
+}
+
+#waitingMessage {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room - Museum Heist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/escape-room.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen">
+            <h1>🏛️ Museum Heist</h1>
+            <p class="subtitle">Work together to steal the diamond!</p>
+
+            <div class="room-section">
+                <div class="create-room">
+                    <h3>Create New Game</h3>
+                    <button id="createRoomBtn" class="btn-primary">Create Room (4 players)</button>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <div class="join-room">
+                    <h3>Join Existing Game</h3>
+                    <input type="text" id="roomCodeInput" placeholder="Enter 4-letter code" maxlength="4">
+                    <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+                </div>
+            </div>
+
+            <div id="roomCode" class="room-code hidden">
+                <p>Room Code:</p>
+                <h2 id="codeDisplay"></h2>
+                <p class="small">Share this with other players</p>
+            </div>
+
+            <div class="info">
+                <p>👥 4 players required - each sees different clues!</p>
+                <p>⏱️ 20 minutes to escape</p>
+                <p>💎 Steal the diamond before security arrives!</p>
+            </div>
+        </div>
+
+        <!-- Lobby Screen -->
+        <div id="lobbyScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeLobby"></span></div>
+            <h1>🏛️ Waiting Room</h1>
+
+            <div class="player-name-input">
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="12">
+                <button id="joinGameBtn" class="btn-primary">Join Game</button>
+            </div>
+
+            <div class="players-list">
+                <h3>Thieves (<span id="playerCount">0</span>/4)</h3>
+                <div id="playersList"></div>
+            </div>
+
+            <div class="role-assignments hidden" id="roleAssignments">
+                <h3>Your Secret Role</h3>
+                <div class="role-card">
+                    <div class="role-icon" id="roleIcon">🔍</div>
+                    <div class="role-name" id="roleName">The Scout</div>
+                    <p class="role-description" id="roleDescription">You see the building layout and security patterns</p>
+                </div>
+            </div>
+
+            <button id="startGameBtn" class="btn-primary hidden">Start Heist</button>
+            <p id="waitingMessage" class="hidden">Waiting for host to start...</p>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeGame"></span></div>
+
+            <div class="game-header">
+                <div class="timer-section">
+                    <div class="timer" id="timer">20:00</div>
+                    <p class="timer-label">Security Arrives In</p>
+                </div>
+                <div class="progress-section">
+                    <p>Room <span id="currentRoom">1</span>/3</p>
+                    <div class="hints-remaining">
+                        💡 <span id="hintsRemaining">3</span> hints
+                    </div>
+                </div>
+            </div>
+
+            <div class="room-info">
+                <h2 id="roomTitle">Security Office</h2>
+                <p id="roomDescription">You've entered through the ventilation shaft. Find the security code to disable the cameras.</p>
+            </div>
+
+            <div class="clue-section">
+                <h3>Your Clue</h3>
+                <div class="clue-card" id="playerClue">
+                    <p>Loading your secret information...</p>
+                </div>
+            </div>
+
+            <div class="team-communication">
+                <h3>Team Progress</h3>
+                <div id="teamCluesShared"></div>
+            </div>
+
+            <div class="answer-section">
+                <input type="text" id="answerInput" placeholder="Enter the code..." maxlength="20">
+                <div class="button-row">
+                    <button id="submitAnswer" class="btn-primary">Submit Code</button>
+                    <button id="useHintBtn" class="btn-secondary">Use Hint</button>
+                </div>
+            </div>
+
+            <div id="hintDisplay" class="hint-display hidden">
+                <h4>💡 Hint</h4>
+                <p id="hintText"></p>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victoryScreen" class="screen hidden">
+            <div class="victory-animation">
+                <h1>💎</h1>
+                <h2>Diamond Secured!</h2>
+                <p class="victory-message">You escaped with <span id="timeRemaining"></span> to spare!</p>
+            </div>
+
+            <div class="stats">
+                <h3>Heist Statistics</h3>
+                <div class="stat-item">
+                    <span>Time Taken:</span>
+                    <span id="timeTaken"></span>
+                </div>
+                <div class="stat-item">
+                    <span>Hints Used:</span>
+                    <span id="hintsUsed"></span>
+                </div>
+                <div class="stat-item">
+                    <span>Rooms Completed:</span>
+                    <span>3/3</span>
+                </div>
+            </div>
+
+            <button id="playAgainBtn" class="btn-primary">Another Heist</button>
+            <button id="homeBtn" class="btn-secondary">Home</button>
+        </div>
+
+        <!-- Failure Screen -->
+        <div id="failureScreen" class="screen hidden">
+            <div class="failure-animation">
+                <h1>🚨</h1>
+                <h2>Security Arrived!</h2>
+                <p class="failure-message">You were caught! Made it to Room <span id="roomsCompleted"></span>/3</p>
+            </div>
+
+            <button id="retryBtn" class="btn-primary">Try Again</button>
+            <button id="homeBtn2" class="btn-secondary">Home</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/escape-room.js"></script>
+</body>
+</html>
