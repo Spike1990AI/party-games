@@ -2,6 +2,60 @@
 
 /* Escape Room Specific Styles */
 
+/* Scenario Selection */
+.scenario-selection {
+    margin-bottom: 30px;
+}
+
+.scenario-selection h3 {
+    text-align: center;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
+
+.scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.scenario-btn {
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.scenario-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.scenario-btn:active {
+    transform: translateY(-2px);
+}
+
+.scenario-icon {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.scenario-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.scenario-desc {
+    font-size: 0.85em;
+    opacity: 0.9;
+}
+
 .room-code-header {
     background: var(--gradient-primary);
     color: var(--color-white);

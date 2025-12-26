@@ -7,7 +7,10 @@ let playerRole = null;
 let isHost = false;
 let timerInterval = null;
 let lastRoomNumber = null; // Track current room to prevent input clearing
+let selectedScenario = null; // Currently selected scenario
+let ROOMS = []; // Will be loaded from selected scenario
 const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
+const TOTAL_ROOMS = 8; // 8 rooms per scenario
 
 // Firebase listener tracking for cleanup
 let lobbyUnsubscribe = null;
@@ -45,48 +48,24 @@ const ROLES = [
     { id: 'safecracker', icon: '🔓', name: 'The Safecracker', description: 'You understand locks and vault mechanisms' }
 ];
 
+// Scenario Selection
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        selectedScenario = btn.dataset.scenario;
+        ROOMS = window.SCENARIOS[selectedScenario].rooms;
+        
+        // Update title
+        document.querySelector('#joinScreen h1').textContent = window.SCENARIOS[selectedScenario].emoji + ' ' + window.SCENARIOS[selectedScenario].name;
+        document.querySelector('#joinScreen .subtitle').textContent = window.SCENARIOS[selectedScenario].description;
+        
+        // Show room section
+        document.getElementById('roomSection').classList.remove('hidden');
+        document.querySelector('.scenario-selection').style.display = 'none';
+    });
+});
+
+
 // Room puzzles - each player gets different clues
-const ROOMS = [
-    {
-        id: 1,
-        title: 'Security Office',
-        description: 'You\'ve entered through the ventilation shaft. Find the security code to disable the cameras.',
-        answer: '7392',
-        hint: 'Each player has one digit. Combine them in order: Scout → Hacker → Insider → Safecracker',
-        clues: {
-            scout: 'You see a note on the desk: "First digit of master code: 7"',
-            hacker: 'The computer screen shows: "Second security digit = 3"',
-            insider: 'A sticky note reads: "Remember - third number is 9"',
-            safecracker: 'On the blueprint: "Final digit marked: 2"'
-        }
-    },
-    {
-        id: 2,
-        title: 'Laser Grid Gallery',
-        description: 'The diamond is behind a laser grid. Calculate the safe path coordinates.',
-        answer: 'B4D2A3C1',
-        hint: 'Each player has two coordinates. The path must spell "ESCAPE" when you connect the grid positions.',
-        clues: {
-            scout: 'Your map shows: "Start at B4, then move to D2"',
-            hacker: 'Security logs indicate: "From D2, laser gap at A3"',
-            insider: 'Guard schedule notes: "Pattern continues to C1 after A3"',
-            safecracker: 'Blueprint reveals: "C1 is the final safe position before vault"'
-        }
-    },
-    {
-        id: 3,
-        title: 'Vault Lock',
-        description: 'The diamond vault requires a color-coded sequence. Each color represents a number.',
-        answer: 'REDBLUEGREENYELLOW',
-        hint: 'Colors represent the first letters of each player\'s role in alphabetical order',
-        clues: {
-            scout: 'You notice: "RED paint on the floor leads to the vault"',
-            hacker: 'The system shows: "After RED comes BLUE in the sequence"',
-            insider: 'Staff manual states: "GREEN follows BLUE in emergency protocol"',
-            safecracker: 'Vault schematic: "Final color is YELLOW - sequence complete"'
-        }
-    }
-];
 
 // DOM Elements
 const joinScreen = document.getElementById('joinScreen');
@@ -351,7 +330,7 @@ function showGame(roomData) {
         updateTimerDisplay(data.timeRemaining);
 
         // Check for victory
-        if (data.currentRoom > 3) {
+        if (data.currentRoom > TOTAL_ROOMS) {
             // Clean up game listener before transition
             if (gameUnsubscribe) {
                 gameUnsubscribe();
@@ -463,7 +442,7 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
 
     if (answer === currentRoom.answer.toUpperCase()) {
         // Correct answer!
-        if (data.currentRoom >= 3) {
+        if (data.currentRoom >= TOTAL_ROOMS) {
             // Victory!
             await update(roomRef, {
                 gameState: 'victory',

@@ -14,7 +14,28 @@
             <h1>🏛️ Museum Heist</h1>
             <p class="subtitle">Work together to steal the diamond!</p>
 
-            <div class="room-section">
+            <div class="scenario-selection">
+                <h3>Choose Your Mission</h3>
+                <div class="scenario-grid">
+                    <button class="scenario-btn" data-scenario="museum">
+                        <div class="scenario-icon">💎</div>
+                        <div class="scenario-name">Museum Heist</div>
+                        <div class="scenario-desc">8 rooms • 35 mins</div>
+                    </button>
+                    <button class="scenario-btn" data-scenario="prison">
+                        <div class="scenario-icon">⛓️</div>
+                        <div class="scenario-name">Prison Break</div>
+                        <div class="scenario-desc">8 rooms • 35 mins</div>
+                    </button>
+                    <button class="scenario-btn" data-scenario="bunker">
+                        <div class="scenario-icon">💣</div>
+                        <div class="scenario-name">Hitler's Bunker</div>
+                        <div class="scenario-desc">8 rooms • 35 mins</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="room-section hidden" id="roomSection">
                 <div class="create-room">
                     <h3>Create New Game</h3>
                     <button id="createRoomBtn" class="btn-primary">Create Room (1-4 players)</button>
@@ -80,7 +101,7 @@
                     <p class="timer-label">Security Arrives In</p>
                 </div>
                 <div class="progress-section">
-                    <p>Room <span id="currentRoom">1</span>/3</p>
+                    <p>Room <span id="currentRoom">1</span>/8</p>
                     <div class="hints-remaining">
                         💡 <span id="hintsRemaining">5</span> hints
                     </div>
@@ -135,7 +156,7 @@
                 </div>
                 <div class="stat-item">
                     <span>Rooms Completed:</span>
-                    <span>3/3</span>
+                    <span>8/8</span>
                 </div>
             </div>
 
@@ -148,7 +169,7 @@
             <div class="failure-animation">
                 <h1>🚨</h1>
                 <h2>Security Arrived!</h2>
-                <p class="failure-message">You were caught! Made it to Room <span id="roomsCompleted"></span>/3</p>
+                <p class="failure-message">You were caught! Made it to Room <span id="roomsCompleted"></span>/8</p>
             </div>
 
             <button id="retryBtn" class="btn-primary">Try Again</button>
@@ -156,6 +177,10 @@
         </div>
     </div>
 
+    <script type="module">
+        import { SCENARIOS } from './js/scenarios.js';
+        window.SCENARIOS = SCENARIOS;
+    </script>
     <script type="module" src="js/escape-room.js"></script>
 </body>
 </html>
