@@ -6,43 +6,85 @@ setTimeout(() => {
     document.getElementById('joinScreen').classList.remove('hidden');
 }, 500);
 
-// Question Bank
+// Question Bank - 64 funny questions for hilarious gameplay!
 const QUESTIONS = [
-    "Name a fruit",
-    "Name a country",
-    "Name a color",
-    "Name an animal you'd find on a farm",
-    "Name something you eat for breakfast",
-    "Name a day of the week",
-    "Name a month of the year",
-    "Name a sport",
-    "Name a vegetable",
-    "Name a car brand",
-    "Name a pizza topping",
-    "Name something cold",
-    "Name something hot",
-    "Name a type of weather",
-    "Name a household pet",
-    "Name a room in a house",
-    "Name something you wear",
-    "Name a drink",
-    "Name a musical instrument",
-    "Name a job",
-    "Name a TV show",
-    "Name a superhero",
-    "Name something round",
-    "Name something you find in a kitchen",
-    "Name a flavor of ice cream",
-    "Name a bird",
-    "Name something with wheels",
-    "Name a body part",
-    "Name a type of tree",
-    "Name something you find at the beach",
-    "Name a type of shoe",
-    "Name something that flies",
-    "Name a dessert",
-    "Name a holiday",
-    "Name something made of wood"
+    // Worst Things (10)
+    "Worst thing to step on barefoot",
+    "Worst food to eat on a first date",
+    "Worst song to get stuck in your head",
+    "Worst thing to forget on vacation",
+    "Worst smell in the world",
+    "Worst thing to say at a funeral",
+    "Worst thing to spill on yourself",
+    "Worst movie to watch with your parents",
+    "Worst time to get hiccups",
+    "Worst thing to run out of",
+
+    // Excuses & Lies (8)
+    "Best excuse for being late",
+    "Best excuse to leave a party early",
+    "Best excuse to skip a workout",
+    "What do you say when you forget someone's name",
+    "Best excuse to avoid a phone call",
+    "Best fake reason to cancel plans",
+    "What you say when food tastes bad but you're being polite",
+    "Best excuse to not help someone move",
+
+    // Embarrassing & Awkward (8)
+    "Most embarrassing thing to buy at a store",
+    "Most awkward place to run into your ex",
+    "Most embarrassing autocorrect fail",
+    "Worst thing to yell in public",
+    "Most embarrassing ringtone to go off in a meeting",
+    "Worst place to accidentally fart",
+    "Most awkward thing to be caught doing",
+    "Worst thing to say to your boss",
+
+    // Opinions & Hot Takes (10)
+    "Most overrated movie of all time",
+    "Best pizza topping that people argue about",
+    "Best age to be",
+    "Worst household chore",
+    "Best day of the week",
+    "Most useless school subject",
+    "Best thing about being an adult",
+    "Worst thing about being an adult",
+    "Best comfort food when you're sad",
+    "Most annoying type of person",
+
+    // Hypotheticals (8)
+    "First thing you'd buy if you won the lottery",
+    "Best superpower for everyday life",
+    "What would you do if you were invisible for a day",
+    "If you could only eat one food forever, what would it be",
+    "Best celebrity to be stuck in an elevator with",
+    "Worst celebrity to be stuck in an elevator with",
+    "What you'd bring to a deserted island",
+    "Best animal to have as a giant pet",
+
+    // Guilty Pleasures (8)
+    "Best fast food guilty pleasure",
+    "TV show you're embarrassed to admit you watch",
+    "Song you secretly love but pretend to hate",
+    "Worst habit you can't break",
+    "Snack you could eat an entire bag of",
+    "Thing you do when nobody's watching",
+    "Website you waste the most time on",
+    "Guilty pleasure movie",
+
+    // Random Fun (12)
+    "Best thing to do on a lazy Sunday",
+    "Worst type of weather",
+    "Best smell in the world",
+    "First thing you do when you wake up",
+    "Last thing you do before bed",
+    "Best thing about weekends",
+    "Worst thing about Mondays",
+    "Best junk food",
+    "Thing that always makes you laugh",
+    "Best excuse to stay home",
+    "Thing you're irrationally afraid of",
+    "Best childhood cartoon"
 ];
 
 // Game state

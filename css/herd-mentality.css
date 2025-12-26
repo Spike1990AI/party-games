@@ -242,6 +242,7 @@
    RESULTS - MAJORITY ANSWER
    ======================================== */
 .majority-answer {
+    width: 100%;
     text-align: center;
     padding: var(--space-xl);
     background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
@@ -266,6 +267,7 @@
    ALL ANSWERS
    ======================================== */
 .all-answers {
+    width: 100%;
     margin-bottom: var(--space-lg);
 }
 
@@ -335,6 +337,7 @@
    ROUND SCOREBOARD
    ======================================== */
 .round-scoreboard {
+    width: 100%;
     margin: 30px 0;
     padding: 20px;
     background: #f8f9fa;
@@ -436,6 +439,13 @@
    MOBILE OPTIMIZATIONS
    ======================================== */
 @media (max-width: 480px) {
+    /* Fix room banner alignment on mobile */
+    .room-code-header {
+        margin-top: -60px;
+        margin-left: calc(var(--space-md) * -1);
+        margin-right: calc(var(--space-md) * -1);
+    }
+
     .room-code h2 {
         font-size: var(--font-size-3xl);
         letter-spacing: 4px;
@@ -548,5 +558,12 @@
 
     .round-scoreboard {
         padding: var(--space-sm);
+    }
+}
+
+/* Tablet - Fix room banner alignment */
+@media (min-width: 768px) {
+    .room-code-header {
+        margin: calc(var(--space-2xl) * -1) calc(var(--space-2xl) * -1) var(--space-lg);
     }
 }
