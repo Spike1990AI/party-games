@@ -15,6 +15,7 @@ let playerNumber = null;
 let roomListener = null;
 let turnTimerInterval = null;
 let timeLeft = TURN_TIMER;
+let moveInProgress = false;
 
 // DOM Elements
 const screens = {
@@ -146,12 +147,20 @@ function generateRoomCode() {
 }
 
 async function createRoom() {
+    // Prevent duplicate clicks
+    if (elements.createRoomBtn.disabled) return;
+    elements.createRoomBtn.disabled = true;
+    elements.playerName.disabled = true;
+
     // Clean up old rooms before creating new one
     await cleanupOldRooms();
 
     const name = elements.playerName.value.trim();
     if (!name) {
         alert('Please enter your name');
+        // Re-enable on failure
+        elements.createRoomBtn.disabled = false;
+        elements.playerName.disabled = false;
         return;
     }
 
@@ -191,6 +200,12 @@ async function createRoom() {
 }
 
 async function joinRoom() {
+    // Prevent duplicate clicks
+    if (elements.joinRoomConfirmBtn.disabled) return;
+    elements.joinRoomConfirmBtn.disabled = true;
+    elements.playerName.disabled = true;
+    elements.roomCodeInput.disabled = true;
+
     // Clean up old rooms before joining
     await cleanupOldRooms();
 
@@ -199,11 +214,19 @@ async function joinRoom() {
 
     if (!name) {
         alert('Please enter your name');
+        // Re-enable on failure
+        elements.joinRoomConfirmBtn.disabled = false;
+        elements.playerName.disabled = false;
+        elements.roomCodeInput.disabled = false;
         return;
     }
 
     if (!code || code.length !== 4) {
         alert('Please enter a valid 4-letter room code');
+        // Re-enable on failure
+        elements.joinRoomConfirmBtn.disabled = false;
+        elements.playerName.disabled = false;
+        elements.roomCodeInput.disabled = false;
         return;
     }
 
@@ -213,6 +236,10 @@ async function joinRoom() {
     const roomSnapshot = await get(ref(database, `minefield/${code}`));
     if (!roomSnapshot.exists()) {
         alert('Room not found');
+        // Re-enable on failure
+        elements.joinRoomConfirmBtn.disabled = false;
+        elements.playerName.disabled = false;
+        elements.roomCodeInput.disabled = false;
         return;
     }
 
@@ -221,6 +248,10 @@ async function joinRoom() {
     // Check if game already started
     if (roomData.gameState !== 'waiting') {
         alert('Game already in progress');
+        // Re-enable on failure
+        elements.joinRoomConfirmBtn.disabled = false;
+        elements.playerName.disabled = false;
+        elements.roomCodeInput.disabled = false;
         return;
     }
 
@@ -228,6 +259,10 @@ async function joinRoom() {
     const existingPlayers = roomData.playerOrder || [];
     if (existingPlayers.length >= 4) {
         alert('Room is full');
+        // Re-enable on failure
+        elements.joinRoomConfirmBtn.disabled = false;
+        elements.playerName.disabled = false;
+        elements.roomCodeInput.disabled = false;
         return;
     }
 
@@ -313,11 +348,17 @@ function updateLobby(data) {
 async function startGame() {
     if (!currentRoom) return;
 
+    // Prevent duplicate clicks
+    if (elements.startGameBtn.disabled) return;
+    elements.startGameBtn.disabled = true;
+
     // Verify caller is room creator
     const roomSnapshot = await get(ref(database, `minefield/${currentRoom}`));
     const data = roomSnapshot.val();
     if (!data || data.playerOrder[0] !== currentPlayer) {
         alert('Only the room creator can start the game');
+        // Re-enable on failure
+        elements.startGameBtn.disabled = false;
         return;
     }
 
@@ -550,8 +591,13 @@ function disableMoveButtons() {
 }
 
 async function makeMove(rowDelta, colDelta) {
+    // Prevent simultaneous moves
+    if (moveInProgress) return;
+    moveInProgress = true;
+
     if (!currentRoom || !currentPlayer) {
         alert('DEBUG: No room or player');
+        moveInProgress = false;
         return;
     }
 
@@ -561,6 +607,7 @@ async function makeMove(rowDelta, colDelta) {
     // Verify it's our turn
     if (data.currentTurn !== currentPlayer) {
         alert(`DEBUG: Not your turn! Current: ${data.currentTurn}, You: ${currentPlayer}`);
+        moveInProgress = false;
         return;
     }
 
@@ -571,6 +618,7 @@ async function makeMove(rowDelta, colDelta) {
     // Validate move (stay in bounds)
     if (newRow < 0 || newRow >= GRID_ROWS || newCol < 0 || newCol >= GRID_COLS) {
         alert(`DEBUG: Out of bounds! Row: ${newRow}, Col: ${newCol}`);
+        moveInProgress = false;
         return;
     }
 
@@ -607,11 +655,15 @@ async function makeMove(rowDelta, colDelta) {
             gameState: 'finished',
             winner: currentPlayer
         });
+        moveInProgress = false;
         return;
     }
 
     // Next turn
     await nextTurn();
+
+    // Re-enable moves after completion
+    moveInProgress = false;
 }
 
 async function nextTurn() {
