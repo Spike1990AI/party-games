@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards Against Humanity</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cah.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen">
+            <h1>🃏 Cards Against Humanity</h1>
+            <p class="subtitle">The party game for horrible people</p>
+
+            <div class="game-settings">
+                <h3>Game Settings</h3>
+                <label for="winningScore">Points to Win:</label>
+                <select id="winningScore">
+                    <option value="5">5 Points (Quick)</option>
+                    <option value="7" selected>7 Points (Standard)</option>
+                    <option value="10">10 Points (Long)</option>
+                </select>
+            </div>
+
+            <div class="room-section">
+                <div class="create-room">
+                    <h3>Create New Game</h3>
+                    <button id="createRoomBtn" class="btn-primary">Create Room (3-8 players)</button>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <div class="join-room">
+                    <h3>Join Existing Game</h3>
+                    <input type="text" id="roomCodeInput" placeholder="Enter 4-letter code" maxlength="4">
+                    <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+                </div>
+            </div>
+
+            <div id="roomCode" class="room-code hidden">
+                <p>Room Code:</p>
+                <h2 id="codeDisplay"></h2>
+                <p class="small">Share this with other players</p>
+            </div>
+
+            <div class="info">
+                <p>👥 3-8 players (best with 4-6)</p>
+                <p>🎴 Each round, one player is Card Czar</p>
+                <p>✍️ Submit your funniest white card to match the black card</p>
+                <p>👑 Czar picks the winner - first to target score wins!</p>
+                <p class="warning">⚠️ Adult content only - dark humor ahead!</p>
+            </div>
+        </div>
+
+        <!-- Lobby Screen -->
+        <div id="lobbyScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeLobby"></span></div>
+            <h1>🃏 Waiting Room</h1>
+
+            <div class="player-name-input">
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="12">
+                <button id="joinGameBtn" class="btn-primary">Join Game</button>
+            </div>
+
+            <div class="game-settings-display">
+                <p>First to <span id="targetScoreLobby">7</span> points wins</p>
+            </div>
+
+            <div class="players-list">
+                <h3>Players (<span id="playerCount">0</span>/8)</h3>
+                <div id="playersList"></div>
+            </div>
+
+            <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
+            <p id="waitingMessage" class="hidden">Waiting for host to start...</p>
+            <p class="minimum-players hidden" id="minimumPlayersMsg">Need at least 3 players to start</p>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeGame"></span></div>
+
+            <div class="game-header">
+                <div class="round-info">
+                    <span>Round <span id="roundNumber">1</span></span>
+                    <span class="czar-indicator" id="czarIndicator">Card Czar: <span id="czarName"></span></span>
+                </div>
+            </div>
+
+            <div class="scoreboard">
+                <div id="scoreboardContent"></div>
+            </div>
+
+            <!-- Black Card Display -->
+            <div class="black-card-section">
+                <div class="card black-card" id="blackCardDisplay">
+                    <div class="card-content">
+                        <p id="blackCardText">Waiting for round to start...</p>
+                        <div class="pick-indicator" id="pickIndicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission Area (for non-czar players) -->
+            <div class="submission-area hidden" id="submissionArea">
+                <h3>Your Hand</h3>
+                <div class="white-cards-hand" id="playerHand"></div>
+                <button id="submitBtn" class="btn-primary hidden">Submit Card</button>
+                <p class="status-message" id="statusMessage"></p>
+            </div>
+
+            <!-- Judging Area (for czar) -->
+            <div class="judging-area hidden" id="judgingArea">
+                <h3>👑 You are the Card Czar - Pick the Winner!</h3>
+                <p class="czar-instructions">Click on the funniest submission</p>
+                <div class="submissions-grid" id="submissionsGrid"></div>
+            </div>
+
+            <!-- Winner Display -->
+            <div class="winner-display hidden" id="winnerDisplay">
+                <h2>Round Winner!</h2>
+                <div class="winning-combo">
+                    <div class="card black-card-small">
+                        <p id="winningBlackCard"></p>
+                    </div>
+                    <div class="card white-card-small">
+                        <p id="winningWhiteCard"></p>
+                    </div>
+                </div>
+                <p class="winner-name">Winner: <span id="winnerName"></span></p>
+                <button id="nextRoundBtn" class="btn-primary hidden">Next Round</button>
+                <p id="nextRoundWait" class="hidden">Waiting for next round...</p>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div class="game-over hidden" id="gameOver">
+                <h1>🏆 Game Over!</h1>
+                <div class="final-winner">
+                    <p class="champion-label">Champion</p>
+                    <h2 id="championName"></h2>
+                    <p id="championScore"></p>
+                </div>
+                <div class="final-scores">
+                    <h3>Final Scores</h3>
+                    <div id="finalScoresContent"></div>
+                </div>
+                <button id="playAgainBtn" class="btn-primary">Play Again</button>
+                <button id="backToMenuBtn" class="btn-secondary">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/cah-game.js"></script>
+</body>
+</html>
