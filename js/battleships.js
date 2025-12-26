@@ -449,9 +449,15 @@ function startBattle(roomData) {
         });
     });
 
+    // Clean up any existing battle listener
+    if (battleUnsubscribe) {
+        battleUnsubscribe();
+        battleUnsubscribe = null;
+    }
+
     // Listen for updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    battleUnsubscribe = onValue(roomRef, (snapshot) => {
         updateBattleScreen(snapshot.val());
     });
 }
@@ -550,6 +556,12 @@ function calculateRemainingShips(ships, hits) {
 
 // Show victory
 function showVictory(won) {
+    // Clean up battle listener
+    if (battleUnsubscribe) {
+        battleUnsubscribe();
+        battleUnsubscribe = null;
+    }
+
     showScreen('victoryScreen');
 
     if (won) {
@@ -585,6 +597,24 @@ window.goBack = function(targetScreen) {
 };
 
 function leaveRoom() {
+    // Clean up all Firebase listeners
+    if (playerSelectUnsubscribe) {
+        playerSelectUnsubscribe();
+        playerSelectUnsubscribe = null;
+    }
+    if (teamSelectUnsubscribe) {
+        teamSelectUnsubscribe();
+        teamSelectUnsubscribe = null;
+    }
+    if (gameStartUnsubscribe) {
+        gameStartUnsubscribe();
+        gameStartUnsubscribe = null;
+    }
+    if (battleUnsubscribe) {
+        battleUnsubscribe();
+        battleUnsubscribe = null;
+    }
+
     // Reset all game state
     roomCode = null;
     gameMode = null;
