@@ -51,14 +51,16 @@ Bug symptoms: [describe what's broken]
 
 ## Files to Reference:
 
-**Must Read:**
-- `HERD_MENTALITY_STABILIZATION.md` - Complete bug history and fixes
+**Must Read (Read BOTH before starting):**
+- `MOBILE_GAME_DEVELOPMENT_GUIDE.md` - Complete mobile game development standards
+- `HERD_MENTALITY_STABILIZATION.md` - Specific bug history and fixes for Herd Mentality
 
 **Code Files:**
 - `js/herd-mentality.js` - Main game logic (608 lines)
 - `herd-mentality.html` - UI structure (6 screens)
 - `css/herd-mentality.css` - Game styling
 - `js/firebase-battleships.js` - Firebase config
+- `css/style.css` - Shared base styles
 
 **Live Game:**
 - https://spike1990ai.github.io/party-games/herd-mentality.html
