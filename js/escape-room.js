@@ -390,6 +390,22 @@ function showGame(roomData) {
         const data = snapshot.val();
         if (!data) return;
 
+        // CRITICAL: Detect room change - reload screen for ALL players
+        // This keeps everyone in sync when someone solves a room
+        if (data.currentRoom !== lastRoomNumber && data.currentRoom <= TOTAL_ROOMS) {
+            console.log(`Room changed: ${lastRoomNumber} → ${data.currentRoom}`);
+
+            // Clean up current listener before reloading
+            if (gameUnsubscribe) {
+                gameUnsubscribe();
+                gameUnsubscribe = null;
+            }
+
+            // Reload game screen with new room for EVERYONE
+            showGame(data);
+            return;  // Exit early - showGame creates new listener
+        }
+
         // Update timer
         updateTimerDisplay(data.timeRemaining);
 
@@ -563,13 +579,8 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
                     isSubmitting: false  // Release lock
                 });
 
-                // Show success message
-                alert('Code accepted! Moving to next room...');
-
-                // Reload game with new room
-                setTimeout(() => {
-                    showGame({ ...data, currentRoom: data.currentRoom + 1 });
-                }, 1000);
+                // Note: showGame() is called automatically for ALL players
+                // (including submitter) by the listener when it detects room change
             }
         } else {
             // Incorrect answer - release lock
