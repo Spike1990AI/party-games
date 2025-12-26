@@ -256,6 +256,8 @@ async function startGame() {
 
     // Generate mines
     const mines = generateMines(currentRoom);
+    console.log(`💣 Generated ${mines.length} mines for room ${currentRoom}`);
+    console.log('Mine positions:', mines);
 
     await update(ref(database, `minefield/${currentRoom}`), {
         gameState: 'playing',
@@ -303,6 +305,8 @@ function generateMines(seed) {
 function updateGame(data) {
     showScreen('game');
     elements.gameRoomCode.textContent = currentRoom;
+
+    console.log(`🎮 Game update - Mines: ${data.mines?.length || 0}, Revealed: ${data.revealed?.length || 0}`);
 
     // Update turn indicator
     const currentTurnPlayer = data.players[data.currentTurn];
