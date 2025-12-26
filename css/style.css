@@ -43,7 +43,7 @@ body {
     background: var(--color-white);
     border-radius: var(--border-radius-lg);
     padding: var(--space-xl);
-    padding-top: 70px; /* Space for nav button */
+    border: var(--border-width) solid #E5E7EB;
     box-shadow: var(--shadow-lg);
 }
 
