@@ -2,6 +2,7 @@ import { database, ref, set, onValue, update } from './firebase-battleships.js';
 
 // Game state
 let roomCode = null;
+let gameMode = null; // '1v1' or '2v2'
 let playerTeam = null;
 let playerName = null;
 let currentShip = null;
@@ -33,12 +34,19 @@ function generateRoomCode() {
     return code;
 }
 
-// Create Room
-document.getElementById('createRoomBtn').addEventListener('click', async () => {
+// Create Room - 1v1
+document.getElementById('create1v1Btn').addEventListener('click', () => createRoom('1v1'));
+
+// Create Room - 2v2
+document.getElementById('create2v2Btn').addEventListener('click', () => createRoom('2v2'));
+
+async function createRoom(mode) {
     roomCode = generateRoomCode();
+    gameMode = mode;
 
     const roomData = {
         code: roomCode,
+        gameMode: mode,
         created: Date.now(),
         team1: { players: [], ready: false, ships: [], hits: [] },
         team2: { players: [], ready: false, ships: [], hits: [] },
@@ -52,9 +60,13 @@ document.getElementById('createRoomBtn').addEventListener('click', async () => {
     document.getElementById('roomCode').classList.remove('hidden');
 
     setTimeout(() => {
-        showTeamSelect();
+        if (mode === '1v1') {
+            showPlayerSelect();
+        } else {
+            showTeamSelect();
+        }
     }, 1500);
-});
+}
 
 // Join Room
 document.getElementById('joinRoomBtn').addEventListener('click', async () => {
@@ -70,12 +82,84 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
     const roomRef = ref(database, `rooms/${roomCode}`);
     onValue(roomRef, (snapshot) => {
         if (snapshot.exists()) {
-            showTeamSelect();
+            const data = snapshot.val();
+            gameMode = data.gameMode;
+
+            if (gameMode === '1v1') {
+                showPlayerSelect();
+            } else {
+                showTeamSelect();
+            }
         } else {
             alert('Room not found!');
         }
     }, { onlyOnce: true });
 });
+
+// Show player select for 1v1
+function showPlayerSelect() {
+    joinScreen.classList.add('hidden');
+    teamScreen.classList.remove('hidden');
+
+    // Show room code
+    document.getElementById('roomCodeTeam').textContent = roomCode;
+
+    // Hide team selection, show player names only
+    document.querySelector('.team-select').style.display = 'none';
+
+    const playerInput = document.getElementById('playerName');
+    playerInput.placeholder = 'Enter your name';
+
+    // Auto-assign to teams (first player = team1, second = team2)
+    const roomRef = ref(database, `rooms/${roomCode}`);
+    onValue(roomRef, async (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            const team1Count = data.team1.players.length;
+            const team2Count = data.team2.players.length;
+
+            if (team1Count === 0) {
+                playerTeam = 'team1';
+            } else if (team2Count === 0) {
+                playerTeam = 'team2';
+            } else {
+                alert('Game is full (2/2 players)');
+                return;
+            }
+
+            // Auto-join when name entered
+            const name = playerInput.value.trim();
+            if (name && !playerName) {
+                playerName = name;
+                const currentPlayers = data[playerTeam].players;
+                currentPlayers.push(playerName);
+                await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
+                showSetupScreen();
+            }
+        }
+    });
+
+    // Enter key to join
+    playerInput.addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+            const name = playerInput.value.trim();
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            playerName = name;
+
+            const snapshot = await new Promise((resolve) => {
+                onValue(ref(database, `rooms/${roomCode}`), resolve, { onlyOnce: true });
+            });
+            const data = snapshot.val();
+            const currentPlayers = data[playerTeam].players;
+            currentPlayers.push(playerName);
+            await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
+            showSetupScreen();
+        }
+    });
+}
 
 // Show team select
 function showTeamSelect() {

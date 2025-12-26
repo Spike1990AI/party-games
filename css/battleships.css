@@ -59,6 +59,11 @@ h1 {
     font-size: 1.1em;
 }
 
+.mode-select {
+    display: grid;
+    gap: 10px;
+}
+
 .divider {
     text-align: center;
     color: #999;
