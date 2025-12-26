@@ -520,7 +520,7 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
                 // Victory!
                 await update(roomRef, {
                     gameState: 'victory',
-                    currentRoom: 4
+                    currentRoom: TOTAL_ROOMS + 1  // Fixed: was 4, now 9
                 });
             } else {
                 // Next room
