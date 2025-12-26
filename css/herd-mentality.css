@@ -425,8 +425,31 @@
    MOBILE OPTIMIZATIONS
    ======================================== */
 @media (max-width: 480px) {
+    .room-code h2 {
+        font-size: var(--font-size-3xl);
+        letter-spacing: 4px;
+    }
+
+    .player-item {
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+    }
+
+    .question-container {
+        padding: var(--space-lg);
+    }
+
     #question {
         font-size: var(--font-size-lg);
+    }
+
+    #answerInput {
+        padding: var(--space-md);
+        font-size: var(--font-size-base);
+    }
+
+    .majority-answer {
+        padding: var(--space-lg);
     }
 
     .majority-answer h1 {
@@ -435,5 +458,84 @@
 
     .pink-cow {
         font-size: var(--font-size-2xl);
+    }
+
+    .answer-group {
+        padding: var(--space-sm);
+    }
+
+    .answer-group h4 {
+        font-size: var(--font-size-base);
+    }
+
+    .pink-cow-award {
+        padding: var(--space-md);
+    }
+
+    .pink-cow-award p {
+        font-size: var(--font-size-lg);
+    }
+
+    .final-player {
+        padding: var(--space-md);
+    }
+
+    .final-player .name {
+        font-size: var(--font-size-lg);
+    }
+
+    .final-player .score {
+        font-size: var(--font-size-xl);
+    }
+
+    .waiting-animation h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    .round-scoreboard {
+        padding: var(--space-md);
+    }
+
+    .score-item {
+        padding: var(--space-sm) var(--space-md);
+    }
+}
+
+/* Extra small mobile - Herd Mentality */
+@media (max-width: 360px) {
+    .question-container {
+        padding: var(--space-md);
+    }
+
+    #question {
+        font-size: var(--font-size-base);
+    }
+
+    .majority-answer h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .waiting-animation h1 {
+        font-size: var(--font-size-3xl);
+    }
+}
+
+/* Landscape mobile - Herd Mentality */
+@media (max-height: 500px) and (orientation: landscape) {
+    .question-container {
+        padding: var(--space-md);
+    }
+
+    #question {
+        font-size: var(--font-size-base);
+    }
+
+    .majority-answer,
+    .pink-cow-award {
+        padding: var(--space-md);
+    }
+
+    .round-scoreboard {
+        padding: var(--space-sm);
     }
 }

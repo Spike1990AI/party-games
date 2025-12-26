@@ -459,66 +459,123 @@ input[type="text"]:focus {
     color: #666;
 }
 
-/* Mobile optimizations */
+/* ========================================
+   MOBILE OPTIMIZATIONS
+   ======================================== */
 @media (max-width: 480px) {
-    body {
-        padding: 5px;
+    .container {
+        max-width: 100%;
     }
 
     .screen {
-        padding: 12px;
-    }
-
-    h1 {
-        font-size: 1.6em;
-        margin-bottom: 8px;
+        padding: var(--space-md);
     }
 
     .subtitle {
-        font-size: 0.9em;
-        margin-bottom: 20px;
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--space-lg);
     }
 
-    .setup-info {
-        margin-bottom: 12px;
+    .room-code h2 {
+        font-size: var(--font-size-3xl);
+        letter-spacing: 4px;
+    }
+
+    .team-btn {
+        padding: var(--space-lg);
+    }
+
+    .team-btn h2 {
+        font-size: var(--font-size-xl);
+    }
+
+    .setup-info p:first-child {
+        font-size: var(--font-size-lg);
     }
 
     .ships-to-place {
-        margin-bottom: 12px;
-        gap: 6px;
+        margin-bottom: var(--space-md);
+        gap: var(--space-xs);
     }
 
     .ship-item {
-        padding: 8px 10px;
-        font-size: 0.75em;
+        padding: var(--space-sm) var(--space-sm);
+        font-size: var(--font-size-xs);
     }
 
     .board {
         gap: 1px;
-        margin: 12px auto;
+        margin: var(--space-md) auto;
     }
 
     .cell {
-        min-height: 26px;
+        min-height: 24px;
     }
 
     .cell.hit::after,
     .cell.miss::after {
-        font-size: 0.8em;
+        font-size: var(--font-size-sm);
     }
 
     .battle-header {
-        font-size: 0.85em;
-        margin-bottom: 12px;
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .ships-remaining {
+        text-align: left;
     }
 
     #battleScreen h3 {
-        font-size: 0.95em;
-        margin: 12px 0 8px;
+        font-size: var(--font-size-base);
+        margin: var(--space-md) 0 var(--space-sm);
     }
 
-    .btn-primary {
-        padding: 14px;
-        font-size: 16px;
+    #victoryTitle {
+        font-size: var(--font-size-4xl);
+    }
+
+    #victoryMessage {
+        font-size: var(--font-size-lg);
+    }
+}
+
+/* Extra small mobile - Battleships specific */
+@media (max-width: 360px) {
+    .cell {
+        min-height: 22px;
+    }
+
+    .ship-item {
+        padding: var(--space-xs);
+        font-size: 0.7rem;
+    }
+
+    .room-code h2 {
+        font-size: var(--font-size-2xl);
+        letter-spacing: 2px;
+    }
+}
+
+/* Landscape mobile - Battleships */
+@media (max-height: 600px) and (orientation: landscape) {
+    .screen {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+
+    .board {
+        max-width: 45vh;
+    }
+
+    .setup-info,
+    .battle-header {
+        margin-bottom: var(--space-sm);
+    }
+
+    .ships-to-place {
+        margin-bottom: var(--space-sm);
     }
 }
