@@ -1,4 +1,4 @@
-import { database, ref, set, onValue, update, safeUpdate } from './firebase-battleships.js';
+import { database, ref, set, onValue, update, safeUpdate, onDisconnect } from './firebase-battleships.js';
 
 // Question Bank
 const QUESTIONS = [
@@ -206,6 +206,16 @@ document.getElementById('joinGameBtn').addEventListener('click', async () => {
     };
 
     await update(roomRef, { players });
+
+    // Set up disconnect handling - marks player as disconnected if they leave
+    const playerRef = ref(database, `rooms/${roomCode}/players/${playerId}`);
+    onDisconnect(playerRef).update({
+        connected: false,
+        disconnectedAt: Date.now()
+    });
+
+    // Mark as connected
+    await update(playerRef, { connected: true });
 
     document.querySelector('.player-name-input').style.display = 'none';
 });
