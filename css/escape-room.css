@@ -22,18 +22,21 @@
 
 .scenario-btn {
     padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 12px;
+    background: var(--gradient-primary);
+    border: var(--border-width-thick) solid var(--color-accent);
+    border-radius: var(--border-radius-lg);
     color: white;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--shadow-md);
+    font-weight: 700;
 }
 
 .scenario-btn:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: var(--shadow-lg);
+    background: var(--gradient-yellow);
+    color: var(--color-text);
 }
 
 .scenario-btn:active {
@@ -150,9 +153,11 @@
     align-items: center;
     margin-bottom: 25px;
     padding: 20px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: var(--gradient-primary);
     color: white;
-    border-radius: 15px;
+    border-radius: var(--border-radius-lg);
+    border: var(--border-width-thick) solid var(--color-accent);
+    box-shadow: var(--shadow-md);
 }
 
 .timer-section {
@@ -162,13 +167,14 @@
 .timer {
     font-size: 2.5em;
     font-weight: 700;
-    color: #e74c3c;
-    font-family: 'Courier New', monospace;
+    color: var(--color-accent);
+    font-family: var(--font-family);
+    text-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
 }
 
 .timer.warning {
     animation: pulse 1s infinite;
-    color: #ff6b6b;
+    color: var(--color-error);
 }
 
 @keyframes pulse {

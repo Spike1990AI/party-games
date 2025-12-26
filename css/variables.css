@@ -60,22 +60,23 @@
   --space-3xl: 64px;
 
   /* ========================================
-     LAYOUT
+     LAYOUT - BUBBLY & CARTOONY
      ======================================== */
   --container-max: 600px;
-  --border-radius-sm: 8px;
-  --border-radius-md: 12px;
-  --border-radius-lg: 20px;
-  --border-width: 2px;
-  --border-width-thick: 3px;
+  --border-radius-sm: 15px;  /* More rounded! */
+  --border-radius-md: 20px;  /* Bubbly! */
+  --border-radius-lg: 30px;  /* Super rounded! */
+  --border-width: 3px;  /* Thicker borders */
+  --border-width-thick: 5px;  /* Extra thick! */
 
   /* ========================================
-     SHADOWS
+     SHADOWS - CARTOONY & PLAYFUL
      ======================================== */
-  --shadow-sm: 0 4px 15px rgba(0,0,0,0.1);
-  --shadow-md: 0 10px 30px rgba(0,0,0,0.2);
-  --shadow-lg: 0 20px 60px rgba(0,0,0,0.3);
-  --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-sm: 0 6px 20px rgba(0, 206, 209, 0.2);  /* Teal glow */
+  --shadow-md: 0 12px 35px rgba(0, 206, 209, 0.3);  /* Medium teal glow */
+  --shadow-lg: 0 20px 70px rgba(0, 206, 209, 0.4);  /* Big teal glow */
+  --shadow-inner: inset 0 3px 6px rgba(0,0,0,0.15);
+  --shadow-yellow: 0 8px 25px rgba(255, 215, 0, 0.4);  /* Yellow glow */
 
   /* ========================================
      TOUCH TARGETS & ACCESSIBILITY
