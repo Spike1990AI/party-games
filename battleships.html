@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="css/battleships.css">
 </head>
 <body>
-    <nav class="game-nav">
-        <a href="index.html" class="nav-home">🏠 Home</a>
-        <span class="nav-title">Battleships</span>
-    </nav>
     <div class="container">
         <!-- Join Screen -->
         <div id="joinScreen" class="screen">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1>⚓ Battleships</h1>
             <p class="subtitle">Classic naval combat</p>
 
@@ -45,6 +45,10 @@
 
         <!-- Team Select Screen -->
         <div id="teamScreen" class="screen hidden">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <button class="btn-back" onclick="goBack('joinScreen')">← Back</button>
             <div class="room-code-header">Room: <span id="roomCodeTeam"></span></div>
             <h1>⚓ Choose Your Team</h1>
@@ -66,6 +70,10 @@
 
         <!-- Setup Screen - Place Ships -->
         <div id="setupScreen" class="screen hidden">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <button class="btn-back" onclick="goBack('teamScreen')">← Back</button>
             <div class="room-code-header">Room: <span id="roomCodeSetup"></span></div>
             <h1>Place Your Ships</h1>
@@ -90,6 +98,10 @@
 
         <!-- Battle Screen -->
         <div id="battleScreen" class="screen hidden">
+            <a href="index.html" class="nav-home nav-home-light">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <div class="room-code-header">Room: <span id="roomCodeBattle"></span></div>
             <div class="battle-header">
                 <div class="team-info">
@@ -113,6 +125,10 @@
 
         <!-- Victory Screen -->
         <div id="victoryScreen" class="screen hidden">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1 id="victoryTitle">🎉</h1>
             <div class="victory-info">
                 <p id="victoryMessage"></p>

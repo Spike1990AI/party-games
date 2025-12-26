@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="css/minefield.css">
 </head>
 <body>
-    <nav class="game-nav">
-        <span class="nav-title">Minefield Race</span>
-        <a href="index.html" class="nav-home">🏠 Home</a>
-    </nav>
     <div class="container">
         <!-- Join Screen -->
         <div id="joinScreen" class="screen">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1>💣 Minefield Race</h1>
             <p class="game-description">Navigate through the minefield to reach the top. Hit a mine and restart!</p>
 
@@ -34,11 +34,14 @@
                 <button id="joinRoomConfirmBtn" class="btn-primary">Join</button>
             </div>
 
-            <a href="index.html" class="btn-back">← Back to Menu</a>
         </div>
 
         <!-- Lobby Screen -->
         <div id="lobbyScreen" class="screen hidden">
+            <a href="index.html" class="nav-home nav-home-light">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <div class="room-code-header">
                 <span>Room Code</span>
                 <h2 id="roomCode">----</h2>
@@ -56,6 +59,10 @@
 
         <!-- Game Screen -->
         <div id="gameScreen" class="screen hidden">
+            <a href="index.html" class="nav-home nav-home-light">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <div class="room-code-header">
                 <span>Room</span>
                 <h3 id="gameRoomCode">----</h3>
@@ -84,6 +91,10 @@
 
         <!-- Results Screen -->
         <div id="resultsScreen" class="screen hidden">
+            <a href="index.html" class="nav-home">
+                <span class="nav-home-icon">🏠</span>
+                <span>Home</span>
+            </a>
             <h1>🏆 Game Over!</h1>
 
             <div class="winner-announcement">
@@ -98,7 +109,6 @@
 
             <div class="button-group">
                 <button id="playAgainBtn" class="btn-primary">Play Again</button>
-                <a href="index.html" class="btn-secondary">Back to Menu</a>
             </div>
         </div>
     </div>

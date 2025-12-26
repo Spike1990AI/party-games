@@ -164,11 +164,12 @@ label {
 input[type="text"],
 select {
     width: 100%;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);  /* Reduced vertical padding */
     font-size: var(--font-size-base);
     border: var(--border-width) solid #e0e0e0;
     border-radius: var(--border-radius-sm);
     transition: border-color var(--transition-base);
+    margin-bottom: var(--space-sm);  /* Reduced margin */
 }
 
 input[type="text"]:focus,

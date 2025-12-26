@@ -12,9 +12,9 @@
         <a href="index.html" class="nav-home">🏠 Home</a>
         <span class="nav-title">Territory Wars</span>
     </nav>
-    <!-- Join Screen -->
-    <div id="joinScreen" class="screen">
-        <div class="container">
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen">
             <h1>🏰 Territory Wars</h1>
             <p class="game-description">Capture territory by placing tiles. Surround opponents to flip their tiles!</p>
 
@@ -36,11 +36,9 @@
 
             <a href="index.html" class="btn-back">← Back to Menu</a>
         </div>
-    </div>
 
-    <!-- Lobby Screen -->
+        <!-- Lobby Screen -->
     <div id="lobbyScreen" class="screen hidden">
-        <div class="container">
             <div class="room-code-header">
                 <span>Room Code</span>
                 <h2 id="roomCode">----</h2>
@@ -54,11 +52,9 @@
             <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
             <button id="leaveLobbyBtn" class="btn-secondary">Leave Room</button>
         </div>
-    </div>
 
-    <!-- Game Screen -->
+        <!-- Game Screen -->
     <div id="gameScreen" class="screen hidden">
-        <div class="container">
             <div class="room-code-header">
                 <span>Room</span>
                 <h3 id="gameRoomCode">----</h3>
@@ -82,11 +78,9 @@
                 <div id="debugLog" style="margin-top: 1rem; padding: 0.5rem; background: #f8f9fa; border-radius: 8px; font-size: 0.75rem; max-height: 100px; overflow-y: auto; font-family: monospace;"></div>
             </div>
         </div>
-    </div>
 
-    <!-- Results Screen -->
+        <!-- Results Screen -->
     <div id="resultsScreen" class="screen hidden">
-        <div class="container">
             <h1>🏆 Game Over!</h1>
 
             <div class="winner-announcement">
@@ -103,7 +97,6 @@
                 <button id="playAgainBtn" class="btn-primary">Play Again</button>
                 <a href="index.html" class="btn-secondary">Back to Menu</a>
             </div>
-        </div>
     </div>
 
     <!-- Game Script (ES6 Module) -->

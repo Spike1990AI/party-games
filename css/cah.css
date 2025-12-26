@@ -9,6 +9,11 @@ body {
     color: #fff;
 }
 
+.screen {
+    background: #000 !important;
+    color: #fff;
+}
+
 /* Card Styling */
 .card {
     border-radius: 12px;
