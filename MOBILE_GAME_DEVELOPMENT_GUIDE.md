@@ -598,6 +598,228 @@ setTimeout(async () => {
 }, 2000);
 ```
 
+### 🚨 CRITICAL: Nested Conditional Check Race Condition
+
+**Real Bug from Herd Mentality (Dec 2024):**
+
+When last player submitted their answer, the game would get stuck on "Answer submitted" screen instead of transitioning to results.
+
+**Root Cause:** Critical check was nested inside a conditional that might not execute.
+
+```javascript
+// ❌ BROKEN: Results check nested inside "count changed" block
+let lastAnswerCount = 0;
+
+onValue(roomRef, (snapshot) => {
+    const data = snapshot.val();
+    const answerCount = Object.keys(data.answers || {}).length;
+    const playerCount = Object.keys(data.players || {}).length;
+
+    // Update count display ONLY if count changed
+    if (answerCount !== lastAnswerCount) {
+        lastAnswerCount = answerCount;
+        updateCountDisplay(answerCount);
+
+        // ❌ BROKEN: Check if all answered (nested inside!)
+        if (answerCount === playerCount && answerCount > 0) {
+            showResults(data); // This might never execute!
+        }
+    }
+});
+
+/* WHY IT BREAKS:
+ * 1. Last player submits answer
+ * 2. New listener created in showWaitingScreen()
+ * 3. Listener's FIRST callback fires with OLD data (Firebase write not complete)
+ * 4. Sets lastAnswerCount = 3 (old value)
+ * 5. Firebase write completes, listener fires AGAIN with NEW data
+ * 6. answerCount (4) !== lastAnswerCount (3), so outer if executes
+ * 7. BUT on NEXT listener fire, answerCount === lastAnswerCount
+ * 8. Inner "all answered" check is SKIPPED
+ * 9. Game stuck forever!
+ */
+
+// ✅ FIXED: Move critical check OUTSIDE conditional
+let lastAnswerCount = 0;
+
+onValue(roomRef, (snapshot) => {
+    const data = snapshot.val();
+    const answerCount = Object.keys(data.answers || {}).length;
+    const playerCount = Object.keys(data.players || {}).length;
+
+    // Update count display ONLY if count changed
+    if (answerCount !== lastAnswerCount) {
+        lastAnswerCount = answerCount;
+        updateCountDisplay(answerCount);
+    }
+
+    // ✅ ALWAYS check if all answered (moved outside!)
+    // Runs on EVERY listener callback, not just when count changes
+    if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
+        unsubscribe(); // Clean up listener
+        setTimeout(async () => {
+            // Fetch fresh data to avoid stale closure
+            const freshSnapshot = await new Promise((resolve) => {
+                onValue(roomRef, resolve, { onlyOnce: true });
+            });
+            showResults(freshSnapshot.val());
+        }, 2000);
+    }
+});
+```
+
+**LESSON:** Never nest critical state checks inside "data changed" conditionals. Critical checks should run on EVERY callback.
+
+### Real-World Button Protection Examples
+
+**Pattern from Escape Room (6 different button types):**
+
+```javascript
+// 1. CREATE ROOM BUTTON
+document.getElementById('createRoomBtn').addEventListener('click', async () => {
+    const createBtn = document.getElementById('createRoomBtn');
+
+    // Prevent duplicate clicks
+    if (createBtn.disabled) return;
+    createBtn.disabled = true;
+
+    try {
+        await cleanupOldRooms();
+        roomCode = generateRoomCode();
+        const roomData = { /* ... */ };
+        await set(ref(database, `rooms/${roomCode}`), roomData);
+
+        showLobby();
+    } catch (error) {
+        console.error('Create room error:', error);
+        createBtn.disabled = false;
+        alert('Failed to create room. Please try again.');
+    }
+});
+
+// 2. JOIN ROOM BUTTON (with input)
+document.getElementById('joinRoomBtn').addEventListener('click', async () => {
+    const joinBtn = document.getElementById('joinRoomBtn');
+    const codeInput = document.getElementById('roomCodeInput');
+
+    // Prevent duplicate clicks
+    if (joinBtn.disabled) return;
+
+    const code = codeInput.value.toUpperCase();
+    if (code.length !== 4) {
+        alert('Please enter a 4-letter code');
+        return; // Early return BEFORE disabling
+    }
+
+    // Disable during operation
+    joinBtn.disabled = true;
+    codeInput.disabled = true;
+
+    try {
+        await cleanupOldRooms();
+        roomCode = code;
+
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        onValue(roomRef, (snapshot) => {
+            if (snapshot.exists()) {
+                showLobby();
+            } else {
+                alert('Room not found!');
+                // Re-enable on failure
+                joinBtn.disabled = false;
+                codeInput.disabled = false;
+            }
+        }, { onlyOnce: true });
+    } catch (error) {
+        console.error('Join room error:', error);
+        joinBtn.disabled = false;
+        codeInput.disabled = false;
+        alert('Failed to join room. Please try again.');
+    }
+});
+
+// 3. SUBMIT ANSWER BUTTON (conditional re-enable)
+document.getElementById('submitAnswer').addEventListener('click', async () => {
+    const submitBtn = document.getElementById('submitAnswer');
+    const answerInput = document.getElementById('answerInput');
+
+    if (submitBtn.disabled) return;
+
+    const answer = answerInput.value.trim();
+    if (!answer) {
+        alert('Please enter an answer');
+        return; // Don't disable if validation fails
+    }
+
+    // Disable during operation
+    submitBtn.disabled = true;
+    answerInput.disabled = true;
+
+    try {
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const data = (await onValue(roomRef, { onlyOnce: true })).val();
+        const currentRoom = ROOMS[data.currentRoom - 1];
+
+        if (answer === currentRoom.answer.toUpperCase()) {
+            // Correct answer - stay disabled (transitioning screens)
+            await update(roomRef, { currentRoom: data.currentRoom + 1 });
+            showGame(data);
+        } else {
+            // Wrong answer - re-enable for retry
+            alert('Incorrect code!');
+            submitBtn.disabled = false;
+            answerInput.disabled = false;
+        }
+    } catch (error) {
+        console.error('Submit error:', error);
+        submitBtn.disabled = false;
+        answerInput.disabled = false;
+        alert('Failed to submit. Please try again.');
+    }
+});
+
+// 4. USE HINT BUTTON (stays disabled after use)
+document.getElementById('useHintBtn').addEventListener('click', async () => {
+    const hintBtn = document.getElementById('useHintBtn');
+
+    if (hintBtn.disabled) return;
+    hintBtn.disabled = true;
+
+    try {
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const data = (await onValue(roomRef, { onlyOnce: true })).val();
+
+        if (data.hintsUsed >= data.maxHints) {
+            alert('No hints remaining!');
+            hintBtn.disabled = false; // Re-enable if no hints
+            return;
+        }
+
+        document.getElementById('hintText').textContent = currentRoom.hint;
+        document.getElementById('hintDisplay').classList.remove('hidden');
+
+        await update(roomRef, { hintsUsed: data.hintsUsed + 1 });
+
+        // Keep disabled - hint already used
+    } catch (error) {
+        console.error('Use hint error:', error);
+        hintBtn.disabled = false;
+        alert('Failed to use hint. Please try again.');
+    }
+});
+```
+
+**Button Protection Checklist:**
+
+✅ Check `if (btn.disabled) return;` FIRST
+✅ Validate input BEFORE disabling buttons
+✅ Disable button + associated inputs together
+✅ Use try/catch for ALL async operations
+✅ Re-enable ONLY on failure or retriable states
+✅ Keep disabled on success (screen transition)
+✅ Log errors with `console.error()`
+✅ Show user-friendly error messages
+
 ---
 
 ## 🎉 Same-Room Party Mode Patterns
