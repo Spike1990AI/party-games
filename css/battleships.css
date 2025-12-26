@@ -247,8 +247,9 @@ input[type="text"]:focus {
     background: #ddd;
     padding: 2px;
     border-radius: 8px;
-    margin: 20px 0;
+    margin: 20px auto;
     max-width: 100%;
+    width: 100%;
     aspect-ratio: 1;
 }
 
@@ -258,6 +259,10 @@ input[type="text"]:focus {
     border: 1px solid #90caf9;
     cursor: pointer;
     transition: all 0.2s;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cell:hover {
@@ -374,19 +379,64 @@ input[type="text"]:focus {
 
 /* Mobile optimizations */
 @media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
     .screen {
-        padding: 20px;
+        padding: 12px;
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .setup-info {
+        margin-bottom: 12px;
+    }
+
+    .ships-to-place {
+        margin-bottom: 12px;
+        gap: 6px;
+    }
+
+    .ship-item {
+        padding: 8px 10px;
+        font-size: 0.75em;
     }
 
     .board {
         gap: 1px;
+        margin: 12px auto;
     }
 
-    .cell.hit::after {
-        font-size: 0.9em;
+    .cell {
+        min-height: 26px;
+    }
+
+    .cell.hit::after,
+    .cell.miss::after {
+        font-size: 0.8em;
+    }
+
+    .battle-header {
+        font-size: 0.85em;
+        margin-bottom: 12px;
+    }
+
+    #battleScreen h3 {
+        font-size: 0.95em;
+        margin: 12px 0 8px;
+    }
+
+    .btn-primary {
+        padding: 14px;
+        font-size: 16px;
     }
 }
