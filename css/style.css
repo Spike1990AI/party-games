@@ -578,7 +578,19 @@ select:focus {
 
     .screen {
         padding: var(--space-md);
+        padding-top: 60px; /* Adjust for mobile nav button */
         border-radius: var(--border-radius-md);
+    }
+
+    .nav-home {
+        top: 10px;
+        left: 10px;
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .nav-home-icon {
+        font-size: 16px;
     }
 
     .welcome-screen h1 {
@@ -653,6 +665,16 @@ select:focus {
 
 /* Extra small mobile (max-width 360px) */
 @media (max-width: 360px) {
+    /* Icon only on very small screens */
+    .nav-home span:not(.nav-home-icon) {
+        display: none;
+    }
+
+    .nav-home {
+        padding: 10px;
+        border-radius: 50%;
+    }
+
     .welcome-screen h1 {
         font-size: var(--font-size-2xl);
     }
