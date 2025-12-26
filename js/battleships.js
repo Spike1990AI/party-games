@@ -9,6 +9,12 @@ let currentShip = null;
 let shipOrientation = 'horizontal';
 let shipsPlaced = [];
 
+// Firebase listener tracking for cleanup
+let playerSelectUnsubscribe = null;
+let teamSelectUnsubscribe = null;
+let gameStartUnsubscribe = null;
+let battleUnsubscribe = null;
+
 const SHIPS = [
     { name: 'Carrier', length: 5 },
     { name: 'Battleship', length: 4 },
@@ -132,6 +138,12 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
 function showPlayerSelect() {
     showScreen('teamScreen');
 
+    // Clean up any existing listener
+    if (playerSelectUnsubscribe) {
+        playerSelectUnsubscribe();
+        playerSelectUnsubscribe = null;
+    }
+
     // Show room code
     document.getElementById('roomCodeTeam').textContent = roomCode;
 
@@ -147,7 +159,7 @@ function showPlayerSelect() {
 
     // Auto-assign to teams (first player = team1, second = team2)
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, async (snapshot) => {
+    playerSelectUnsubscribe = onValue(roomRef, async (snapshot) => {
         const data = snapshot.val();
         if (data) {
             const team1Count = data.team1.players.length;
@@ -169,6 +181,12 @@ function showPlayerSelect() {
                 const currentPlayers = data[playerTeam].players;
                 currentPlayers.push(playerName);
                 await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
+
+                // Clean up listener before transition
+                if (playerSelectUnsubscribe) {
+                    playerSelectUnsubscribe();
+                    playerSelectUnsubscribe = null;
+                }
                 showSetupScreen();
             }
         }
@@ -202,6 +220,12 @@ function showPlayerSelect() {
         const currentPlayers = data[playerTeam].players;
         currentPlayers.push(playerName);
         await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
+
+        // Clean up listener before transition
+        if (playerSelectUnsubscribe) {
+            playerSelectUnsubscribe();
+            playerSelectUnsubscribe = null;
+        }
         showSetupScreen();
     }
 }
@@ -210,12 +234,18 @@ function showPlayerSelect() {
 function showTeamSelect() {
     showScreen('teamScreen');
 
+    // Clean up any existing listener
+    if (teamSelectUnsubscribe) {
+        teamSelectUnsubscribe();
+        teamSelectUnsubscribe = null;
+    }
+
     // Show room code
     document.getElementById('roomCodeTeam').textContent = roomCode;
 
     // Listen for team updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    teamSelectUnsubscribe = onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
             document.getElementById('team1Count').textContent = `${data.team1.players.length}/2 players`;
@@ -255,6 +285,11 @@ async function joinTeam(team) {
     currentPlayers.push(playerName);
     await set(roomRef, currentPlayers);
 
+    // Clean up listener before transition
+    if (teamSelectUnsubscribe) {
+        teamSelectUnsubscribe();
+        teamSelectUnsubscribe = null;
+    }
     showSetupScreen();
 }
 
@@ -379,9 +414,14 @@ document.getElementById('readyBtn').addEventListener('click', async () => {
 
     // Listen for game start
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    gameStartUnsubscribe = onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         if (data.team1.ready && data.team2.ready) {
+            // Clean up listener before transition
+            if (gameStartUnsubscribe) {
+                gameStartUnsubscribe();
+                gameStartUnsubscribe = null;
+            }
             startBattle(data);
         }
     });
@@ -543,28 +583,6 @@ window.goBack = function(targetScreen) {
         showScreen('teamScreen');
     }
 };
-
-function showScreen(screenName) {
-    // Hide all screens
-    joinScreen.classList.add('hidden');
-    teamScreen.classList.add('hidden');
-    setupScreen.classList.add('hidden');
-    battleScreen.classList.add('hidden');
-    victoryScreen.classList.add('hidden');
-
-    // Show target screen
-    if (screenName === 'joinScreen') {
-        joinScreen.classList.remove('hidden');
-    } else if (screenName === 'teamScreen') {
-        teamScreen.classList.remove('hidden');
-    } else if (screenName === 'setupScreen') {
-        setupScreen.classList.remove('hidden');
-    } else if (screenName === 'battleScreen') {
-        battleScreen.classList.remove('hidden');
-    } else if (screenName === 'victoryScreen') {
-        victoryScreen.classList.remove('hidden');
-    }
-}
 
 function leaveRoom() {
     // Reset all game state

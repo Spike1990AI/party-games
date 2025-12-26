@@ -294,17 +294,20 @@ function updateLobby(data) {
         elements.lobbyHighScore.innerHTML = '';
     }
 
-    // Show/hide start button based on room creator
-    // Only first player in order can start
-    if (data.playerOrder && data.playerOrder[0] === currentPlayer) {
-        elements.startGameBtn.classList.remove('hidden');
-    } else {
-        elements.startGameBtn.classList.add('hidden');
-    }
+    // Button always visible - permission checked in startGame()
+    elements.startGameBtn.classList.remove('hidden');
 }
 
 async function startGame() {
     if (!currentRoom) return;
+
+    // Verify caller is room creator
+    const roomSnapshot = await get(ref(database, `minefield/${currentRoom}`));
+    const data = roomSnapshot.val();
+    if (!data || data.playerOrder[0] !== currentPlayer) {
+        alert('Only the room creator can start the game');
+        return;
+    }
 
     // Generate mines
     const mines = generateMines(currentRoom);
