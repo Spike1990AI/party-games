@@ -76,14 +76,56 @@ body {
 }
 
 .screen {
+    position: relative;
     background: var(--color-white);
     border-radius: var(--border-radius-lg);
     padding: var(--space-xl);
+    padding-top: 70px; /* Space for nav button */
     box-shadow: var(--shadow-lg);
 }
 
 .hidden {
     display: none !important;
+}
+
+/* ========================================
+   NAVIGATION - SHARED ACROSS ALL GAMES
+   ======================================== */
+.nav-home {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 100;
+    transition: all 0.2s ease;
+    min-height: 44px; /* WCAG touch target */
+}
+
+.nav-home:hover,
+.nav-home:active {
+    background: rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+.nav-home-icon {
+    font-size: 18px;
+}
+
+/* Light nav for dark backgrounds */
+.nav-home.nav-home-light {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
 /* ========================================
