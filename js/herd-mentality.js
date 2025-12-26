@@ -217,10 +217,12 @@ function showLobby() {
 
         Object.entries(players).forEach(([id, player]) => {
             const div = document.createElement('div');
-            div.className = `player-item${player.isHost ? ' host' : ''}`;
+            const isDisconnected = player.connected === false;
+            div.className = `player-item${player.isHost ? ' host' : ''}${isDisconnected ? ' disconnected' : ''}`;
             div.innerHTML = `
                 ${player.name}
                 ${player.isHost ? '<span class="badge">HOST</span>' : ''}
+                ${isDisconnected ? '<span class="status">(disconnected)</span>' : ''}
             `;
             playersList.appendChild(div);
         });
@@ -368,6 +370,7 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
     submitBtn.disabled = true;
     answerInput.disabled = true;
 
+    // Get player ID
     const roomRef = ref(database, `rooms/${roomCode}`);
     const snapshot = await new Promise((resolve) => {
         onValue(roomRef, resolve, { onlyOnce: true });
@@ -377,14 +380,15 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
     const players = data.players || {};
     const myPlayer = Object.values(players).find(p => p.name === playerName);
 
-    const answers = data.answers || {};
-    answers[myPlayer.id] = {
+    // Atomic update: update just this player's answer path directly
+    // This prevents race conditions when multiple players submit simultaneously
+    const answerRef = ref(database, `rooms/${roomCode}/answers/${myPlayer.id}`);
+    const success = await safeUpdate(answerRef, {
         playerId: myPlayer.id,
         playerName: myPlayer.name,
-        answer: answer
-    };
-
-    const success = await safeUpdate(roomRef, { answers });
+        answer: answer,
+        timestamp: Date.now()
+    });
 
     // Re-enable if update failed
     if (!success) {
@@ -497,10 +501,14 @@ function showWaitingScreen() {
         // This fixes race condition where last player's answer might not trigger count change
         // Now also handles disconnected players by only counting connected ones
         if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
-            // Clear timeout since all answered
+            // Clear timeouts since all answered
             if (answerTimeout) {
                 clearTimeout(answerTimeout);
                 answerTimeout = null;
+            }
+            if (skipButtonTimeout) {
+                clearTimeout(skipButtonTimeout);
+                skipButtonTimeout = null;
             }
             unsubscribe(); // Clean up listener
             // Fetch fresh data to avoid stale closure
@@ -677,6 +685,31 @@ document.getElementById('nextRoundBtn').addEventListener('click', async () => {
             answers: {}
         });
     }
+});
+
+// Skip to Results (Host only - appears after 30 seconds)
+document.getElementById('skipToResultsBtn').addEventListener('click', async () => {
+    if (!isHost) return;
+
+    console.log('⏭️ Host skipped to results');
+
+    // Clear both timeouts
+    if (answerTimeout) {
+        clearTimeout(answerTimeout);
+        answerTimeout = null;
+    }
+    if (skipButtonTimeout) {
+        clearTimeout(skipButtonTimeout);
+        skipButtonTimeout = null;
+    }
+
+    // Force show results with available answers
+    const roomRef = ref(database, `rooms/${roomCode}`);
+    const snapshot = await new Promise((resolve) => {
+        onValue(roomRef, resolve, { onlyOnce: true });
+    });
+
+    showResults(snapshot.val());
 });
 
 // Listen for next round (non-host) - moved into showResults function to avoid conflicts

@@ -1,39 +1,40 @@
 /**
  * Party Games - Design System Variables
- * Unified navy theme across all games
+ * Fun yellow & teal cartoony theme!
  */
 
 :root {
   /* ========================================
-     COLORS - UNIFIED NAVY THEME
+     COLORS - YELLOW & TEAL CARTOONY THEME
      ======================================== */
-  --color-primary: #1e3c72;
-  --color-primary-light: #2a5298;
-  --color-primary-dark: #152a52;
-  --color-accent: #4fc3f7;  /* Light blue accent for contrast */
-  --color-success: #4caf50;
-  --color-error: #f44336;
-  --color-warning: #ff9800;
-  --color-team-blue: #2196f3;
-  --color-team-red: #f44336;
-  --color-text: #333;
-  --color-text-light: #666;
-  --color-text-muted: #999;
+  --color-primary: #00CED1;  /* Dark Turquoise */
+  --color-primary-light: #48D1CC;  /* Medium Turquoise */
+  --color-primary-dark: #20B2AA;  /* Light Sea Green */
+  --color-accent: #FFD700;  /* Gold */
+  --color-success: #32CD32;  /* Lime Green */
+  --color-error: #FF6347;  /* Tomato */
+  --color-warning: #FFA500;  /* Orange */
+  --color-team-blue: #00CED1;  /* Teal */
+  --color-team-red: #FF6347;  /* Tomato */
+  --color-text: #2C3E50;  /* Dark slate */
+  --color-text-light: #546E7A;
+  --color-text-muted: #90A4AE;
   --color-white: #ffffff;
-  --color-bg-light: #f5f7fa;
-  --color-bg-dark: #c3cfe2;
+  --color-bg-light: #FFFACD;  /* Lemon Chiffon */
+  --color-bg-dark: #FFE4B5;  /* Moccasin */
 
   /* ========================================
      GRADIENTS
      ======================================== */
-  --gradient-primary: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  --gradient-card: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  --gradient-primary: linear-gradient(135deg, #00CED1 0%, #20B2AA 100%);
+  --gradient-bg: linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%);
+  --gradient-card: linear-gradient(135deg, #48D1CC 0%, #00CED1 100%);
+  --gradient-yellow: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
 
   /* ========================================
-     TYPOGRAPHY
+     TYPOGRAPHY - ROUNDED & PLAYFUL
      ======================================== */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-size-xs: 0.75rem;      /* 12px */
   --font-size-sm: 0.875rem;     /* 14px */
   --font-size-base: 1rem;       /* 16px */
