@@ -1,4 +1,4 @@
-import { database, ref, set, onValue, update } from './firebase-battleships.js';
+import { database, ref, set, onValue, update, safeUpdate } from './firebase-battleships.js';
 
 // Question Bank
 const QUESTIONS = [
@@ -325,7 +325,8 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
         answer: answer
     };
 
-    await update(roomRef, { answers });
+    const success = await safeUpdate(roomRef, { answers });
+    if (!success) return; // Don't disable input if update failed
 
     // Disable input after submitting
     document.getElementById('answerInput').disabled = true;
@@ -426,7 +427,7 @@ function showResults(roomData) {
             }
         });
 
-        update(ref(database, `rooms/${roomCode}`), {
+        safeUpdate(ref(database, `rooms/${roomCode}`), {
             players: updatedPlayers
         });
     }
