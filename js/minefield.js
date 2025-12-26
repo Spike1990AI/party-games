@@ -70,6 +70,26 @@ elements.moveUpRightBtn.addEventListener('click', () => makeMove(1, 1));
 // Initialize
 loadPlayerName();
 
+// Debug mode toggle (press 'M' key to reveal mines)
+window.debugMines = false;
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'm' || e.key === 'M') {
+        window.debugMines = !window.debugMines;
+        console.log(`🔍 Debug Mines: ${window.debugMines ? 'ON - All mines visible' : 'OFF'}`);
+        // Re-render if game is active
+        if (currentRoom) {
+            get(ref(database, `minefield/${currentRoom}`)).then(snapshot => {
+                const data = snapshot.val();
+                if (data && data.gameState === 'playing') {
+                    renderGrid(data);
+                }
+            });
+        }
+    }
+});
+
+console.log('💣 Minefield Race loaded! Press M to toggle mine visibility for testing.');
+
 function loadPlayerName() {
     const savedName = localStorage.getItem('minefield_playerName');
     if (savedName) {
@@ -287,6 +307,9 @@ function updateGame(data) {
     showScreen('game');
     elements.gameRoomCode.textContent = currentRoom;
 
+    // Debug: log mine count
+    console.log(`Game has ${data.mines.length} mines, ${data.revealed.length} revealed`);
+
     // Update turn indicator
     const currentTurnPlayer = data.players[data.currentTurn];
     elements.currentPlayerName.textContent = currentTurnPlayer.name;
@@ -311,6 +334,9 @@ function renderGrid(data) {
     const grid = elements.gameGrid;
     grid.innerHTML = '';
 
+    // Debug mode: hold Shift to see all mines
+    const debugMode = window.debugMines || false;
+
     for (let row = GRID_ROWS - 1; row >= 0; row--) {
         for (let col = 0; col < GRID_COLS; col++) {
             const cell = document.createElement('div');
@@ -325,6 +351,12 @@ function renderGrid(data) {
             // Show revealed mines
             if (data.revealed && data.revealed.some(m => m[0] === row && m[1] === col)) {
                 cell.classList.add('revealed-mine');
+            }
+
+            // Debug: show all mines if debugMode is on
+            if (debugMode && data.mines.some(m => m[0] === row && m[1] === col)) {
+                cell.classList.add('has-mine');
+                cell.style.opacity = '0.5';
             }
 
             // Add player markers
