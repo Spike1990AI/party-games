@@ -1,13 +1,12 @@
 // Firebase Configuration
-// REPLACE THIS with your Firebase config from console.firebase.google.com
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBcydGkkGFTmcX1Z83gDECQGY1nOvUwdoo",
+    authDomain: "family-games-f00e7.firebaseapp.com",
+    databaseURL: "https://family-games-f00e7-default-rtdb.firebaseio.com",
+    projectId: "family-games-f00e7",
+    storageBucket: "family-games-f00e7.firebasestorage.app",
+    messagingSenderId: "290169222484",
+    appId: "1:290169222484:web:0c27cfa01a141ec49104c1"
 };
 
 // Initialize Firebase
