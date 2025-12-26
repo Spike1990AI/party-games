@@ -301,6 +301,27 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
     showWaitingScreen();
 });
 
+// Display Scoreboard
+function displayScoreboard(players, answers, majorityAnswer) {
+    const scoresDiv = document.getElementById('roundScores');
+    scoresDiv.innerHTML = '';
+
+    // Sort players by score (highest first)
+    const sortedPlayers = Object.values(players).sort((a, b) => b.score - a.score);
+    const topScore = sortedPlayers[0]?.score || 0;
+
+    sortedPlayers.forEach((player) => {
+        const gotPoint = answers[player.id]?.answer === majorityAnswer;
+        const div = document.createElement('div');
+        div.className = `score-item${player.score === topScore ? ' leader' : ''}`;
+        div.innerHTML = `
+            <span class="player-name">${player.name}${gotPoint ? ' <span class="score-change">+1</span>' : ''}</span>
+            <span class="score-value">${player.score} pts</span>
+        `;
+        scoresDiv.appendChild(div);
+    });
+}
+
 // Show Waiting Screen (after submitting)
 function showWaitingScreen() {
     const questionScreen = document.getElementById('questionScreen');
@@ -452,6 +473,12 @@ function showResults(roomData) {
         safeUpdate(ref(database, `rooms/${roomCode}`), {
             players: updatedPlayers
         });
+
+        // Display updated scoreboard
+        displayScoreboard(updatedPlayers, answers, majorityAnswer);
+    } else {
+        // Non-host: display current scores
+        displayScoreboard(players, answers, majorityAnswer);
     }
 
     // Listen for next round or game end (all players)

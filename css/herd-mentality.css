@@ -321,6 +321,65 @@
 }
 
 /* ========================================
+   ROUND SCOREBOARD
+   ======================================== */
+.round-scoreboard {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.round-scoreboard h3 {
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#roundScores {
+    display: grid;
+    gap: 10px;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.score-item.leader {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border-left-color: #ffa000;
+}
+
+.score-item .player-name {
+    font-weight: 700;
+    font-size: 1.05em;
+}
+
+.score-item .score-value {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.score-item.leader .score-value {
+    color: #ff6f00;
+}
+
+.score-change {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 0.9em;
+    color: #27ae60;
+    font-weight: 600;
+}
+
+/* ========================================
    FINAL SCORES
    ======================================== */
 .final-scores {

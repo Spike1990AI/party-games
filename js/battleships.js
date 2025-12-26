@@ -59,6 +59,14 @@ async function createRoom(mode) {
     document.getElementById('codeDisplay').textContent = roomCode;
     document.getElementById('roomCode').classList.remove('hidden');
 
+    // Update share message based on mode
+    const shareMessage = document.getElementById('shareMessage');
+    if (mode === '1v1') {
+        shareMessage.textContent = 'Share this with 1 other player';
+    } else {
+        shareMessage.textContent = 'Share this with 3 other players';
+    }
+
     setTimeout(() => {
         if (mode === '1v1') {
             showPlayerSelect();
@@ -498,3 +506,103 @@ function showVictory(won) {
 document.getElementById('newGameBtn').addEventListener('click', () => {
     location.reload();
 });
+
+// Navigation functions
+window.goBack = function(targetScreen) {
+    if (targetScreen === 'joinScreen') {
+        // Leave room and reset state
+        leaveRoom();
+        showScreen('joinScreen');
+    } else if (targetScreen === 'teamScreen') {
+        // Warn if ships are placed
+        if (shipsPlaced.length > 0) {
+            if (!confirm('Going back will clear your placed ships. Continue?')) {
+                return;
+            }
+        }
+        clearShips();
+        showScreen('teamScreen');
+    }
+};
+
+function showScreen(screenName) {
+    // Hide all screens
+    joinScreen.classList.add('hidden');
+    teamScreen.classList.add('hidden');
+    setupScreen.classList.add('hidden');
+    battleScreen.classList.add('hidden');
+    victoryScreen.classList.add('hidden');
+
+    // Show target screen
+    if (screenName === 'joinScreen') {
+        joinScreen.classList.remove('hidden');
+    } else if (screenName === 'teamScreen') {
+        teamScreen.classList.remove('hidden');
+    } else if (screenName === 'setupScreen') {
+        setupScreen.classList.remove('hidden');
+    } else if (screenName === 'battleScreen') {
+        battleScreen.classList.remove('hidden');
+    } else if (screenName === 'victoryScreen') {
+        victoryScreen.classList.remove('hidden');
+    }
+}
+
+function leaveRoom() {
+    // Reset all game state
+    roomCode = null;
+    gameMode = null;
+    playerTeam = null;
+    playerName = null;
+    shipsPlaced = [];
+    currentShip = null;
+    shipOrientation = 'horizontal';
+
+    // Clear input fields
+    document.getElementById('roomCodeInput').value = '';
+    document.getElementById('playerName').value = '';
+}
+
+function clearShips() {
+    // Reset ship placement
+    shipsPlaced = [];
+    currentShip = null;
+    shipOrientation = 'horizontal';
+
+    // Clear the setup board UI
+    const setupBoard = document.getElementById('setupBoard');
+    if (setupBoard) {
+        const cells = setupBoard.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            cell.classList.remove('ship');
+        });
+    }
+
+    // Reset ship items
+    const shipItems = document.querySelectorAll('.ship-item');
+    shipItems.forEach(item => {
+        item.classList.remove('placed');
+    });
+
+    // Disable ready button
+    document.getElementById('readyBtn').disabled = true;
+}
+
+// Surrender function
+window.surrender = async function() {
+    if (!confirm('Are you sure you want to surrender? Your opponent will win.')) {
+        return;
+    }
+
+    // Determine winner (opposite team)
+    const winnerTeam = playerTeam === 'team1' ? 'team2' : 'team1';
+
+    // Update Firebase to end game
+    await update(ref(database, `rooms/${roomCode}`), {
+        gameState: 'finished',
+        winner: winnerTeam
+    });
+
+    // Show defeat screen
+    showVictory(false);
+    document.getElementById('victoryMessage').textContent = 'You surrendered. Better luck next time!';
+};

@@ -139,6 +139,29 @@
     margin: 20px 0;
 }
 
+.btn-debug {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: rgba(251, 191, 36, 0.2);
+    border: 2px solid #fbbf24;
+    color: #fbbf24;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-debug:hover {
+    background: rgba(251, 191, 36, 0.3);
+}
+
+.btn-debug.active {
+    background: #fbbf24;
+    color: #1e293b;
+}
+
 .move-btn {
     width: 70px;
     height: 70px;

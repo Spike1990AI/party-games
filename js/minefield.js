@@ -46,6 +46,7 @@ const elements = {
     moveUpLeftBtn: document.getElementById('moveUpLeftBtn'),
     moveUpBtn: document.getElementById('moveUpBtn'),
     moveUpRightBtn: document.getElementById('moveUpRightBtn'),
+    debugMinesBtn: document.getElementById('debugMinesBtn'),
     playersStatus: document.getElementById('playersStatus'),
 
     winnerName: document.getElementById('winnerName'),
@@ -66,6 +67,23 @@ elements.playAgainBtn.addEventListener('click', playAgain);
 elements.moveUpLeftBtn.addEventListener('click', () => makeMove(1, -1));
 elements.moveUpBtn.addEventListener('click', () => makeMove(1, 0));
 elements.moveUpRightBtn.addEventListener('click', () => makeMove(1, 1));
+
+elements.debugMinesBtn.addEventListener('click', () => {
+    window.debugMines = !window.debugMines;
+    elements.debugMinesBtn.classList.toggle('active');
+    elements.debugMinesBtn.textContent = window.debugMines ? '👁️ Hide Mines' : '👁️ Show Mines (Test)';
+    console.log(`🔍 Debug Mines: ${window.debugMines ? 'ON' : 'OFF'}`);
+
+    // Re-render grid
+    if (currentRoom) {
+        get(ref(database, `minefield/${currentRoom}`)).then(snapshot => {
+            const data = snapshot.val();
+            if (data && data.gameState === 'playing') {
+                renderGrid(data);
+            }
+        });
+    }
+});
 
 // Initialize
 loadPlayerName();
