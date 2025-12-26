@@ -161,6 +161,27 @@
     margin-bottom: var(--space-md);
 }
 
+/* Submitted Status - Always visible */
+.submitted-status {
+    text-align: center;
+    padding: var(--space-lg);
+    background: #f8f9fa;
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--space-lg);
+}
+
+.submitted-status p {
+    color: #666;
+    margin-bottom: var(--space-md);
+    font-weight: 600;
+}
+
+#answerCountDisplay {
+    color: #667eea;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
 .submitted-players {
     display: flex;
     flex-wrap: wrap;

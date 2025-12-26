@@ -253,7 +253,10 @@ function showQuestion(roomData) {
     answerInput.value = '';
     answerInput.disabled = false;
     document.getElementById('submitAnswer').disabled = false;
-    document.getElementById('waitingForAnswers').classList.add('hidden');
+
+    // Reset submitted status
+    document.getElementById('answerCountDisplay').textContent = `0/${Object.keys(players).length}`;
+    document.getElementById('submittedPlayers').innerHTML = '';
 
     // Listen for all answers submitted
     const roomRef = ref(database, `rooms/${roomCode}`);
@@ -271,6 +274,9 @@ function showQuestion(roomData) {
         // Only update if answer count changed (prevents flicker)
         if (answerCount !== lastAnswerCount) {
             lastAnswerCount = answerCount;
+
+            // Update answer count display
+            document.getElementById('answerCountDisplay').textContent = `${answerCount}/${playerCount}`;
 
             // Update submitted players
             const submittedList = document.getElementById('submittedPlayers');
@@ -321,10 +327,9 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
 
     await update(roomRef, { answers });
 
-    // Disable input
+    // Disable input after submitting
     document.getElementById('answerInput').disabled = true;
     document.getElementById('submitAnswer').disabled = true;
-    document.getElementById('waitingForAnswers').classList.remove('hidden');
 });
 
 // Show Results
