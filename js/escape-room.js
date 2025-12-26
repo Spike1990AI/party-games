@@ -9,6 +9,10 @@ let timerInterval = null;
 let lastRoomNumber = null; // Track current room to prevent input clearing
 const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
 
+// Firebase listener tracking for cleanup
+let lobbyUnsubscribe = null;
+let gameUnsubscribe = null;
+
 // Centralized screen management
 let currentScreen = 'join';
 const screens = ['joinScreen', 'lobbyScreen', 'gameScreen', 'victoryScreen', 'failureScreen'];
@@ -157,11 +161,17 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
 function showLobby() {
     showScreen('lobbyScreen');
 
+    // Clean up any existing lobby listener
+    if (lobbyUnsubscribe) {
+        lobbyUnsubscribe();
+        lobbyUnsubscribe = null;
+    }
+
     document.getElementById('roomCodeLobby').textContent = roomCode;
 
     // Listen for player updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    lobbyUnsubscribe = onValue(roomRef, (snapshot) => {
         if (!snapshot.exists()) return;
 
         const data = snapshot.val();
@@ -204,6 +214,11 @@ function showLobby() {
 
         // Start game if triggered
         if (data.gameState === 'playing') {
+            // Clean up lobby listener before transition
+            if (lobbyUnsubscribe) {
+                lobbyUnsubscribe();
+                lobbyUnsubscribe = null;
+            }
             showGame(data);
         }
     });
@@ -320,9 +335,15 @@ function showGame(roomData) {
         lastRoomNumber = roomData.currentRoom;
     }
 
+    // Clean up any existing game listener
+    if (gameUnsubscribe) {
+        gameUnsubscribe();
+        gameUnsubscribe = null;
+    }
+
     // Listen for room updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    gameUnsubscribe = onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
@@ -331,11 +352,21 @@ function showGame(roomData) {
 
         // Check for victory
         if (data.currentRoom > 3) {
+            // Clean up game listener before transition
+            if (gameUnsubscribe) {
+                gameUnsubscribe();
+                gameUnsubscribe = null;
+            }
             showVictory(data);
         }
 
         // Check for failure
         if (data.timeRemaining <= 0 && data.gameState === 'playing') {
+            // Clean up game listener before transition
+            if (gameUnsubscribe) {
+                gameUnsubscribe();
+                gameUnsubscribe = null;
+            }
             showFailure(data);
         }
     });
