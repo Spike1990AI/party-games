@@ -109,7 +109,8 @@ document.getElementById('createRoomBtn').addEventListener('click', async () => {
             timeRemaining: GAME_DURATION,
             hintsUsed: 0,
             maxHints: 5, // Increased for mobile play
-            startTime: null
+            startTime: null,
+            isSubmitting: false  // Global submission lock
         };
 
         await set(ref(database, `rooms/${roomCode}`), roomData);
@@ -392,6 +393,21 @@ function showGame(roomData) {
         // Update timer
         updateTimerDisplay(data.timeRemaining);
 
+        // Global submission lock - disable submit button for ALL players when anyone is submitting
+        const submitBtn = document.getElementById('submitAnswer');
+        const answerInput = document.getElementById('answerInput');
+        if (data.isSubmitting) {
+            if (submitBtn && !submitBtn.disabled) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Someone is submitting...';
+            }
+        } else {
+            if (submitBtn && submitBtn.disabled && submitBtn.textContent.includes('submitting')) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Code';
+            }
+        }
+
         // Check for victory
         if (data.currentRoom > TOTAL_ROOMS) {
             // Clean up game listener before transition
@@ -507,6 +523,23 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
 
     try {
         const roomRef = ref(database, `rooms/${roomCode}`);
+
+        // Check if someone else is already submitting (race condition check)
+        const checkSnapshot = await new Promise((resolve) => {
+            onValue(roomRef, resolve, { onlyOnce: true });
+        });
+
+        if (checkSnapshot.val().isSubmitting) {
+            alert('Someone else is submitting. Please wait...');
+            submitBtn.disabled = false;
+            answerInput.disabled = false;
+            return;
+        }
+
+        // Set global lock - blocks ALL players from submitting
+        await update(roomRef, { isSubmitting: true });
+
+        // Fetch fresh data after setting lock
         const snapshot = await new Promise((resolve) => {
             onValue(roomRef, resolve, { onlyOnce: true });
         });
@@ -520,12 +553,14 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
                 // Victory!
                 await update(roomRef, {
                     gameState: 'victory',
-                    currentRoom: TOTAL_ROOMS + 1  // Fixed: was 4, now 9
+                    currentRoom: TOTAL_ROOMS + 1,  // Fixed: was 4, now 9
+                    isSubmitting: false  // Release lock
                 });
             } else {
                 // Next room
                 await update(roomRef, {
-                    currentRoom: data.currentRoom + 1
+                    currentRoom: data.currentRoom + 1,
+                    isSubmitting: false  // Release lock
                 });
 
                 // Show success message
@@ -537,6 +572,9 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
                 }, 1000);
             }
         } else {
+            // Incorrect answer - release lock
+            await update(roomRef, { isSubmitting: false });
+
             alert('Incorrect code! Keep working together.');
             // Re-enable on incorrect answer
             submitBtn.disabled = false;
@@ -544,6 +582,14 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
         }
     } catch (error) {
         console.error('Submit answer error:', error);
+
+        // Release lock on error
+        try {
+            await update(ref(database, `rooms/${roomCode}`), { isSubmitting: false });
+        } catch (unlockError) {
+            console.error('Failed to release lock:', unlockError);
+        }
+
         submitBtn.disabled = false;
         answerInput.disabled = false;
         alert('Failed to submit answer. Please try again.');
