@@ -417,6 +417,28 @@ function showResults(roomData) {
             players: updatedPlayers
         });
     }
+
+    // Listen for next round or game end (non-host players)
+    if (!isHost) {
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const unsubscribe = onValue(roomRef, (snapshot) => {
+            if (!snapshot.exists()) return;
+
+            const data = snapshot.val();
+
+            // Next round started (answers cleared)
+            if (data.gameState === 'playing' && Object.keys(data.answers || {}).length === 0) {
+                unsubscribe(); // Clean up this listener
+                showQuestion(data);
+            }
+
+            // Game finished
+            if (data.gameState === 'finished') {
+                unsubscribe(); // Clean up this listener
+                showFinalResults(data);
+            }
+        });
+    }
 }
 
 // Next Round
@@ -447,21 +469,7 @@ document.getElementById('nextRoundBtn').addEventListener('click', async () => {
     }
 });
 
-// Listen for next round (non-host)
-const roomRef = ref(database, `rooms/${roomCode || 'temp'}`);
-onValue(roomRef, (snapshot) => {
-    if (!snapshot.exists() || !roomCode) return;
-
-    const data = snapshot.val();
-
-    if (data.gameState === 'playing' && Object.keys(data.answers || {}).length === 0) {
-        showQuestion(data);
-    }
-
-    if (data.gameState === 'finished') {
-        showFinalResults(data);
-    }
-});
+// Listen for next round (non-host) - moved into showResults function to avoid conflicts
 
 // Show Final Results
 function showFinalResults(roomData) {
