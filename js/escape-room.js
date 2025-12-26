@@ -86,54 +86,86 @@ function generateRoomCode() {
 
 // Create Room
 document.getElementById('createRoomBtn').addEventListener('click', async () => {
-    // Clean up old rooms before creating new one
-    await cleanupOldRooms();
+    const createBtn = document.getElementById('createRoomBtn');
 
-    roomCode = generateRoomCode();
-    isHost = true;
+    // Prevent duplicate clicks
+    if (createBtn.disabled) return;
+    createBtn.disabled = true;
 
-    const roomData = {
-        code: roomCode,
-        host: null,
-        created: Date.now(),
-        players: {},
-        gameState: 'lobby',
-        currentRoom: 1,
-        timeRemaining: GAME_DURATION,
-        hintsUsed: 0,
-        maxHints: 5, // Increased for mobile play
-        startTime: null
-    };
+    try {
+        // Clean up old rooms before creating new one
+        await cleanupOldRooms();
 
-    await set(ref(database, `rooms/${roomCode}`), roomData);
+        roomCode = generateRoomCode();
+        isHost = true;
 
-    document.getElementById('codeDisplay').textContent = roomCode;
-    document.getElementById('roomCode').classList.remove('hidden');
+        const roomData = {
+            code: roomCode,
+            host: null,
+            created: Date.now(),
+            players: {},
+            gameState: 'lobby',
+            currentRoom: 1,
+            timeRemaining: GAME_DURATION,
+            hintsUsed: 0,
+            maxHints: 5, // Increased for mobile play
+            startTime: null
+        };
 
-    setTimeout(() => showLobby(), 1500);
+        await set(ref(database, `rooms/${roomCode}`), roomData);
+
+        document.getElementById('codeDisplay').textContent = roomCode;
+        document.getElementById('roomCode').classList.remove('hidden');
+
+        setTimeout(() => showLobby(), 1500);
+    } catch (error) {
+        console.error('Create room error:', error);
+        createBtn.disabled = false;
+        alert('Failed to create room. Please try again.');
+    }
 });
 
 // Join Room
 document.getElementById('joinRoomBtn').addEventListener('click', async () => {
-    // Clean up old rooms before joining
-    await cleanupOldRooms();
+    const joinBtn = document.getElementById('joinRoomBtn');
+    const codeInput = document.getElementById('roomCodeInput');
 
-    const code = document.getElementById('roomCodeInput').value.toUpperCase();
+    // Prevent duplicate clicks
+    if (joinBtn.disabled) return;
+
+    const code = codeInput.value.toUpperCase();
     if (code.length !== 4) {
         alert('Please enter a 4-letter code');
         return;
     }
 
-    roomCode = code;
+    // Disable during operation
+    joinBtn.disabled = true;
+    codeInput.disabled = true;
 
-    const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
-        if (snapshot.exists()) {
-            showLobby();
-        } else {
-            alert('Room not found!');
-        }
-    }, { onlyOnce: true });
+    try {
+        // Clean up old rooms before joining
+        await cleanupOldRooms();
+
+        roomCode = code;
+
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        onValue(roomRef, (snapshot) => {
+            if (snapshot.exists()) {
+                showLobby();
+            } else {
+                alert('Room not found!');
+                // Re-enable on failure
+                joinBtn.disabled = false;
+                codeInput.disabled = false;
+            }
+        }, { onlyOnce: true });
+    } catch (error) {
+        console.error('Join room error:', error);
+        joinBtn.disabled = false;
+        codeInput.disabled = false;
+        alert('Failed to join room. Please try again.');
+    }
 });
 
 // Show Lobby
@@ -205,58 +237,89 @@ function showLobby() {
 
 // Join Game
 document.getElementById('joinGameBtn').addEventListener('click', async () => {
-    const name = document.getElementById('playerName').value.trim();
+    const joinBtn = document.getElementById('joinGameBtn');
+    const nameInput = document.getElementById('playerName');
+
+    // Prevent duplicate clicks
+    if (joinBtn.disabled) return;
+
+    const name = nameInput.value.trim();
     if (!name) {
         alert('Please enter your name');
         return;
     }
 
-    playerName = name;
+    // Disable during operation
+    joinBtn.disabled = true;
+    nameInput.disabled = true;
 
-    const roomRef = ref(database, `rooms/${roomCode}`);
-    const snapshot = await new Promise((resolve) => {
-        onValue(roomRef, resolve, { onlyOnce: true });
-    });
+    try {
+        playerName = name;
 
-    const data = snapshot.val();
-    const players = data.players || {};
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const snapshot = await new Promise((resolve) => {
+            onValue(roomRef, resolve, { onlyOnce: true });
+        });
 
-    if (Object.keys(players).length >= 4) {
-        alert('Room is full (4 players maximum)');
-        return;
+        const data = snapshot.val();
+        const players = data.players || {};
+
+        if (Object.keys(players).length >= 4) {
+            alert('Room is full (4 players maximum)');
+            joinBtn.disabled = false;
+            nameInput.disabled = false;
+            return;
+        }
+
+        // Assign role
+        const usedRoles = Object.values(players).map(p => p.role);
+        const availableRole = ROLES.find(r => !usedRoles.includes(r.id));
+
+        // Set host if first player
+        if (Object.keys(players).length === 0) {
+            isHost = true;
+            await update(roomRef, { host: playerName });
+        }
+
+        // Add player
+        const playerId = Date.now().toString();
+        players[playerId] = {
+            name: playerName,
+            role: availableRole.id,
+            isHost: isHost,
+            id: playerId
+        };
+
+        await update(roomRef, { players });
+
+        playerRole = availableRole.id;
+        document.querySelector('.player-name-input').style.display = 'none';
+    } catch (error) {
+        console.error('Join game error:', error);
+        joinBtn.disabled = false;
+        nameInput.disabled = false;
+        alert('Failed to join game. Please try again.');
     }
-
-    // Assign role
-    const usedRoles = Object.values(players).map(p => p.role);
-    const availableRole = ROLES.find(r => !usedRoles.includes(r.id));
-
-    // Set host if first player
-    if (Object.keys(players).length === 0) {
-        isHost = true;
-        await update(roomRef, { host: playerName });
-    }
-
-    // Add player
-    const playerId = Date.now().toString();
-    players[playerId] = {
-        name: playerName,
-        role: availableRole.id,
-        isHost: isHost,
-        id: playerId
-    };
-
-    await update(roomRef, { players });
-
-    playerRole = availableRole.id;
-    document.querySelector('.player-name-input').style.display = 'none';
 });
 
 // Start Game
 document.getElementById('startGameBtn').addEventListener('click', async () => {
-    await update(ref(database, `rooms/${roomCode}`), {
-        gameState: 'playing',
-        startTime: Date.now()
-    });
+    const startBtn = document.getElementById('startGameBtn');
+
+    // Prevent duplicate clicks
+    if (startBtn.disabled) return;
+    startBtn.disabled = true;
+
+    try {
+        await update(ref(database, `rooms/${roomCode}`), {
+            gameState: 'playing',
+            startTime: Date.now()
+        });
+    } catch (error) {
+        console.error('Start game error:', error);
+        startBtn.disabled = false;
+        alert('Failed to start game. Please try again.');
+    }
 });
 
 // Show Game
@@ -425,72 +488,107 @@ function updateTeamClues(players, currentRoom) {
 
 // Submit Answer
 document.getElementById('submitAnswer').addEventListener('click', async () => {
-    const answer = document.getElementById('answerInput').value.trim().toUpperCase().replace(/\s/g, '');
+    const submitBtn = document.getElementById('submitAnswer');
+    const answerInput = document.getElementById('answerInput');
+
+    // Prevent duplicate clicks
+    if (submitBtn.disabled) return;
+
+    const answer = answerInput.value.trim().toUpperCase().replace(/\s/g, '');
 
     if (!answer) {
         alert('Please enter an answer');
         return;
     }
 
-    const roomRef = ref(database, `rooms/${roomCode}`);
-    const snapshot = await new Promise((resolve) => {
-        onValue(roomRef, resolve, { onlyOnce: true });
-    });
+    // Disable during operation
+    submitBtn.disabled = true;
+    answerInput.disabled = true;
 
-    const data = snapshot.val();
-    const currentRoom = ROOMS[data.currentRoom - 1];
+    try {
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const snapshot = await new Promise((resolve) => {
+            onValue(roomRef, resolve, { onlyOnce: true });
+        });
 
-    if (answer === currentRoom.answer.toUpperCase()) {
-        // Correct answer!
-        if (data.currentRoom >= TOTAL_ROOMS) {
-            // Victory!
-            await update(roomRef, {
-                gameState: 'victory',
-                currentRoom: 4
-            });
+        const data = snapshot.val();
+        const currentRoom = ROOMS[data.currentRoom - 1];
+
+        if (answer === currentRoom.answer.toUpperCase()) {
+            // Correct answer!
+            if (data.currentRoom >= TOTAL_ROOMS) {
+                // Victory!
+                await update(roomRef, {
+                    gameState: 'victory',
+                    currentRoom: 4
+                });
+            } else {
+                // Next room
+                await update(roomRef, {
+                    currentRoom: data.currentRoom + 1
+                });
+
+                // Show success message
+                alert('Code accepted! Moving to next room...');
+
+                // Reload game with new room
+                setTimeout(() => {
+                    showGame({ ...data, currentRoom: data.currentRoom + 1 });
+                }, 1000);
+            }
         } else {
-            // Next room
-            await update(roomRef, {
-                currentRoom: data.currentRoom + 1
-            });
-
-            // Show success message
-            alert('Code accepted! Moving to next room...');
-
-            // Reload game with new room
-            setTimeout(() => {
-                showGame({ ...data, currentRoom: data.currentRoom + 1 });
-            }, 1000);
+            alert('Incorrect code! Keep working together.');
+            // Re-enable on incorrect answer
+            submitBtn.disabled = false;
+            answerInput.disabled = false;
         }
-    } else {
-        alert('Incorrect code! Keep working together.');
+    } catch (error) {
+        console.error('Submit answer error:', error);
+        submitBtn.disabled = false;
+        answerInput.disabled = false;
+        alert('Failed to submit answer. Please try again.');
     }
 });
 
 // Use Hint
 document.getElementById('useHintBtn').addEventListener('click', async () => {
-    const roomRef = ref(database, `rooms/${roomCode}`);
-    const snapshot = await new Promise((resolve) => {
-        onValue(roomRef, resolve, { onlyOnce: true });
-    });
+    const hintBtn = document.getElementById('useHintBtn');
 
-    const data = snapshot.val();
+    // Prevent duplicate clicks
+    if (hintBtn.disabled) return;
+    hintBtn.disabled = true;
 
-    if (data.hintsUsed >= data.maxHints) {
-        alert('No hints remaining!');
-        return;
+    try {
+        const roomRef = ref(database, `rooms/${roomCode}`);
+        const snapshot = await new Promise((resolve) => {
+            onValue(roomRef, resolve, { onlyOnce: true });
+        });
+
+        const data = snapshot.val();
+
+        if (data.hintsUsed >= data.maxHints) {
+            alert('No hints remaining!');
+            hintBtn.disabled = false;
+            return;
+        }
+
+        const currentRoom = ROOMS[data.currentRoom - 1];
+
+        document.getElementById('hintText').textContent = currentRoom.hint;
+        document.getElementById('hintDisplay').classList.remove('hidden');
+
+        await update(roomRef, {
+            hintsUsed: data.hintsUsed + 1
+        });
+
+        document.getElementById('hintsRemaining').textContent = data.maxHints - (data.hintsUsed + 1);
+
+        // Keep button disabled after use (hint already used)
+    } catch (error) {
+        console.error('Use hint error:', error);
+        hintBtn.disabled = false;
+        alert('Failed to use hint. Please try again.');
     }
-
-    const currentRoom = ROOMS[data.currentRoom - 1];
-
-    document.getElementById('hintText').textContent = currentRoom.hint;
-    document.getElementById('hintDisplay').classList.remove('hidden');
-
-    await update(roomRef, {
-        hintsUsed: data.hintsUsed + 1
-    });
-
-    document.getElementById('hintsRemaining').textContent = data.maxHints - (data.hintsUsed + 1);
 });
 
 // Show Victory
