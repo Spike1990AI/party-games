@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minefield Race - Party Games</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/minefield.css">
+</head>
+<body>
+    <!-- Join Screen -->
+    <div id="joinScreen" class="screen">
+        <div class="container">
+            <h1>💣 Minefield Race</h1>
+            <p class="game-description">Navigate through the minefield to reach the top. Hit a mine and restart!</p>
+
+            <div class="input-group">
+                <label for="playerName">Your Name</label>
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="12">
+            </div>
+
+            <div class="button-group">
+                <button id="createRoomBtn" class="btn-primary">Create Room</button>
+                <button id="joinRoomBtn" class="btn-secondary">Join Room</button>
+            </div>
+
+            <div id="joinRoomInput" class="input-group hidden">
+                <label for="roomCodeInput">Room Code</label>
+                <input type="text" id="roomCodeInput" placeholder="ABCD" maxlength="4" style="text-transform: uppercase;">
+                <button id="joinRoomConfirmBtn" class="btn-primary">Join</button>
+            </div>
+
+            <a href="index.html" class="btn-back">← Back to Menu</a>
+        </div>
+    </div>
+
+    <!-- Lobby Screen -->
+    <div id="lobbyScreen" class="screen hidden">
+        <div class="container">
+            <div class="room-code-header">
+                <span>Room Code</span>
+                <h2 id="roomCode">----</h2>
+            </div>
+
+            <h3>Waiting for Players</h3>
+            <div id="playersList" class="players-list"></div>
+
+            <p class="info-text">Waiting for players to join... (1-4 players)</p>
+
+            <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
+            <button id="leaveLobbyBtn" class="btn-secondary">Leave Room</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen hidden">
+        <div class="container">
+            <div class="room-code-header">
+                <span>Room</span>
+                <h3 id="gameRoomCode">----</h3>
+            </div>
+
+            <div class="game-status">
+                <div id="turnIndicator" class="turn-indicator">
+                    <span id="currentPlayerName">Player 1</span>'s Turn
+                </div>
+                <div id="timer" class="timer">10</div>
+            </div>
+
+            <div id="gameGrid" class="game-grid"></div>
+
+            <div id="moveButtons" class="move-buttons">
+                <button id="moveUpLeftBtn" class="move-btn">↖</button>
+                <button id="moveUpBtn" class="move-btn">↑</button>
+                <button id="moveUpRightBtn" class="move-btn">↗</button>
+            </div>
+
+            <div class="players-info">
+                <h4>Players</h4>
+                <div id="playersStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen hidden">
+        <div class="container">
+            <h1>🏆 Game Over!</h1>
+
+            <div class="winner-announcement">
+                <h2 id="winnerName">Winner</h2>
+                <p>reached the top!</p>
+            </div>
+
+            <div class="rankings">
+                <h3>Final Standings</h3>
+                <div id="rankingsList"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="playAgainBtn" class="btn-primary">Play Again</button>
+                <a href="index.html" class="btn-secondary">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, onValue, update, remove, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcydGkkGFTmcX1Z83gDECQGY1nOvUwdoo",
+            authDomain: "family-games-f00e7.firebaseapp.com",
+            databaseURL: "https://family-games-f00e7-default-rtdb.firebaseio.com",
+            projectId: "family-games-f00e7",
+            storageBucket: "family-games-f00e7.firebasestorage.app",
+            messagingSenderId: "1013472677357",
+            appId: "1:1013472677357:web:62c85f71ec5d96db0f8fab"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        window.firebase = { database, ref, set, onValue, update, remove, get };
+    </script>
+
+    <script src="js/minefield.js"></script>
+</body>
+</html>
