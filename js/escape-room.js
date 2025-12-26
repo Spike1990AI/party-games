@@ -9,6 +9,30 @@ let timerInterval = null;
 let lastRoomNumber = null; // Track current room to prevent input clearing
 const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
 
+// Centralized screen management
+let currentScreen = 'join';
+const screens = ['joinScreen', 'lobbyScreen', 'gameScreen', 'victoryScreen', 'failureScreen'];
+
+function showScreen(screenId) {
+    // Prevent duplicate transitions
+    if (currentScreen === screenId.replace('Screen', '')) {
+        return;
+    }
+
+    // Hide all screens
+    screens.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) screen.classList.add('hidden');
+    });
+
+    // Show target screen
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.remove('hidden');
+        currentScreen = screenId.replace('Screen', '');
+    }
+}
+
 // Player roles
 const ROLES = [
     { id: 'scout', icon: '🔍', name: 'The Scout', description: 'You see the building layout and security patterns' },
@@ -131,8 +155,7 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
 
 // Show Lobby
 function showLobby() {
-    joinScreen.classList.add('hidden');
-    lobbyScreen.classList.remove('hidden');
+    showScreen('lobbyScreen');
 
     document.getElementById('roomCodeLobby').textContent = roomCode;
 
@@ -244,8 +267,7 @@ document.getElementById('startGameBtn').addEventListener('click', async () => {
 
 // Show Game
 function showGame(roomData) {
-    lobbyScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
+    showScreen('gameScreen');
 
     document.getElementById('roomCodeGame').textContent = roomCode;
 
@@ -293,7 +315,6 @@ function showGame(roomData) {
     // Show team clues
     updateTeamClues(players, currentRoom);
 
-    // Only clear input when changing rooms, not on every update
     if (lastRoomNumber !== roomData.currentRoom) {
         document.getElementById('answerInput').value = '';
         document.getElementById('hintDisplay').classList.add('hidden');
@@ -469,8 +490,7 @@ function showVictory(roomData) {
         clearInterval(timerInterval);
     }
 
-    gameScreen.classList.add('hidden');
-    victoryScreen.classList.remove('hidden');
+    showScreen('victoryScreen');
 
     const timeTaken = GAME_DURATION - roomData.timeRemaining;
     const minutes = Math.floor(timeTaken / 60);
@@ -491,8 +511,7 @@ function showFailure(roomData) {
         clearInterval(timerInterval);
     }
 
-    gameScreen.classList.add('hidden');
-    failureScreen.classList.remove('hidden');
+    showScreen('failureScreen');
 
     document.getElementById('roomsCompleted').textContent = roomData.currentRoom - 1;
 }
