@@ -313,7 +313,6 @@ function showGame(roomData) {
     }
 
     // Show team clues
-    updateTeamClues(players, currentRoom);
 
     if (lastRoomNumber !== roomData.currentRoom) {
         document.getElementById('answerInput').value = '';
