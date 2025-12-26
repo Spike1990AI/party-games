@@ -28,43 +28,6 @@ body {
     color: var(--color-text);
 }
 
-/* Navigation */
-.game-nav {
-    width: 100%;
-    background: var(--gradient-primary);
-    padding: var(--space-md) var(--space-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow-md);
-    border-bottom: var(--border-width-thick) solid var(--color-accent);
-}
-
-.nav-home {
-    color: white;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: var(--font-size-lg);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--gradient-yellow);
-    color: var(--color-text);
-    border-radius: var(--border-radius-md);
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: var(--shadow-sm);
-}
-
-.nav-home:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: var(--shadow-yellow);
-}
-
-.nav-title {
-    color: white;
-    font-weight: 700;
-    font-size: var(--font-size-xl);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
 .container {
     width: 100%;
     max-width: var(--container-max);
@@ -91,42 +54,10 @@ body {
 /* ========================================
    NAVIGATION - SHARED ACROSS ALL GAMES
    ======================================== */
-.nav-home {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    border-radius: 25px;
-    color: inherit;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 100;
-    transition: all 0.2s ease;
-    min-height: 44px; /* WCAG touch target */
-}
 
-.nav-home:hover,
-.nav-home:active {
-    background: rgba(0, 0, 0, 0.15);
-    transform: scale(1.02);
-}
 
-.nav-home-icon {
-    font-size: 18px;
-}
 
 /* Light nav for dark backgrounds */
-.nav-home.nav-home-light {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: white;
-}
 
 /* ========================================
    WELCOME SCREEN
@@ -583,16 +514,7 @@ select:focus {
         border-radius: var(--border-radius-md);
     }
 
-    .nav-home {
-        top: 10px;
-        left: 10px;
-        padding: 8px 14px;
-        font-size: 13px;
-    }
 
-    .nav-home-icon {
-        font-size: 16px;
-    }
 
     .welcome-screen h1 {
         font-size: clamp(2rem, 8vw, 2.5rem);
@@ -667,14 +589,7 @@ select:focus {
 /* Extra small mobile (max-width 360px) */
 @media (max-width: 360px) {
     /* Icon only on very small screens */
-    .nav-home span:not(.nav-home-icon) {
-        display: none;
-    }
 
-    .nav-home {
-        padding: 10px;
-        border-radius: 50%;
-    }
 
     .welcome-screen h1 {
         font-size: var(--font-size-2xl);
