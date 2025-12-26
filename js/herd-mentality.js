@@ -6,85 +6,83 @@ setTimeout(() => {
     document.getElementById('joinScreen').classList.remove('hidden');
 }, 500);
 
-// Question Bank - 64 funny questions for hilarious gameplay!
+// Question Bank - Actually funny awkward questions!
 const QUESTIONS = [
-    // Worst Things (10)
-    "Worst thing to step on barefoot",
-    "Worst food to eat on a first date",
-    "Worst song to get stuck in your head",
-    "Worst thing to forget on vacation",
-    "Worst smell in the world",
-    "Worst thing to say at a funeral",
-    "Worst thing to spill on yourself",
-    "Worst movie to watch with your parents",
-    "Worst time to get hiccups",
-    "Worst thing to run out of",
+    // Toilet & Body Humor (12)
+    "What do you do while sitting on the toilet",
+    "How long do you actually sit on the toilet",
+    "Where do you look while peeing at a urinal",
+    "First thing you do when you get home and nobody's there",
+    "What do you do in the shower that you won't admit",
+    "Where do you pick your nose",
+    "How do you discretely adjust yourself in public",
+    "What body part do you check/smell when alone",
+    "How do you check if your breath smells bad",
+    "What do you do with a booger when there's no tissue",
+    "How do you discretely check if you smell",
+    "Where do you fart the most",
 
-    // Excuses & Lies (8)
-    "Best excuse for being late",
-    "Best excuse to leave a party early",
-    "Best excuse to skip a workout",
-    "What do you say when you forget someone's name",
-    "Best excuse to avoid a phone call",
-    "Best fake reason to cancel plans",
-    "What you say when food tastes bad but you're being polite",
-    "Best excuse to not help someone move",
+    // Awkward Social Truths (12)
+    "What you pretend to do when you see someone you're avoiding",
+    "Fake activity you do on your phone to avoid talking",
+    "What you're actually thinking during awkward silence",
+    "Real reason you don't answer the phone",
+    "What you say when you haven't listened at all",
+    "Worst place to run into someone after ghosting them",
+    "What you do when you forget someone's name mid-conversation",
+    "Real reason you cancel plans last minute",
+    "What you really mean when you say 'we should hang out'",
+    "Lie you tell most when leaving a party",
+    "Where you hide when someone knocks unexpectedly",
+    "What you do when you wave at someone who wasn't waving at you",
 
-    // Embarrassing & Awkward (8)
-    "Most embarrassing thing to buy at a store",
-    "Most awkward place to run into your ex",
-    "Most embarrassing autocorrect fail",
-    "Worst thing to yell in public",
-    "Most embarrassing ringtone to go off in a meeting",
-    "Worst place to accidentally fart",
-    "Most awkward thing to be caught doing",
-    "Worst thing to say to your boss",
+    // Embarrassing Private Habits (12)
+    "Gross thing you do when eating alone",
+    "What you smell after scratching down there",
+    "How long you wear underwear before washing",
+    "Food you eat straight from the container",
+    "Where you put chewed gum when there's no bin",
+    "What you do with toenail clippings",
+    "How you eat when nobody's watching",
+    "Body part you scratch then smell",
+    "What you do after dropping food on the floor",
+    "How you get food out of your teeth in public",
+    "What you wipe on when there's no napkin",
+    "Thing you've peed in that's not a toilet",
 
-    // Opinions & Hot Takes (10)
-    "Most overrated movie of all time",
-    "Best pizza topping that people argue about",
-    "Best age to be",
-    "Worst household chore",
-    "Best day of the week",
-    "Most useless school subject",
-    "Best thing about being an adult",
-    "Worst thing about being an adult",
-    "Best comfort food when you're sad",
-    "Most annoying type of person",
+    // Awkward Adult Situations (10)
+    "Worst time to get a random boner",
+    "Where you adjust your underwear in public",
+    "What you blame a fart on",
+    "Noise you pretend you didn't hear from the bathroom",
+    "What you do when you clog someone else's toilet",
+    "Worst thing to Google with family nearby",
+    "What you pretend not to notice on someone's face",
+    "Body sound you try to disguise as something else",
+    "Worst time to get the hiccups",
+    "What you do when you're caught staring",
 
-    // Hypotheticals (8)
-    "First thing you'd buy if you won the lottery",
-    "Best superpower for everyday life",
-    "What would you do if you were invisible for a day",
-    "If you could only eat one food forever, what would it be",
-    "Best celebrity to be stuck in an elevator with",
-    "Worst celebrity to be stuck in an elevator with",
-    "What you'd bring to a deserted island",
-    "Best animal to have as a giant pet",
+    // Relationship & Dating Awkwardness (8)
+    "Worst thing to say during sex",
+    "What you lie about on a first date",
+    "Dealbreaker you'd never admit on a date",
+    "Real reason you dumped someone",
+    "What you secretly judge your partner for",
+    "What you do differently when you're single",
+    "Worst place to run into your ex",
+    "Thing you secretly check on someone's phone",
 
-    // Guilty Pleasures (8)
-    "Best fast food guilty pleasure",
-    "TV show you're embarrassed to admit you watch",
-    "Song you secretly love but pretend to hate",
-    "Worst habit you can't break",
-    "Snack you could eat an entire bag of",
-    "Thing you do when nobody's watching",
-    "Website you waste the most time on",
-    "Guilty pleasure movie",
-
-    // Random Fun (12)
-    "Best thing to do on a lazy Sunday",
-    "Worst type of weather",
-    "Best smell in the world",
-    "First thing you do when you wake up",
-    "Last thing you do before bed",
-    "Best thing about weekends",
-    "Worst thing about Mondays",
-    "Best junk food",
-    "Thing that always makes you laugh",
-    "Best excuse to stay home",
-    "Thing you're irrationally afraid of",
-    "Best childhood cartoon"
+    // Secret Judging (10)
+    "What you secretly judge people for",
+    "Type of person you instantly dislike",
+    "What makes you think someone is stupid",
+    "Thing that makes you lose respect for someone",
+    "What you pretend not to judge but totally do",
+    "Red flag that makes you avoid someone",
+    "What instantly makes someone unattractive",
+    "Bad habit that makes you think less of someone",
+    "What tells you someone is lying",
+    "Thing people do that makes you cringe"
 ];
 
 // Game state
