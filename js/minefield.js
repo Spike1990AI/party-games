@@ -470,11 +470,18 @@ async function makeMove(rowDelta, colDelta) {
     const hitMine = data.mines.some(m => m[0] === newRow && m[1] === newCol);
 
     if (hitMine) {
-        // Reveal mine and reset player to start
-        const newRevealed = [...data.revealed, [newRow, newCol]];
+        console.log('💥 HIT A MINE! Resetting to start...');
+        // Reveal mine
+        const newRevealed = [...(data.revealed || []), [newRow, newCol]];
+
+        // Update revealed mines list
         await update(ref(database, `minefield/${currentRoom}`), {
-            [`players/${currentPlayer}/position`]: { row: 0, col: currentPos.col },
             revealed: newRevealed
+        });
+
+        // Reset player position to start
+        await update(ref(database, `minefield/${currentRoom}/players/${currentPlayer}`), {
+            position: { row: 0, col: currentPos.col }
         });
     } else {
         // Move player
