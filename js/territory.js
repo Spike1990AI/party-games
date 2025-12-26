@@ -290,6 +290,7 @@ function renderGrid(data) {
     grid.innerHTML = '';
 
     const isMyTurn = data.currentTurn === currentPlayer;
+    console.log('🎨 Rendering grid. Current grid:', data.grid);
 
     for (let row = 0; row < GRID_SIZE; row++) {
         for (let col = 0; col < GRID_SIZE; col++) {
@@ -304,6 +305,7 @@ function renderGrid(data) {
             if (owner) {
                 // Cell is occupied
                 const ownerIndex = data.playerOrder.indexOf(owner);
+                console.log(`  📍 Cell ${key}: owned by ${owner} (index ${ownerIndex}) → class: player-${ownerIndex + 1}`);
                 cell.classList.add(`player-${ownerIndex + 1}`);
                 cell.classList.add('occupied');
 
@@ -325,22 +327,33 @@ function renderGrid(data) {
 }
 
 async function placeTile(row, col) {
-    if (!currentRoom || !currentPlayer) return;
+    if (!currentRoom || !currentPlayer) {
+        console.log('❌ No room or player');
+        return;
+    }
 
     const roomSnapshot = await get(ref(database, `territory/${currentRoom}`));
     const data = roomSnapshot.val();
 
     // Verify it's our turn
-    if (data.currentTurn !== currentPlayer) return;
+    if (data.currentTurn !== currentPlayer) {
+        console.log('❌ Not your turn');
+        return;
+    }
 
     const key = `${row}_${col}`;
+    console.log(`🎯 Placing tile at ${key} for ${currentPlayer}`);
 
     // Verify cell is empty
-    if (data.grid[key]) return;
+    if (data.grid[key]) {
+        console.log('❌ Cell already occupied');
+        return;
+    }
 
     // Place the tile
     const newGrid = { ...data.grid };
     newGrid[key] = currentPlayer;
+    console.log('✅ Grid updated:', newGrid);
 
     // Check for captures
     const captures = checkCaptures(row, col, currentPlayer, newGrid, data.playerOrder);
