@@ -1,5 +1,8 @@
+@import 'variables.css';
+@import 'game-shell.css';
+
 /* Cards Against Humanity Styling */
-/* Uses base yellow/teal theme from variables.css */
+/* Uses unified game shell and base yellow/teal theme */
 
 /* Card Styling */
 .card {

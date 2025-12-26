@@ -1,0 +1,631 @@
+/**
+ * Party Games - Unified Game Shell
+ * Provides consistent layouts, colors, and UX across all games
+ *
+ * USAGE: Import this after variables.css in game-specific CSS files
+ * @import 'variables.css';
+ * @import 'game-shell.css';
+ */
+
+/* ========================================
+   LOADING SCREEN
+   ======================================== */
+#loadingScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+}
+
+#loadingScreen p {
+    color: var(--color-text);
+    font-size: var(--font-size-lg);
+    margin-top: var(--space-lg);
+}
+
+/* ========================================
+   ROOM CODE HEADER (consistent across all games)
+   ======================================== */
+.room-code-header {
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    padding: var(--space-md) var(--space-lg);
+    margin: calc(var(--space-xl) * -1) calc(var(--space-xl) * -1) var(--space-lg);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
+
+.room-code-header span {
+    font-size: var(--font-size-2xl);
+    letter-spacing: 4px;
+    margin-left: var(--space-sm);
+    color: var(--color-white); /* Ensure white text on gradient */
+}
+
+/* ========================================
+   JOIN/LOBBY SCREENS
+   ======================================== */
+.room-section {
+    margin: var(--space-xl) 0;
+}
+
+.create-room,
+.join-room {
+    text-align: center;
+}
+
+.create-room h3,
+.join-room h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-xl);
+}
+
+.divider {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: var(--space-xl) 0;
+    font-weight: var(--font-weight-bold);
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--color-text-muted), transparent);
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.room-code {
+    text-align: center;
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-dark) 100%);
+    border-radius: var(--border-radius-md);
+    margin: var(--space-xl) 0;
+}
+
+.room-code p {
+    color: var(--color-text-light);
+    margin-bottom: var(--space-sm);
+}
+
+.room-code h2 {
+    color: var(--color-primary);
+    font-size: var(--font-size-4xl);
+    letter-spacing: 8px;
+    margin: var(--space-md) 0;
+}
+
+.room-code .small {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* ========================================
+   PLAYERS LIST (consistent layout)
+   ======================================== */
+.players-list {
+    margin: var(--space-xl) 0;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.players-list h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-xl);
+}
+
+#playersList,
+.players-list-container {
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.player-item {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-white);
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--color-primary);
+    font-weight: var(--font-weight-bold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text);
+}
+
+.player-item.host {
+    border-left-color: var(--color-accent);
+    background: linear-gradient(135deg, var(--color-white) 0%, var(--color-bg-light) 100%);
+}
+
+.player-item.disconnected {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.player-item .badge {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-accent);
+    color: var(--color-white);
+    border-radius: var(--border-radius-md);
+}
+
+/* ========================================
+   GAME BOARDS (play area with fixed width)
+   ======================================== */
+.game-board {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto var(--space-xl);
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--color-bg-light);
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.player-info span:first-child {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+}
+
+#scoreDisplay,
+.score-display {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.question-info,
+.round-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+}
+
+#questionNumber,
+#roundNumber,
+.round-number {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+#timer,
+.timer {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    min-width: 60px;
+    text-align: right;
+}
+
+#timer.warning,
+.timer.warning {
+    color: var(--color-error);
+    animation: pulse 0.5s infinite;
+}
+
+/* ========================================
+   TURN INDICATOR
+   ======================================== */
+.turn-indicator {
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--space-lg);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+}
+
+#currentPlayerName {
+    color: var(--color-white);
+    font-weight: var(--font-weight-bold);
+}
+
+/* ========================================
+   QUESTION/PROMPT CONTAINER
+   ======================================== */
+.question-container,
+.prompt-container {
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.category {
+    display: inline-block;
+    background: var(--color-accent);
+    color: var(--color-white);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-md);
+    font-weight: var(--font-weight-bold);
+}
+
+#question,
+.question-text {
+    font-size: var(--font-size-2xl);
+    line-height: 1.5;
+    color: var(--color-white); /* Ensure white text on gradient */
+    margin: 0;
+}
+
+/* ========================================
+   RESULTS SCREENS (fixed width)
+   ======================================== */
+.results-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.winner-announcement {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--gradient-accent);
+    color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.winner-announcement h2 {
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--space-sm);
+    color: var(--color-white);
+}
+
+.winner-announcement p {
+    font-size: var(--font-size-lg);
+    opacity: 0.95;
+    color: var(--color-white);
+}
+
+/* ========================================
+   SCOREBOARD / LEADERBOARD (consistent width & styling)
+   ======================================== */
+.scoreboard,
+.leaderboard,
+.final-scores {
+    width: 100%;
+    max-width: 600px;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xl);
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.scoreboard h3,
+.leaderboard h3,
+.final-scores h3 {
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+    font-size: var(--font-size-2xl);
+}
+
+.score-item,
+.ranking-item,
+.final-player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg);
+    background: var(--color-bg-light);
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.score-item.leader,
+.ranking-item.first,
+.final-player.winner {
+    background: var(--gradient-yellow);
+    border-left-color: var(--color-warning);
+    box-shadow: var(--shadow-md);
+}
+
+.score-item.leader::before,
+.ranking-item.first::before,
+.final-player.winner::before {
+    content: '👑 ';
+}
+
+.player-name,
+.score-item .name,
+.ranking-item .name,
+.final-player .name {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+}
+
+.score-value,
+.ranking-value,
+.final-player .score {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.score-item.leader .score-value,
+.ranking-item.first .ranking-value,
+.final-player.winner .score {
+    color: var(--color-warning);
+}
+
+/* ========================================
+   PLAYER COLORS (for multiplayer games)
+   ======================================== */
+.player-1,
+[data-player="1"] {
+    --player-color: var(--color-team-red);
+}
+
+.player-2,
+[data-player="2"] {
+    --player-color: var(--color-team-blue);
+}
+
+.player-3,
+[data-player="3"] {
+    --player-color: var(--color-success);
+}
+
+.player-4,
+[data-player="4"] {
+    --player-color: var(--color-warning);
+}
+
+/* Apply player colors to borders */
+.player-status.player-1,
+.score-item.player-1 {
+    border-left-color: var(--color-team-red);
+}
+
+.player-status.player-2,
+.score-item.player-2 {
+    border-left-color: var(--color-team-blue);
+}
+
+.player-status.player-3,
+.score-item.player-3 {
+    border-left-color: var(--color-success);
+}
+
+.player-status.player-4,
+.score-item.player-4 {
+    border-left-color: var(--color-warning);
+}
+
+/* ========================================
+   WAITING/STATUS SCREENS
+   ======================================== */
+.waiting-animation,
+.status-animation {
+    text-align: center;
+    padding: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+}
+
+.waiting-animation h1,
+.status-animation h1 {
+    font-size: 5rem;
+    animation: rotate 2s linear infinite;
+    margin-bottom: var(--space-lg);
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.waiting-animation h2,
+.status-animation h2 {
+    color: var(--color-success);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-2xl);
+}
+
+.waiting-animation p,
+.status-animation p {
+    color: var(--color-text-light);
+    font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   INFO BOXES
+   ======================================== */
+.info-box,
+.info-text {
+    padding: var(--space-lg);
+    background: var(--color-bg-light);
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--color-primary);
+    margin: var(--space-lg) 0;
+}
+
+.info-box p,
+.info-text {
+    color: var(--color-text);
+    margin: var(--space-sm) 0;
+}
+
+/* ========================================
+   MOBILE OPTIMIZATIONS
+   ======================================== */
+@media (max-width: 768px) {
+    .room-code-header {
+        margin: calc(var(--space-xl) * -1) calc(var(--space-xl) * -1) var(--space-lg);
+    }
+
+    .game-board {
+        padding: var(--space-lg);
+    }
+
+    .scoreboard,
+    .leaderboard,
+    .final-scores {
+        padding: var(--space-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .room-code-header {
+        margin-top: -60px;
+        margin-left: calc(var(--space-md) * -1);
+        margin-right: calc(var(--space-md) * -1);
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .room-code-header span {
+        font-size: var(--font-size-xl);
+        letter-spacing: 2px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        align-items: flex-start;
+    }
+
+    .question-info,
+    .round-info {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    #question,
+    .question-text {
+        font-size: var(--font-size-lg);
+    }
+
+    .question-container,
+    .prompt-container {
+        padding: var(--space-lg);
+    }
+
+    #timer,
+    .timer {
+        font-size: var(--font-size-2xl);
+    }
+
+    .winner-announcement {
+        padding: var(--space-xl);
+    }
+
+    .winner-announcement h2 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .game-board,
+    .scoreboard,
+    .leaderboard,
+    .final-scores {
+        padding: var(--space-md);
+    }
+
+    .score-item,
+    .ranking-item,
+    .final-player {
+        padding: var(--space-md);
+    }
+
+    .player-name,
+    .score-item .name,
+    .ranking-item .name,
+    .final-player .name {
+        font-size: var(--font-size-base);
+    }
+
+    .score-value,
+    .ranking-value,
+    .final-player .score {
+        font-size: var(--font-size-xl);
+    }
+
+    .waiting-animation h1,
+    .status-animation h1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 360px) {
+    #question,
+    .question-text {
+        font-size: var(--font-size-base);
+    }
+
+    .winner-announcement h2 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .waiting-animation h1,
+    .status-animation h1 {
+        font-size: 3rem;
+    }
+}
+
+/* ========================================
+   LANDSCAPE MOBILE
+   ======================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .question-container,
+    .prompt-container {
+        padding: var(--space-md);
+    }
+
+    .winner-announcement {
+        padding: var(--space-lg);
+    }
+
+    .game-board,
+    .scoreboard,
+    .leaderboard {
+        padding: var(--space-sm);
+    }
+}

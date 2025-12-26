@@ -1,103 +1,14 @@
+@import 'variables.css';
+@import 'game-shell.css';
+
 /**
  * Herd Mentality - Game-Specific Styles
- * Extends base styles from style.css
+ * Extends base styles from style.css and game-shell.css
  */
 
-@import 'style.css';
-
 /* ========================================
-   ROOM CODE HEADER (Navy theme)
+   HERD-SPECIFIC: Pink Cow Animation
    ======================================== */
-.room-code-header {
-    background: var(--gradient-primary);
-    color: var(--color-white);
-    padding: var(--space-sm) var(--space-md);
-    margin: calc(var(--space-xl) * -1) calc(var(--space-xl) * -1) var(--space-lg);
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-sm);
-    text-align: center;
-}
-
-.room-code-header span {
-    font-size: var(--font-size-xl);
-    letter-spacing: 3px;
-    margin-left: var(--space-xs);
-}
-
-/* ========================================
-   LOBBY - PLAYERS LIST
-   ======================================== */
-.players-list {
-    margin: var(--space-xl) 0;
-}
-
-.players-list h3 {
-    color: var(--color-primary);
-    margin-bottom: var(--space-md);
-}
-
-#playersList {
-    display: grid;
-    gap: var(--space-sm);
-}
-
-.player-item {
-    padding: var(--space-md);
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 20%);
-    border-radius: var(--border-radius-sm);
-    border-left: 4px solid var(--color-primary);
-    font-weight: var(--font-weight-bold);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.player-item.host {
-    border-left-color: var(--color-primary-dark);
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 20%);
-}
-
-.player-item.disconnected {
-    opacity: 0.5;
-    text-decoration: line-through;
-}
-
-.player-item .status {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    font-style: italic;
-}
-
-.player-item .badge {
-    font-size: var(--font-size-xs);
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--color-primary);
-    color: var(--color-white);
-    border-radius: var(--border-radius-md);
-}
-
-#waitingMessage {
-    text-align: center;
-    color: var(--color-text-light);
-    font-style: italic;
-    margin-top: var(--space-lg);
-}
-
-/* ========================================
-   QUESTION INFO
-   ======================================== */
-.question-info {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-}
-
-#roundNumber {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-}
-
 .pink-cow {
     font-size: var(--font-size-3xl);
     animation: bounce 1s infinite;
@@ -109,26 +20,7 @@
 }
 
 /* ========================================
-   QUESTION CONTAINER
-   ======================================== */
-.question-container {
-    background: var(--gradient-primary);
-    color: var(--color-white);
-    padding: var(--space-xl);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--space-lg);
-    text-align: center;
-}
-
-#question {
-    font-size: var(--font-size-xl);
-    line-height: 1.4;
-    margin: 0;
-    color: white;
-}
-
-/* ========================================
-   ANSWER INPUT
+   HERD-SPECIFIC: Answer Input
    ======================================== */
 .answer-input {
     display: grid;
@@ -145,81 +37,44 @@
     text-align: center;
     font-weight: var(--font-weight-bold);
     min-height: var(--touch-min);
+    background: var(--color-white);
+    color: var(--color-text);
 }
 
 #answerInput:focus {
     outline: none;
     border-color: var(--color-primary-dark);
-    box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 206, 209, 0.1);
 }
 
 #answerInput:disabled {
-    background: #f5f5f5;
-    border-color: #ddd;
+    background: var(--color-bg-light);
+    border-color: var(--color-text-muted);
+    color: var(--color-text-light);
 }
 
 /* ========================================
-   WAITING FOR ANSWERS
+   HERD-SPECIFIC: Submitted Status
    ======================================== */
-#waitingForAnswers {
-    text-align: center;
-    padding: var(--space-lg);
-    background: #f8f9fa;
-    border-radius: var(--border-radius-md);
-}
-
-#waitingForAnswers p {
-    color: var(--color-text-light);
-    margin-bottom: var(--space-md);
-}
-
-/* Waiting Animation */
-.waiting-animation {
-    text-align: center;
-    padding: 40px 20px;
-    margin-bottom: 30px;
-}
-
-.waiting-animation h1 {
-    font-size: 5em;
-    animation: rotate 2s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.waiting-animation h2 {
-    color: #27ae60;
-    margin-bottom: 10px;
-}
-
-.waiting-animation p {
-    color: #666;
-    font-size: 1.1em;
-}
-
-/* Submitted Status - Always visible */
 .submitted-status {
     text-align: center;
     padding: var(--space-lg);
-    background: #f8f9fa;
+    background: var(--color-bg-light);
     border-radius: var(--border-radius-md);
     margin-bottom: var(--space-lg);
 }
 
 .submitted-status p {
-    color: #666;
+    color: var(--color-text);
     margin-bottom: var(--space-md);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 }
 
-#answerCountDisplay {
-    color: #667eea;
-    font-weight: 700;
-    font-size: 1.1em;
+#answerCountDisplay,
+#waitingCountDisplay {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
 }
 
 .submitted-players {
@@ -239,60 +94,65 @@
 }
 
 /* ========================================
-   RESULTS - MAJORITY ANSWER
+   HERD-SPECIFIC: Majority Answer Display
    ======================================== */
 .majority-answer {
     width: 100%;
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
     text-align: center;
-    padding: var(--space-xl);
-    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    padding: var(--space-2xl);
+    background: var(--gradient-accent);
     color: var(--color-white);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--space-lg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
 }
 
 .majority-answer p {
-    font-size: var(--font-size-sm);
-    opacity: 0.9;
+    font-size: var(--font-size-base);
+    opacity: 0.95;
     margin-bottom: var(--space-sm);
+    color: var(--color-white);
 }
 
 .majority-answer h1 {
     font-size: var(--font-size-3xl);
     margin: 0;
     text-transform: capitalize;
+    color: var(--color-white);
 }
 
 /* ========================================
-   ALL ANSWERS
+   HERD-SPECIFIC: All Answers Display
    ======================================== */
 .all-answers {
     width: 100%;
-    margin-bottom: var(--space-lg);
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
 }
 
 .answer-group {
     margin-bottom: var(--space-md);
-    padding: var(--space-md);
-    background: #f8f9fa;
-    border-radius: var(--border-radius-sm);
+    padding: var(--space-lg);
+    background: var(--color-bg-light);
+    border-radius: var(--border-radius-md);
     border-left: 4px solid var(--color-primary);
 }
 
 .answer-group.majority {
-    background: #e8f5e9;
+    background: linear-gradient(135deg, var(--color-bg-light) 0%, rgba(50, 205, 50, 0.1) 100%);
     border-left-color: var(--color-success);
 }
 
 .answer-group.unique {
-    background: #fff3e0;
+    background: linear-gradient(135deg, var(--color-bg-light) 0%, rgba(255, 165, 0, 0.1) 100%);
     border-left-color: var(--color-warning);
 }
 
 .answer-group h4 {
     margin: 0 0 var(--space-sm) 0;
     color: var(--color-text);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
 }
 
 .answer-group .players {
@@ -311,157 +171,89 @@
 }
 
 /* ========================================
-   PINK COW AWARD
+   HERD-SPECIFIC: Pink Cow Award
    ======================================== */
 .pink-cow-award {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
     text-align: center;
-    padding: var(--space-lg);
-    background: #ffe0f0;
-    border-radius: var(--border-radius-md);
-    border: var(--border-width-thick) dashed #ff69b4;
-    margin-bottom: var(--space-lg);
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, #ffe0f0 0%, #ffc0e0 100%);
+    border-radius: var(--border-radius-lg);
+    border: var(--border-width-thick) dashed var(--color-accent);
+    box-shadow: var(--shadow-md);
 }
 
 .pink-cow-award h3 {
-    color: #d81b60;
-    margin-bottom: var(--space-sm);
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-xl);
 }
 
 .pink-cow-award p {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
 }
 
 /* ========================================
-   ROUND SCOREBOARD
+   HERD-SPECIFIC: Round Scoreboard
    ======================================== */
 .round-scoreboard {
     width: 100%;
-    margin: 30px 0;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 12px;
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
+    padding: var(--space-xl);
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .round-scoreboard h3 {
-    color: #667eea;
+    color: var(--color-primary);
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: var(--space-lg);
+    font-size: var(--font-size-2xl);
 }
 
 #roundScores {
     display: grid;
-    gap: 10px;
+    gap: var(--space-sm);
 }
 
-.score-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    background: white;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-}
-
-.score-item.leader {
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    border-left-color: #ffa000;
-}
+/* Note: .score-item, .score-item.leader defined in game-shell.css */
 
 .score-item .player-name {
-    font-weight: 700;
-    font-size: 1.05em;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
 }
 
 .score-item .score-value {
-    font-size: 1.3em;
-    font-weight: 700;
-    color: #667eea;
-}
-
-.score-item.leader .score-value {
-    color: #ff6f00;
-}
-
-.score-change {
-    display: inline-block;
-    margin-left: 8px;
-    font-size: 0.9em;
-    color: #27ae60;
-    font-weight: 600;
-}
-
-/* ========================================
-   FINAL SCORES
-   ======================================== */
-.final-scores {
-    margin: var(--space-xl) 0;
-}
-
-.final-player {
-    padding: var(--space-lg);
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 20%);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--space-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.final-player.winner {
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    border: var(--border-width-thick) solid #ffa000;
-    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-}
-
-.final-player.winner::before {
-    content: '👑 ';
-}
-
-.final-player .name {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
-}
-
-.final-player .score {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-primary);
 }
 
-.final-player.winner .score {
-    color: #ff6f00;
+.score-item.leader .score-value {
+    color: var(--color-warning);
+}
+
+.score-change {
+    display: inline-block;
+    margin-left: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-success);
+    font-weight: var(--font-weight-semibold);
 }
 
 /* ========================================
    MOBILE OPTIMIZATIONS
    ======================================== */
 @media (max-width: 480px) {
-    /* Fix room banner alignment on mobile */
-    .room-code-header {
-        margin-top: -60px;
-        margin-left: calc(var(--space-md) * -1);
-        margin-right: calc(var(--space-md) * -1);
-    }
-
-    .room-code h2 {
-        font-size: var(--font-size-3xl);
-        letter-spacing: 4px;
-    }
-
-    .player-item {
-        padding: var(--space-sm);
-        font-size: var(--font-size-sm);
-    }
-
-    .question-container {
-        padding: var(--space-lg);
-    }
-
-    #question {
-        font-size: var(--font-size-lg);
+    .pink-cow {
+        font-size: var(--font-size-2xl);
     }
 
     #answerInput {
@@ -470,100 +262,47 @@
     }
 
     .majority-answer {
-        padding: var(--space-lg);
+        padding: var(--space-xl);
     }
 
     .majority-answer h1 {
-        font-size: var(--font-size-2xl);
-    }
-
-    .pink-cow {
         font-size: var(--font-size-2xl);
     }
 
     .answer-group {
-        padding: var(--space-sm);
+        padding: var(--space-md);
     }
 
     .answer-group h4 {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-lg);
     }
 
     .pink-cow-award {
-        padding: var(--space-md);
+        padding: var(--space-lg);
     }
 
     .pink-cow-award p {
-        font-size: var(--font-size-lg);
-    }
-
-    .final-player {
-        padding: var(--space-md);
-    }
-
-    .final-player .name {
-        font-size: var(--font-size-lg);
-    }
-
-    .final-player .score {
         font-size: var(--font-size-xl);
-    }
-
-    .waiting-animation h1 {
-        font-size: var(--font-size-4xl);
     }
 
     .round-scoreboard {
-        padding: var(--space-md);
-    }
-
-    .score-item {
-        padding: var(--space-sm) var(--space-md);
+        padding: var(--space-lg);
     }
 }
 
-/* Extra small mobile - Herd Mentality */
 @media (max-width: 360px) {
-    .question-container {
-        padding: var(--space-md);
-    }
-
-    #question {
-        font-size: var(--font-size-base);
-    }
-
     .majority-answer h1 {
         font-size: var(--font-size-xl);
     }
-
-    .waiting-animation h1 {
-        font-size: var(--font-size-3xl);
-    }
 }
 
-/* Landscape mobile - Herd Mentality */
 @media (max-height: 500px) and (orientation: landscape) {
-    .question-container {
-        padding: var(--space-md);
-    }
-
-    #question {
-        font-size: var(--font-size-base);
-    }
-
     .majority-answer,
     .pink-cow-award {
         padding: var(--space-md);
     }
 
     .round-scoreboard {
-        padding: var(--space-sm);
-    }
-}
-
-/* Tablet - Fix room banner alignment */
-@media (min-width: 768px) {
-    .room-code-header {
-        margin: calc(var(--space-2xl) * -1) calc(var(--space-2xl) * -1) var(--space-lg);
+        padding: var(--space-md);
     }
 }

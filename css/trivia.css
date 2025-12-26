@@ -1,11 +1,12 @@
 @import 'variables.css';
+@import 'game-shell.css';
 
 /**
  * Trivia Showdown - Game-Specific Styles
- * Extends base styles from style.css
+ * Extends base styles from style.css and game-shell.css
  */
 
-/* Trivia uses base styles from style.css */
+/* Trivia uses base styles from style.css and unified game-shell.css */
 /* All variables are available via import above */
 
 /* Trivia-specific enhancements can go below */
