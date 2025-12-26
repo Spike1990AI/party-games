@@ -24,6 +24,30 @@ const setupScreen = document.getElementById('setupScreen');
 const battleScreen = document.getElementById('battleScreen');
 const victoryScreen = document.getElementById('victoryScreen');
 
+// Centralized screen management
+let currentScreen = 'join';
+const screens = ['joinScreen', 'teamScreen', 'setupScreen', 'battleScreen', 'victoryScreen'];
+
+function showScreen(screenId) {
+    // Prevent duplicate transitions
+    if (currentScreen === screenId.replace('Screen', '')) {
+        return;
+    }
+
+    // Hide all screens
+    screens.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) screen.classList.add('hidden');
+    });
+
+    // Show target screen
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.remove('hidden');
+        currentScreen = screenId.replace('Screen', '');
+    }
+}
+
 // Generate 4-letter room code
 function generateRoomCode() {
     const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -106,8 +130,7 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
 
 // Show player select for 1v1
 function showPlayerSelect() {
-    joinScreen.classList.add('hidden');
-    teamScreen.classList.remove('hidden');
+    showScreen('teamScreen');
 
     // Show room code
     document.getElementById('roomCodeTeam').textContent = roomCode;
@@ -185,8 +208,7 @@ function showPlayerSelect() {
 
 // Show team select
 function showTeamSelect() {
-    joinScreen.classList.add('hidden');
-    teamScreen.classList.remove('hidden');
+    showScreen('teamScreen');
 
     // Show room code
     document.getElementById('roomCodeTeam').textContent = roomCode;
@@ -238,8 +260,7 @@ async function joinTeam(team) {
 
 // Setup Screen - Place Ships
 function showSetupScreen() {
-    teamScreen.classList.add('hidden');
-    setupScreen.classList.remove('hidden');
+    showScreen('setupScreen');
 
     // Show room code
     document.getElementById('roomCodeSetup').textContent = roomCode;
@@ -368,8 +389,7 @@ document.getElementById('readyBtn').addEventListener('click', async () => {
 
 // Start Battle
 function startBattle(roomData) {
-    setupScreen.classList.add('hidden');
-    battleScreen.classList.remove('hidden');
+    showScreen('battleScreen');
 
     // Show room code
     document.getElementById('roomCodeBattle').textContent = roomCode;
@@ -490,8 +510,7 @@ function calculateRemainingShips(ships, hits) {
 
 // Show victory
 function showVictory(won) {
-    battleScreen.classList.add('hidden');
-    victoryScreen.classList.remove('hidden');
+    showScreen('victoryScreen');
 
     if (won) {
         document.getElementById('victoryTitle').textContent = '🎉 Victory!';

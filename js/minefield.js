@@ -294,8 +294,9 @@ function updateLobby(data) {
         elements.lobbyHighScore.innerHTML = '';
     }
 
-    // Always show start button for player 1 (1-4 players allowed)
-    if (currentPlayer === 'player1') {
+    // Show/hide start button based on room creator
+    // Only first player in order can start
+    if (data.playerOrder && data.playerOrder[0] === currentPlayer) {
         elements.startGameBtn.classList.remove('hidden');
     } else {
         elements.startGameBtn.classList.add('hidden');
