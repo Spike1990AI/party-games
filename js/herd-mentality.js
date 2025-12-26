@@ -454,27 +454,27 @@ function showResults(roomData) {
         });
     }
 
-    // Listen for next round or game end (non-host players)
-    if (!isHost) {
-        const roomRef = ref(database, `rooms/${roomCode}`);
-        const unsubscribe = onValue(roomRef, (snapshot) => {
-            if (!snapshot.exists()) return;
+    // Listen for next round or game end (all players)
+    const roomRef = ref(database, `rooms/${roomCode}`);
+    const currentRoundNum = roomData.currentRound;
 
-            const data = snapshot.val();
+    const unsubscribe = onValue(roomRef, (snapshot) => {
+        if (!snapshot.exists()) return;
 
-            // Next round started (answers cleared)
-            if (data.gameState === 'playing' && Object.keys(data.answers || {}).length === 0) {
-                unsubscribe(); // Clean up this listener
-                showQuestion(data);
-            }
+        const data = snapshot.val();
 
-            // Game finished
-            if (data.gameState === 'finished') {
-                unsubscribe(); // Clean up this listener
-                showFinalResults(data);
-            }
-        });
-    }
+        // Next round started (round number increased)
+        if (data.gameState === 'playing' && data.currentRound > currentRoundNum) {
+            unsubscribe(); // Clean up this listener
+            showQuestion(data);
+        }
+
+        // Game finished
+        if (data.gameState === 'finished') {
+            unsubscribe(); // Clean up this listener
+            showFinalResults(data);
+        }
+    });
 }
 
 // Next Round
@@ -497,7 +497,7 @@ document.getElementById('nextRoundBtn').addEventListener('click', async () => {
 
         showFinalResults(data);
     } else {
-        // Next round
+        // Next round - all players will transition via listener in showResults
         await update(roomRef, {
             currentRound: nextRound,
             answers: {}
