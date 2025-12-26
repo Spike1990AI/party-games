@@ -401,7 +401,7 @@ function showWaitingScreen() {
         const playerCount = Object.keys(players).length;
         const answerCount = Object.keys(answers).length;
 
-        // Only update if answer count changed
+        // Only update display if answer count changed
         if (answerCount !== lastAnswerCount) {
             lastAnswerCount = answerCount;
 
@@ -420,7 +420,8 @@ function showWaitingScreen() {
             });
         }
 
-        // Show results when all answered
+        // ALWAYS check if all answered (moved outside the count change block)
+        // This fixes race condition where last player's answer might not trigger count change
         if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
             unsubscribe(); // Clean up listener
             // Fetch fresh data to avoid stale closure
