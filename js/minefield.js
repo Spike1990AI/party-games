@@ -46,7 +46,6 @@ const elements = {
     moveUpLeftBtn: document.getElementById('moveUpLeftBtn'),
     moveUpBtn: document.getElementById('moveUpBtn'),
     moveUpRightBtn: document.getElementById('moveUpRightBtn'),
-    debugMinesBtn: document.getElementById('debugMinesBtn'),
     playersStatus: document.getElementById('playersStatus'),
 
     winnerName: document.getElementById('winnerName'),
@@ -68,32 +67,14 @@ elements.moveUpLeftBtn.addEventListener('click', () => makeMove(1, -1));
 elements.moveUpBtn.addEventListener('click', () => makeMove(1, 0));
 elements.moveUpRightBtn.addEventListener('click', () => makeMove(1, 1));
 
-elements.debugMinesBtn.addEventListener('click', () => {
-    window.debugMines = !window.debugMines;
-    elements.debugMinesBtn.classList.toggle('active');
-    elements.debugMinesBtn.textContent = window.debugMines ? '👁️ Hide Mines' : '👁️ Show Mines (Test)';
-    console.log(`🔍 Debug Mines: ${window.debugMines ? 'ON' : 'OFF'}`);
-
-    // Re-render grid
-    if (currentRoom) {
-        get(ref(database, `minefield/${currentRoom}`)).then(snapshot => {
-            const data = snapshot.val();
-            if (data && data.gameState === 'playing') {
-                renderGrid(data);
-            }
-        });
-    }
-});
-
 // Initialize
 loadPlayerName();
 
-// Debug mode toggle (press 'M' key to reveal mines)
+// Hidden debug mode (dev only - press 'M' key to reveal mines)
 window.debugMines = false;
 document.addEventListener('keydown', (e) => {
     if (e.key === 'm' || e.key === 'M') {
         window.debugMines = !window.debugMines;
-        console.log(`🔍 Debug Mines: ${window.debugMines ? 'ON - All mines visible' : 'OFF'}`);
         // Re-render if game is active
         if (currentRoom) {
             get(ref(database, `minefield/${currentRoom}`)).then(snapshot => {
@@ -105,8 +86,6 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
-
-console.log('💣 Minefield Race loaded! Press M to toggle mine visibility for testing.');
 
 function loadPlayerName() {
     const savedName = localStorage.getItem('minefield_playerName');
@@ -325,9 +304,6 @@ function updateGame(data) {
     showScreen('game');
     elements.gameRoomCode.textContent = currentRoom;
 
-    // Debug: log mine count
-    console.log(`Game has ${data.mines.length} mines, ${data.revealed.length} revealed`);
-
     // Update turn indicator
     const currentTurnPlayer = data.players[data.currentTurn];
     elements.currentPlayerName.textContent = currentTurnPlayer.name;
@@ -469,26 +445,15 @@ async function makeMove(rowDelta, colDelta) {
     const newRow = currentPos.row + rowDelta;
     const newCol = currentPos.col + colDelta;
 
-    console.log('Move attempt:', {
-        currentPos,
-        rowDelta,
-        colDelta,
-        newRow,
-        newCol,
-        bounds: { GRID_ROWS, GRID_COLS }
-    });
-
     // Validate move (stay in bounds)
     if (newRow < 0 || newRow >= GRID_ROWS || newCol < 0 || newCol >= GRID_COLS) {
-        alert(`Invalid move - out of bounds!\nCurrent: (${currentPos.row}, ${currentPos.col})\nTrying: (${newRow}, ${newCol})\nBounds: rows 0-${GRID_ROWS-1}, cols 0-${GRID_COLS-1}`);
-        return;
+        return; // Silently ignore invalid moves
     }
 
     // Check for mine
     const hitMine = data.mines.some(m => m[0] === newRow && m[1] === newCol);
 
     if (hitMine) {
-        console.log('💥 HIT A MINE! Resetting to start...');
         // Reveal mine
         const newRevealed = [...(data.revealed || []), [newRow, newCol]];
 

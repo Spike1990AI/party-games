@@ -6,7 +6,7 @@ let playerName = null;
 let playerRole = null;
 let isHost = false;
 let timerInterval = null;
-const GAME_DURATION = 20 * 60; // 20 minutes in seconds
+const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
 
 // Player roles
 const ROLES = [
@@ -90,7 +90,7 @@ document.getElementById('createRoomBtn').addEventListener('click', async () => {
         currentRoom: 1,
         timeRemaining: GAME_DURATION,
         hintsUsed: 0,
-        maxHints: 3,
+        maxHints: 5, // Increased for mobile play
         startTime: null
     };
 

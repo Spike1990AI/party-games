@@ -45,6 +45,7 @@ let playerName = null;
 let isHost = false;
 let currentRound = 0;
 const TOTAL_ROUNDS = 10;
+let lobbyUnsubscribe = null; // Track lobby listener for cleanup
 
 // DOM Elements
 const joinScreen = document.getElementById('joinScreen');
@@ -122,6 +123,12 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
 
 // Show Lobby
 function showLobby() {
+    // Clean up any existing lobby listener (prevents memory leak)
+    if (lobbyUnsubscribe) {
+        lobbyUnsubscribe();
+        lobbyUnsubscribe = null;
+    }
+
     joinScreen.classList.add('hidden');
     lobbyScreen.classList.remove('hidden');
 
@@ -129,7 +136,7 @@ function showLobby() {
 
     // Listen for player updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    lobbyUnsubscribe = onValue(roomRef, (snapshot) => {
         if (!snapshot.exists()) return;
 
         const data = snapshot.val();
@@ -162,6 +169,8 @@ function showLobby() {
 
         // Start game if triggered
         if (data.gameState === 'playing') {
+            lobbyUnsubscribe(); // Clean up BEFORE transitioning
+            lobbyUnsubscribe = null;
             showQuestion(data);
         }
     });
@@ -271,12 +280,22 @@ function showQuestion(roomData) {
 
 // Submit Answer
 document.getElementById('submitAnswer').addEventListener('click', async () => {
-    const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+    const submitBtn = document.getElementById('submitAnswer');
+    const answerInput = document.getElementById('answerInput');
+
+    // Prevent duplicate clicks
+    if (submitBtn.disabled) return;
+
+    const answer = answerInput.value.trim().toLowerCase();
 
     if (!answer) {
         alert('Please enter an answer');
         return;
     }
+
+    // Disable immediately to prevent duplicate submissions
+    submitBtn.disabled = true;
+    answerInput.disabled = true;
 
     const roomRef = ref(database, `rooms/${roomCode}`);
     const snapshot = await new Promise((resolve) => {
@@ -295,9 +314,15 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
     };
 
     const success = await safeUpdate(roomRef, { answers });
-    if (!success) return; // Don't disable input if update failed
 
-    // Show waiting screen
+    // Re-enable if update failed
+    if (!success) {
+        submitBtn.disabled = false;
+        answerInput.disabled = false;
+        return;
+    }
+
+    // Show waiting screen (inputs stay disabled)
     showWaitingScreen();
 });
 
@@ -480,6 +505,9 @@ function showResults(roomData) {
         // Non-host: display current scores
         displayScoreboard(players, answers, majorityAnswer);
     }
+
+    // Show/hide Next Round button based on host status
+    document.getElementById('nextRoundBtn').style.display = isHost ? 'block' : 'none';
 
     // Listen for next round or game end (all players)
     const roomRef = ref(database, `rooms/${roomCode}`);
