@@ -257,7 +257,9 @@ function showQuestion(roomData) {
 
     // Listen for all answers submitted
     const roomRef = ref(database, `rooms/${roomCode}`);
-    onValue(roomRef, (snapshot) => {
+    let lastAnswerCount = 0;
+
+    const unsubscribe = onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
@@ -266,21 +268,27 @@ function showQuestion(roomData) {
         const playerCount = Object.keys(players).length;
         const answerCount = Object.keys(answers).length;
 
-        // Update submitted players
-        if (answerCount > 0) {
+        // Only update if answer count changed (prevents flicker)
+        if (answerCount !== lastAnswerCount) {
+            lastAnswerCount = answerCount;
+
+            // Update submitted players
             const submittedList = document.getElementById('submittedPlayers');
             submittedList.innerHTML = '';
 
-            Object.values(answers).forEach(answer => {
-                const tag = document.createElement('span');
-                tag.className = 'submitted-tag';
-                tag.textContent = answer.playerName;
-                submittedList.appendChild(tag);
-            });
+            if (answerCount > 0) {
+                Object.values(answers).forEach(answer => {
+                    const tag = document.createElement('span');
+                    tag.className = 'submitted-tag';
+                    tag.textContent = answer.playerName;
+                    submittedList.appendChild(tag);
+                });
+            }
         }
 
         // Show results when all answered
         if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
+            unsubscribe(); // Clean up listener
             setTimeout(() => showResults(data), 2000);
         }
     });
