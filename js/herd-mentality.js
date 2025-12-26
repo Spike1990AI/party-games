@@ -6,83 +6,83 @@ setTimeout(() => {
     document.getElementById('joinScreen').classList.remove('hidden');
 }, 500);
 
-// Question Bank - Actually funny awkward questions!
+// Question Bank - Funny awkward questions (all-ages appropriate!)
 const QUESTIONS = [
-    // Toilet & Body Humor (12)
-    "What do you do while sitting on the toilet",
-    "How long do you actually sit on the toilet",
-    "Where do you look while peeing at a urinal",
-    "First thing you do when you get home and nobody's there",
-    "What do you do in the shower that you won't admit",
-    "Where do you pick your nose",
-    "How do you discretely adjust yourself in public",
-    "What body part do you check/smell when alone",
-    "How do you check if your breath smells bad",
-    "What do you do with a booger when there's no tissue",
-    "How do you discretely check if you smell",
-    "Where do you fart the most",
-
-    // Awkward Social Truths (12)
+    // Awkward Social Situations (15)
     "What you pretend to do when you see someone you're avoiding",
     "Fake activity you do on your phone to avoid talking",
-    "What you're actually thinking during awkward silence",
-    "Real reason you don't answer the phone",
-    "What you say when you haven't listened at all",
-    "Worst place to run into someone after ghosting them",
-    "What you do when you forget someone's name mid-conversation",
-    "Real reason you cancel plans last minute",
-    "What you really mean when you say 'we should hang out'",
-    "Lie you tell most when leaving a party",
-    "Where you hide when someone knocks unexpectedly",
+    "What you do when you forget someone's name",
     "What you do when you wave at someone who wasn't waving at you",
+    "Where you hide when someone knocks unexpectedly",
+    "What you say when you haven't been listening",
+    "What you do when caught staring at someone",
+    "Worst place to run into your teacher",
+    "What you pretend to look at to avoid eye contact",
+    "Most awkward thing to say to break silence",
+    "What you do when someone has food in their teeth",
+    "Worst time to laugh at something serious",
+    "What you do when you walk into the wrong classroom",
+    "Most embarrassing autocorrect fail",
+    "What you do when your stomach growls loudly",
 
-    // Embarrassing Private Habits (12)
-    "Gross thing you do when eating alone",
-    "What you smell after scratching down there",
-    "How long you wear underwear before washing",
-    "Food you eat straight from the container",
-    "Where you put chewed gum when there's no bin",
-    "What you do with toenail clippings",
-    "How you eat when nobody's watching",
-    "Body part you scratch then smell",
-    "What you do after dropping food on the floor",
-    "How you get food out of your teeth in public",
-    "What you wipe on when there's no napkin",
-    "Thing you've peed in that's not a toilet",
-
-    // Awkward Adult Situations (10)
-    "Worst time to get a random boner",
-    "Where you adjust your underwear in public",
+    // Harmless Body Humor (12)
+    "Where do you pick your nose",
+    "What you do with a booger when there's no tissue",
     "What you blame a fart on",
-    "Noise you pretend you didn't hear from the bathroom",
-    "What you do when you clog someone else's toilet",
-    "Worst thing to Google with family nearby",
-    "What you pretend not to notice on someone's face",
-    "Body sound you try to disguise as something else",
     "Worst time to get the hiccups",
-    "What you do when you're caught staring",
+    "How do you check if your breath smells bad",
+    "What you do when you need to burp in public",
+    "Worst place to have an itchy bum",
+    "What body part do you crack most",
+    "How do you sneakily smell your armpits",
+    "What you do when you have something stuck in your teeth",
+    "Worst time to sneeze",
+    "What sound does your stomach make when hungry",
 
-    // Relationship & Dating Awkwardness (8)
-    "Worst thing to say during sex",
-    "What you lie about on a first date",
-    "Dealbreaker you'd never admit on a date",
-    "Real reason you dumped someone",
-    "What you secretly judge your partner for",
-    "What you do differently when you're single",
-    "Worst place to run into your ex",
-    "Thing you secretly check on someone's phone",
+    // Food & Eating (10)
+    "Food you eat straight from the container",
+    "What you do after dropping food on the floor",
+    "Weirdest food combination you secretly love",
+    "Food you'd eat for every meal if you could",
+    "Grossest thing you've ever eaten",
+    "Where you hide snacks from your family",
+    "Food you pretend to like but hate",
+    "What you eat when nobody's watching",
+    "Worst food to eat on a first date",
+    "Best junk food nobody can judge you for",
 
-    // Secret Judging (10)
-    "What you secretly judge people for",
-    "Type of person you instantly dislike",
-    "What makes you think someone is stupid",
-    "Thing that makes you lose respect for someone",
-    "What you pretend not to judge but totally do",
-    "Red flag that makes you avoid someone",
-    "What instantly makes someone unattractive",
-    "Bad habit that makes you think less of someone",
-    "What tells you someone is lying",
-    "Thing people do that makes you cringe"
+    // Embarrassing Moments (12)
+    "Most embarrassing thing to buy at a shop",
+    "Worst thing to spill on yourself",
+    "Most embarrassing ringtone to go off in class",
+    "Worst song to get stuck in your head",
+    "Most embarrassing thing parents caught you doing",
+    "What you've accidentally called your teacher",
+    "Worst time to trip and fall",
+    "Most embarrassing thing you've said out loud by accident",
+    "What you've walked into because you weren't paying attention",
+    "Most embarrassing photo of you that exists",
+    "Worst haircut you've ever had",
+    "Most cringe thing you did to impress someone",
+
+    // Phone & Social Media (8)
+    "What you do when you accidentally like an old photo",
+    "App you spend the most time on",
+    "What you Google when bored",
+    "Worst text you've sent to the wrong person",
+    "What you look at on your phone when pretending to be busy",
+    "Real reason you leave someone on read",
+    "What you post when you want attention",
+    "Filter you use the most",
+
+    // Random Funny (7)
+    "Worst excuse you've used to skip school",
+    "Best excuse to leave a party early",
+    "Worst chore at home",
+    "First thing you do when you get home",
+    "What animal would you be",
+    "Superpower you'd want for everyday life",
+    "What you'd do if you were invisible for a day"
 ];
 
 // Game state
