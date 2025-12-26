@@ -1,5 +1,11 @@
 import { database, ref, set, onValue, update, safeUpdate, onDisconnect, cleanupOldRooms } from './firebase-battleships.js';
 
+// Hide loading screen once Firebase is loaded
+setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('joinScreen').classList.remove('hidden');
+}, 500);
+
 // Question Bank
 const QUESTIONS = [
     "Name a fruit",

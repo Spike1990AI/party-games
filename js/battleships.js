@@ -1,5 +1,11 @@
 import { database, ref, set, onValue, update, cleanupOldRooms } from './firebase-battleships.js';
 
+// Hide loading screen once Firebase is loaded
+setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('joinScreen').classList.remove('hidden');
+}, 500);
+
 // Game state
 let roomCode = null;
 let gameMode = null; // '1v1' or '2v2'

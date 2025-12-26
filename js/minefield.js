@@ -1,6 +1,12 @@
 // Minefield Race Game Logic
 import { database, ref, set, onValue, update, remove, get, cleanupOldRooms } from './firebase-minefield.js';
 
+// Hide loading screen once Firebase is loaded
+setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('joinScreen').classList.remove('hidden');
+}, 500);
+
 // Game Configuration
 const GRID_ROWS = 8;
 const GRID_COLS = 8;
