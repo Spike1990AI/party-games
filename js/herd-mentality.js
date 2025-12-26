@@ -392,7 +392,13 @@ function showWaitingScreen() {
         // Show results when all answered
         if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
             unsubscribe(); // Clean up listener
-            setTimeout(() => showResults(data), 2000);
+            // Fetch fresh data to avoid stale closure
+            setTimeout(async () => {
+                const freshSnapshot = await new Promise((resolve) => {
+                    onValue(roomRef, resolve, { onlyOnce: true });
+                });
+                showResults(freshSnapshot.val());
+            }, 2000);
         }
     });
 }
