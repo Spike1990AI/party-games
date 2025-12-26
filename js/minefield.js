@@ -1,5 +1,5 @@
 // Minefield Race Game Logic
-import { database, ref, set, onValue, update, remove, get } from './firebase-minefield.js';
+import { database, ref, set, onValue, update, remove, get, cleanupOldRooms } from './firebase-minefield.js';
 
 // Game Configuration
 const GRID_ROWS = 8;
@@ -146,6 +146,9 @@ function generateRoomCode() {
 }
 
 async function createRoom() {
+    // Clean up old rooms before creating new one
+    await cleanupOldRooms();
+
     const name = elements.playerName.value.trim();
     if (!name) {
         alert('Please enter your name');
@@ -538,13 +541,19 @@ function disableMoveButtons() {
 }
 
 async function makeMove(rowDelta, colDelta) {
-    if (!currentRoom || !currentPlayer) return;
+    if (!currentRoom || !currentPlayer) {
+        alert('DEBUG: No room or player');
+        return;
+    }
 
     const roomSnapshot = await get(ref(database, `minefield/${currentRoom}`));
     const data = roomSnapshot.val();
 
     // Verify it's our turn
-    if (data.currentTurn !== currentPlayer) return;
+    if (data.currentTurn !== currentPlayer) {
+        alert(`DEBUG: Not your turn! Current: ${data.currentTurn}, You: ${currentPlayer}`);
+        return;
+    }
 
     const currentPos = data.players[currentPlayer].position;
     const newRow = currentPos.row + rowDelta;
@@ -552,7 +561,8 @@ async function makeMove(rowDelta, colDelta) {
 
     // Validate move (stay in bounds)
     if (newRow < 0 || newRow >= GRID_ROWS || newCol < 0 || newCol >= GRID_COLS) {
-        return; // Silently ignore invalid moves
+        alert(`DEBUG: Out of bounds! Row: ${newRow}, Col: ${newCol}`);
+        return;
     }
 
     // Check for mine using object key lookup

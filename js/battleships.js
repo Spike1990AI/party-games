@@ -1,4 +1,4 @@
-import { database, ref, set, onValue, update } from './firebase-battleships.js';
+import { database, ref, set, onValue, update, cleanupOldRooms } from './firebase-battleships.js';
 
 // Game state
 let roomCode = null;
@@ -14,6 +14,9 @@ let playerSelectUnsubscribe = null;
 let teamSelectUnsubscribe = null;
 let gameStartUnsubscribe = null;
 let battleUnsubscribe = null;
+
+// Attack protection flag
+let attackInProgress = false;
 
 const SHIPS = [
     { name: 'Carrier', length: 5 },
@@ -71,6 +74,9 @@ document.getElementById('create1v1Btn').addEventListener('click', () => createRo
 document.getElementById('create2v2Btn').addEventListener('click', () => createRoom('2v2'));
 
 async function createRoom(mode) {
+    // Clean up old rooms before creating new one
+    await cleanupOldRooms();
+
     roomCode = generateRoomCode();
     gameMode = mode;
 
@@ -108,11 +114,24 @@ async function createRoom(mode) {
 
 // Join Room
 document.getElementById('joinRoomBtn').addEventListener('click', async () => {
-    const code = document.getElementById('roomCodeInput').value.toUpperCase();
+    const joinBtn = document.getElementById('joinRoomBtn');
+    const codeInput = document.getElementById('roomCodeInput');
+
+    // Prevent duplicate clicks
+    if (joinBtn.disabled) return;
+
+    // Clean up old rooms before joining
+    await cleanupOldRooms();
+
+    const code = codeInput.value.toUpperCase();
     if (code.length !== 4) {
         alert('Please enter a 4-letter code');
         return;
     }
+
+    // Disable during operation
+    joinBtn.disabled = true;
+    codeInput.disabled = true;
 
     roomCode = code;
 
@@ -128,8 +147,12 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
             } else {
                 showTeamSelect();
             }
+            // Button stays disabled - user has moved to new screen
         } else {
             alert('Room not found!');
+            // Re-enable on failure
+            joinBtn.disabled = false;
+            codeInput.disabled = false;
         }
     }, { onlyOnce: true });
 });
@@ -263,11 +286,23 @@ document.getElementById('team1Btn').addEventListener('click', () => joinTeam('te
 document.getElementById('team2Btn').addEventListener('click', () => joinTeam('team2'));
 
 async function joinTeam(team) {
-    playerName = document.getElementById('playerName').value.trim();
+    const team1Btn = document.getElementById('team1Btn');
+    const team2Btn = document.getElementById('team2Btn');
+    const playerInput = document.getElementById('playerName');
+
+    // Prevent duplicate clicks
+    if (team1Btn.disabled || team2Btn.disabled) return;
+
+    playerName = playerInput.value.trim();
     if (!playerName) {
         alert('Please enter your name');
         return;
     }
+
+    // Disable during operation
+    team1Btn.disabled = true;
+    team2Btn.disabled = true;
+    playerInput.disabled = true;
 
     playerTeam = team;
 
@@ -279,6 +314,10 @@ async function joinTeam(team) {
     const currentPlayers = playersSnapshot.val() || [];
     if (currentPlayers.length >= 2) {
         alert('This team is full!');
+        // Re-enable on failure
+        team1Btn.disabled = false;
+        team2Btn.disabled = false;
+        playerInput.disabled = false;
         return;
     }
 
@@ -290,6 +329,7 @@ async function joinTeam(team) {
         teamSelectUnsubscribe();
         teamSelectUnsubscribe = null;
     }
+    // Buttons stay disabled - user has moved to new screen
     showSetupScreen();
 }
 
@@ -405,11 +445,17 @@ function placeShip(index, length, orientation) {
 
 // Ready button
 document.getElementById('readyBtn').addEventListener('click', async () => {
+    const readyBtn = document.getElementById('readyBtn');
+
+    // Prevent duplicate clicks
+    if (readyBtn.disabled) return;
+    readyBtn.disabled = true;
+
     // Save ships to database
     await set(ref(database, `rooms/${roomCode}/${playerTeam}/ships`), shipsPlaced);
     await set(ref(database, `rooms/${roomCode}/${playerTeam}/ready`), true);
 
-    document.getElementById('readyBtn').classList.add('hidden');
+    readyBtn.classList.add('hidden');
     document.getElementById('waitingMessage').classList.remove('hidden');
 
     // Listen for game start
@@ -511,6 +557,10 @@ function updateBattleScreen(roomData) {
 
 // Handle attack
 async function handleAttackCellClick(index) {
+    // Prevent simultaneous attacks
+    if (attackInProgress) return;
+    attackInProgress = true;
+
     const roomRef = ref(database, `rooms/${roomCode}`);
     const snapshot = await new Promise((resolve) => {
         onValue(roomRef, resolve, { onlyOnce: true });
@@ -519,11 +569,17 @@ async function handleAttackCellClick(index) {
     const roomData = snapshot.val();
 
     // Check if it's my turn
-    if (roomData.currentTurn !== playerTeam) return;
+    if (roomData.currentTurn !== playerTeam) {
+        attackInProgress = false;
+        return;
+    }
 
     // Check if already hit
     const myHits = roomData[playerTeam].hits || [];
-    if (myHits.some(h => h.index === index)) return;
+    if (myHits.some(h => h.index === index)) {
+        attackInProgress = false;
+        return;
+    }
 
     // Check if hit or miss
     const enemyTeam = playerTeam === 'team1' ? 'team2' : 'team1';

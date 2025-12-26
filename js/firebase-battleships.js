@@ -11,7 +11,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, set, onValue, update, onDisconnect } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getDatabase, ref, set, onValue, update, onDisconnect, get, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -81,4 +81,31 @@ async function safeUpdate(path, data, retries = 3) {
     return false;
 }
 
-export { database, ref, set, onValue, update, onDisconnect, safeUpdate, isConnected };
+// Clean up rooms older than 30 minutes
+async function cleanupOldRooms() {
+    try {
+        const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
+        const roomsRef = ref(database, 'rooms');
+        const snapshot = await get(roomsRef);
+
+        if (snapshot.exists()) {
+            const rooms = snapshot.val();
+            let deletedCount = 0;
+
+            for (const [code, room] of Object.entries(rooms)) {
+                if (room.created && room.created < thirtyMinutesAgo) {
+                    await remove(ref(database, `rooms/${code}`));
+                    deletedCount++;
+                }
+            }
+
+            if (deletedCount > 0) {
+                console.log(`🧹 Cleaned up ${deletedCount} old room(s)`);
+            }
+        }
+    } catch (error) {
+        console.error('Cleanup error:', error);
+    }
+}
+
+export { database, ref, set, onValue, update, onDisconnect, get, remove, safeUpdate, isConnected, cleanupOldRooms };

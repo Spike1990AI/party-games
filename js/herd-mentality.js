@@ -1,4 +1,4 @@
-import { database, ref, set, onValue, update, safeUpdate, onDisconnect } from './firebase-battleships.js';
+import { database, ref, set, onValue, update, safeUpdate, onDisconnect, cleanupOldRooms } from './firebase-battleships.js';
 
 // Question Bank
 const QUESTIONS = [
@@ -101,6 +101,9 @@ function capitalizeFirst(str) {
 
 // Create Room
 document.getElementById('createRoomBtn').addEventListener('click', async () => {
+    // Clean up old rooms before creating new one
+    await cleanupOldRooms();
+
     roomCode = generateRoomCode();
     isHost = true;
 
@@ -128,6 +131,9 @@ document.getElementById('createRoomBtn').addEventListener('click', async () => {
 
 // Join Room
 document.getElementById('joinRoomBtn').addEventListener('click', async () => {
+    // Clean up old rooms before joining
+    await cleanupOldRooms();
+
     const code = document.getElementById('roomCodeInput').value.toUpperCase();
     if (code.length !== 4) {
         alert('Please enter a 4-letter code');
