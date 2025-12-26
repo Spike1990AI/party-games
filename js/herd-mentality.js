@@ -454,7 +454,7 @@ function showResults(roomData) {
         }
     });
 
-    document.getElementById('majorityAnswer').textContent = majorityAnswer;
+    document.getElementById('majorityAnswer').textContent = capitalizeFirst(majorityAnswer);
 
     // Group answers
     const answerGroups = {};
@@ -479,18 +479,19 @@ function showResults(roomData) {
         const playerNames = playerList.map(p => p.playerName).join(', ');
 
         div.innerHTML = `
-            <h4>${answer} ${isMajority ? '<span class="score-badge">+1 pt</span>' : ''}</h4>
+            <h4>${capitalizeFirst(answer)} ${isMajority ? '<span class="score-badge">+1 pt</span>' : ''}</h4>
             <p class="players">${playerNames}</p>
         `;
 
         allAnswersDiv.appendChild(div);
     });
 
-    // Pink Cow logic
-    const uniqueAnswers = Object.entries(answerGroups).filter(([_, list]) => list.length === 1);
+    // Pink Cow logic - award to sole minority player
+    const minorityPlayers = Object.values(answers).filter(a => a.answer !== majorityAnswer);
 
-    if (uniqueAnswers.length === 1) {
-        const pinkCowPlayer = uniqueAnswers[0][1][0];
+    // Give pink cow if there's ONLY ONE person not in the majority
+    if (minorityPlayers.length === 1) {
+        const pinkCowPlayer = minorityPlayers[0];
         document.getElementById('pinkCowAward').classList.remove('hidden');
         document.getElementById('pinkCowPlayer').textContent = pinkCowPlayer.playerName;
 
