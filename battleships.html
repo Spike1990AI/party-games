@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2v2 Battleships</title>
+    <link rel="stylesheet" href="css/battleships.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen">
+            <h1>⚓ 2v2 Battleships</h1>
+            <p class="subtitle">4 players, 2 teams, 1 winner</p>
+
+            <div class="room-section">
+                <div class="create-room">
+                    <h3>Create New Game</h3>
+                    <button id="createRoomBtn" class="btn-primary">Create Room</button>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <div class="join-room">
+                    <h3>Join Existing Game</h3>
+                    <input type="text" id="roomCodeInput" placeholder="Enter 4-letter code" maxlength="4">
+                    <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+                </div>
+            </div>
+
+            <div id="roomCode" class="room-code hidden">
+                <p>Room Code:</p>
+                <h2 id="codeDisplay"></h2>
+                <p class="small">Share this with 3 other players</p>
+            </div>
+        </div>
+
+        <!-- Team Select Screen -->
+        <div id="teamScreen" class="screen hidden">
+            <h1>⚓ Choose Your Team</h1>
+            <div class="team-select">
+                <button id="team1Btn" class="team-btn team1">
+                    <h2>🔵 Team 1</h2>
+                    <p id="team1Count">0/2 players</p>
+                </button>
+                <button id="team2Btn" class="team-btn team2">
+                    <h2>🔴 Team 2</h2>
+                    <p id="team2Count">0/2 players</p>
+                </button>
+            </div>
+            <div class="player-name-input">
+                <input type="text" id="playerName" placeholder="Your name" maxlength="12">
+            </div>
+        </div>
+
+        <!-- Setup Screen - Place Ships -->
+        <div id="setupScreen" class="screen hidden">
+            <h1>Place Your Ships</h1>
+            <div class="setup-info">
+                <p>Team <span id="yourTeam"></span></p>
+                <p class="small">Tap to rotate, drag to place</p>
+            </div>
+
+            <div class="ships-to-place">
+                <div class="ship-item" data-length="5">Carrier (5)</div>
+                <div class="ship-item" data-length="4">Battleship (4)</div>
+                <div class="ship-item" data-length="3">Cruiser (3)</div>
+                <div class="ship-item" data-length="3">Submarine (3)</div>
+                <div class="ship-item" data-length="2">Destroyer (2)</div>
+            </div>
+
+            <div id="setupBoard" class="board"></div>
+
+            <button id="readyBtn" class="btn-primary" disabled>Ready to Battle!</button>
+            <div id="waitingMessage" class="hidden">Waiting for teammate...</div>
+        </div>
+
+        <!-- Battle Screen -->
+        <div id="battleScreen" class="screen hidden">
+            <div class="battle-header">
+                <div class="team-info">
+                    <h3>Team <span id="battleTeam"></span></h3>
+                    <p id="turnIndicator">Enemy's turn...</p>
+                </div>
+                <div class="ships-remaining">
+                    <p>Your ships: <span id="yourShips">5</span></p>
+                    <p>Enemy ships: <span id="enemyShips">5</span></p>
+                </div>
+            </div>
+
+            <h3>Enemy Waters</h3>
+            <div id="attackBoard" class="board"></div>
+
+            <h3>Your Fleet</h3>
+            <div id="defenseBoard" class="board"></div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victoryScreen" class="screen hidden">
+            <h1 id="victoryTitle">🎉</h1>
+            <div class="victory-info">
+                <p id="victoryMessage"></p>
+            </div>
+            <button id="newGameBtn" class="btn-primary">New Game</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/battleships.js"></script>
+</body>
+</html>
