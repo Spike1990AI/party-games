@@ -191,6 +191,9 @@ async function createRoom() {
 }
 
 async function joinRoom() {
+    // Clean up old rooms before joining
+    await cleanupOldRooms();
+
     const name = elements.playerName.value.trim();
     const code = elements.roomCodeInput.value.trim().toUpperCase();
 

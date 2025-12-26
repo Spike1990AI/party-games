@@ -345,7 +345,7 @@ input[type="text"]:focus {
     border: 1px solid #90caf9;
     cursor: pointer;
     transition: all 0.2s;
-    min-height: 30px;
+    min-height: var(--touch-min);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -513,7 +513,7 @@ input[type="text"]:focus {
     }
 
     .cell {
-        min-height: 24px;
+        min-height: var(--touch-min);
     }
 
     .cell.hit::after,
@@ -549,7 +549,7 @@ input[type="text"]:focus {
 /* Extra small mobile - Battleships specific */
 @media (max-width: 360px) {
     .cell {
-        min-height: 22px;
+        min-height: var(--touch-min);
     }
 
     .ship-item {
