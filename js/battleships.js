@@ -82,6 +82,9 @@ function showTeamSelect() {
     joinScreen.classList.add('hidden');
     teamScreen.classList.remove('hidden');
 
+    // Show room code
+    document.getElementById('roomCodeTeam').textContent = roomCode;
+
     // Listen for team updates
     const roomRef = ref(database, `rooms/${roomCode}`);
     onValue(roomRef, (snapshot) => {
@@ -131,6 +134,9 @@ async function joinTeam(team) {
 function showSetupScreen() {
     teamScreen.classList.add('hidden');
     setupScreen.classList.remove('hidden');
+
+    // Show room code
+    document.getElementById('roomCodeSetup').textContent = roomCode;
 
     document.getElementById('yourTeam').textContent = playerTeam === 'team1' ? '🔵 1' : '🔴 2';
 
@@ -258,6 +264,9 @@ document.getElementById('readyBtn').addEventListener('click', async () => {
 function startBattle(roomData) {
     setupScreen.classList.add('hidden');
     battleScreen.classList.remove('hidden');
+
+    // Show room code
+    document.getElementById('roomCodeBattle').textContent = roomCode;
 
     document.getElementById('battleTeam').textContent = playerTeam === 'team1' ? '🔵 1' : '🔴 2';
 
