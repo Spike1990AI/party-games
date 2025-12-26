@@ -41,11 +41,21 @@ const elements = {
     timer: document.getElementById('timer'),
     scoresDisplay: document.getElementById('scoresDisplay'),
     territoryGrid: document.getElementById('territoryGrid'),
+    debugLog: document.getElementById('debugLog'),
 
     winnerName: document.getElementById('winnerName'),
     finalScoresList: document.getElementById('finalScoresList'),
     playAgainBtn: document.getElementById('playAgainBtn')
 };
+
+// Mobile debug helper
+function debugLog(msg) {
+    console.log(msg);
+    if (elements.debugLog) {
+        const time = new Date().toLocaleTimeString();
+        elements.debugLog.innerHTML = `[${time}] ${msg}<br>` + elements.debugLog.innerHTML;
+    }
+}
 
 // Event Listeners
 elements.createRoomBtn.addEventListener('click', createRoom);
@@ -290,7 +300,8 @@ function renderGrid(data) {
     grid.innerHTML = '';
 
     const isMyTurn = data.currentTurn === currentPlayer;
-    console.log('🎨 Rendering grid. Current grid:', data.grid);
+    const occupiedCount = Object.keys(data.grid || {}).length;
+    debugLog(`🎨 Render: ${occupiedCount} tiles`);
 
     for (let row = 0; row < GRID_SIZE; row++) {
         for (let col = 0; col < GRID_SIZE; col++) {
@@ -300,12 +311,12 @@ function renderGrid(data) {
             cell.dataset.col = col;
 
             const key = `${row}_${col}`;
-            const owner = data.grid[key];
+            const owner = data.grid ? data.grid[key] : null;
 
             if (owner) {
                 // Cell is occupied
                 const ownerIndex = data.playerOrder.indexOf(owner);
-                console.log(`  📍 Cell ${key}: owned by ${owner} (index ${ownerIndex}) → class: player-${ownerIndex + 1}`);
+                debugLog(`  📍 ${key}=${owner} → player-${ownerIndex + 1}`);
                 cell.classList.add(`player-${ownerIndex + 1}`);
                 cell.classList.add('occupied');
 
@@ -327,8 +338,10 @@ function renderGrid(data) {
 }
 
 async function placeTile(row, col) {
+    debugLog(`🎯 Click at ${row},${col}`);
+
     if (!currentRoom || !currentPlayer) {
-        console.log('❌ No room or player');
+        debugLog('❌ No room/player');
         return;
     }
 
@@ -337,23 +350,23 @@ async function placeTile(row, col) {
 
     // Verify it's our turn
     if (data.currentTurn !== currentPlayer) {
-        console.log('❌ Not your turn');
+        debugLog('❌ Not your turn');
         return;
     }
 
     const key = `${row}_${col}`;
-    console.log(`🎯 Placing tile at ${key} for ${currentPlayer}`);
+    debugLog(`✅ Placing ${currentPlayer} at ${key}`);
 
     // Verify cell is empty
     if (data.grid[key]) {
-        console.log('❌ Cell already occupied');
+        debugLog('❌ Already occupied');
         return;
     }
 
     // Place the tile
     const newGrid = { ...data.grid };
     newGrid[key] = currentPlayer;
-    console.log('✅ Grid updated:', newGrid);
+    debugLog(`📝 Grid has ${Object.keys(newGrid).length} tiles`);
 
     // Check for captures
     const captures = checkCaptures(row, col, currentPlayer, newGrid, data.playerOrder);
