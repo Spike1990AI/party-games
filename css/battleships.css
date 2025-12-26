@@ -1,3 +1,5 @@
+@import 'variables.css';
+
 * {
     margin: 0;
     padding: 0;
@@ -5,26 +7,26 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    font-family: var(--font-family);
+    background: var(--gradient-primary);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15px;
-    color: #333;
+    padding: var(--space-md);
+    color: var(--color-text);
 }
 
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: var(--container-max);
 }
 
 .screen {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lg);
 }
 
 .hidden {
@@ -34,15 +36,15 @@ body {
 /* Join Screen */
 h1 {
     text-align: center;
-    color: #1e3c72;
-    font-size: 2.2em;
-    margin-bottom: 10px;
+    color: var(--color-primary);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-sm);
 }
 
 .subtitle {
     text-align: center;
-    color: #666;
-    margin-bottom: 30px;
+    color: var(--color-text-light);
+    margin-bottom: var(--space-xl);
 }
 
 .room-section {
@@ -54,9 +56,9 @@ h1 {
 }
 
 .create-room h3, .join-room h3 {
-    margin-bottom: 12px;
-    color: #1e3c72;
-    font-size: 1.1em;
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
 }
 
 .mode-select {
@@ -92,44 +94,46 @@ h1 {
 
 input[type="text"] {
     width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    padding: var(--space-md);
+    font-size: var(--font-size-base);
+    border: var(--border-width) solid var(--color-bg-dark);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--space-sm);
     text-transform: uppercase;
     text-align: center;
-    font-weight: 700;
-    color: #333;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    min-height: var(--touch-min);
 }
 
 input[type="text"]::placeholder {
-    color: #999;
+    color: var(--color-text-muted);
 }
 
 input[type="text"]:focus {
     outline: none;
-    border-color: #1e3c72;
+    border-color: var(--color-primary);
 }
 
 .btn-primary {
     width: 100%;
-    padding: 18px 24px;
-    font-size: 17px;
-    font-weight: 700;
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
     border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
+    border-radius: var(--border-radius-md);
+    background: var(--gradient-primary);
+    color: var(--color-white);
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
-    margin-bottom: 12px;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md);
+    min-height: var(--touch-min);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(30, 60, 114, 0.3);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:disabled {
@@ -202,13 +206,13 @@ input[type="text"]:focus {
 }
 
 .room-code-header {
-    background: #1e3c72;
-    color: white;
-    padding: 8px 15px;
-    margin: -25px -25px 20px -25px;
-    border-radius: 20px 20px 0 0;
-    font-weight: 700;
-    font-size: 0.95em;
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--space-sm) var(--space-md);
+    margin: calc(var(--space-lg) * -1) calc(var(--space-lg) * -1) var(--space-lg) calc(var(--space-lg) * -1);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
     text-align: center;
 }
 
@@ -241,7 +245,7 @@ input[type="text"]:focus {
 }
 
 .team-btn.team1 {
-    border-color: #2196f3;
+    border-color: var(--color-team-blue);
 }
 
 .team-btn.team1:hover,
@@ -250,7 +254,7 @@ input[type="text"]:focus {
 }
 
 .team-btn.team2 {
-    border-color: #f44336;
+    border-color: var(--color-team-red);
 }
 
 .team-btn.team2:hover,
@@ -352,11 +356,11 @@ input[type="text"]:focus {
 }
 
 .cell.ship {
-    background: #2196f3;
+    background: var(--color-team-blue);
 }
 
 .cell.hit {
-    background: #f44336;
+    background: var(--color-error);
     position: relative;
 }
 
@@ -402,21 +406,21 @@ input[type="text"]:focus {
 }
 
 .team-info h3 {
-    color: #1e3c72;
-    margin-bottom: 5px;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
 }
 
 #turnIndicator {
-    font-weight: 700;
-    font-size: 1.1em;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
 }
 
 #turnIndicator.your-turn {
-    color: #4caf50;
+    color: var(--color-success);
 }
 
 #turnIndicator.enemy-turn {
-    color: #f44336;
+    color: var(--color-error);
 }
 
 .ships-remaining {

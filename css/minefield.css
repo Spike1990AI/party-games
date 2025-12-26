@@ -1,10 +1,12 @@
+@import 'variables.css';
+
 /* Minefield Race Specific Styles */
 
 .game-description {
     text-align: center;
-    margin: 20px 0;
-    color: #a0aec0;
-    font-size: 0.95rem;
+    margin: var(--space-lg) 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
 }
 
 /* Game Status */
@@ -18,18 +20,6 @@
     border-radius: 12px;
 }
 
-.mine-count {
-    text-align: center;
-    padding: 8px;
-    margin-bottom: 10px;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 8px;
-    color: #fca5a5;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
 .turn-indicator {
     font-size: 1.1rem;
     font-weight: 600;
@@ -37,20 +27,20 @@
 }
 
 .turn-indicator #currentPlayerName {
-    color: #fbbf24;
-    font-weight: 700;
+    color: var(--color-warning);
+    font-weight: var(--font-weight-bold);
 }
 
 .timer {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fbbf24;
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-warning);
     min-width: 50px;
     text-align: center;
 }
 
 .timer.warning {
-    color: #ef4444;
+    color: var(--color-error);
     animation: pulse 0.5s infinite;
 }
 
@@ -150,29 +140,6 @@
     justify-content: center;
     gap: 15px;
     margin: 20px 0;
-}
-
-.btn-debug {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background: rgba(251, 191, 36, 0.2);
-    border: 2px solid #fbbf24;
-    color: #fbbf24;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-debug:hover {
-    background: rgba(251, 191, 36, 0.3);
-}
-
-.btn-debug.active {
-    background: #fbbf24;
-    color: #1e293b;
 }
 
 .move-btn {
@@ -330,16 +297,16 @@
     }
 
     .player-marker {
-        width: 22px;
-        height: 22px;
-        font-size: 0.65rem;
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
         border-width: 2px;
     }
 
     .move-btn {
-        width: 65px;
-        height: 65px;
-        font-size: 1.8rem;
+        width: 80px;
+        height: 80px;
+        font-size: 2.2rem;
     }
 
     .game-status {
