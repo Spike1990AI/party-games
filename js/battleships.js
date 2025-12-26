@@ -594,6 +594,9 @@ async function handleAttackCellClick(index) {
     await update(ref(database, `rooms/${roomCode}`), {
         currentTurn: enemyTeam
     });
+
+    // Re-enable attacks after completion
+    attackInProgress = false;
 }
 
 // Calculate remaining ships
