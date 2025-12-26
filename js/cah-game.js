@@ -382,26 +382,25 @@ function updateScoreboard() {
 function displayPlayerHand() {
     const playerHand = document.getElementById('playerHand');
     playerHand.innerHTML = '';
-    
+
     const hand = gameState.players[playerId]?.hand || [];
     const submitted = gameState.players[playerId]?.submitted;
-    
-    hand.forEach((cardId, index) => {
-        const whiteCard = WHITE_CARDS.find(c => c.id === cardId);
-        if (!whiteCard) return;
-        
+
+    hand.forEach((card, index) => {
+        if (!card) return;  // Skip if card is missing
+
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card white-card';
         if (selectedWhiteCard === index) cardDiv.classList.add('selected');
         if (submitted !== null) cardDiv.classList.add('submitted');
-        
-        cardDiv.innerHTML = `<p>${whiteCard.text}</p>`;
+
+        cardDiv.innerHTML = `<p>${card.text}</p>`;
         cardDiv.onclick = () => {
             if (submitted === null) {
                 selectWhiteCard(index);
             }
         };
-        
+
         playerHand.appendChild(cardDiv);
     });
     
@@ -481,18 +480,18 @@ async function checkAllSubmitted() {
 function displaySubmissions() {
     const submissionsGrid = document.getElementById('submissionsGrid');
     submissionsGrid.innerHTML = '';
-    
+
     const submissions = gameState.submissions || {};
-    
+
     Object.entries(submissions).forEach(([id, submission]) => {
-        const whiteCard = WHITE_CARDS.find(c => c.id === submission.cardId);
-        if (!whiteCard) return;
-        
+        const card = submission.cardId;  // This is already the full card object
+        if (!card) return;
+
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card white-card submission-card';
-        cardDiv.innerHTML = `<p>${whiteCard.text}</p>`;
+        cardDiv.innerHTML = `<p>${card.text}</p>`;
         cardDiv.onclick = () => selectWinner(id, submission);
-        
+
         submissionsGrid.appendChild(cardDiv);
     });
 }
@@ -524,12 +523,12 @@ function showRoundWinner() {
     document.getElementById('submissionArea').classList.add('hidden');
     document.getElementById('judgingArea').classList.add('hidden');
     document.getElementById('winnerDisplay').classList.remove('hidden');
-    
+
     const winnerId = gameState.roundWinner;
     const winnerPlayer = gameState.players[winnerId];
     const blackCard = gameState.currentBlackCard;
-    const whiteCard = WHITE_CARDS.find(c => c.id === gameState.winningCard);
-    
+    const whiteCard = gameState.winningCard;  // This is already the full card object
+
     document.getElementById('winningBlackCard').textContent = blackCard.text;
     document.getElementById('winningWhiteCard').textContent = whiteCard.text;
     document.getElementById('winnerName').textContent = winnerPlayer.name;
