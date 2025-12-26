@@ -419,9 +419,18 @@ async function makeMove(rowDelta, colDelta) {
     const newRow = currentPos.row + rowDelta;
     const newCol = currentPos.col + colDelta;
 
+    console.log('Move attempt:', {
+        currentPos,
+        rowDelta,
+        colDelta,
+        newRow,
+        newCol,
+        bounds: { GRID_ROWS, GRID_COLS }
+    });
+
     // Validate move (stay in bounds)
     if (newRow < 0 || newRow >= GRID_ROWS || newCol < 0 || newCol >= GRID_COLS) {
-        alert('Invalid move - out of bounds!');
+        alert(`Invalid move - out of bounds!\nCurrent: (${currentPos.row}, ${currentPos.col})\nTrying: (${newRow}, ${newCol})\nBounds: rows 0-${GRID_ROWS-1}, cols 0-${GRID_COLS-1}`);
         return;
     }
 
