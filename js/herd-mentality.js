@@ -369,10 +369,9 @@ function showResults(roomData) {
         div.className = `answer-group${isMajority ? ' majority' : ''}${isUnique ? ' unique' : ''}`;
 
         const playerNames = playerList.map(p => p.playerName).join(', ');
-        const points = isMajority ? maxCount : 0;
 
         div.innerHTML = `
-            <h4>${answer} ${isMajority ? '<span class="score-badge">+' + points + ' pts</span>' : ''}</h4>
+            <h4>${answer} ${isMajority ? '<span class="score-badge">+1 pt</span>' : ''}</h4>
             <p class="players">${playerNames}</p>
         `;
 
@@ -410,7 +409,7 @@ function showResults(roomData) {
 
         Object.values(answers).forEach(({ playerId, answer }) => {
             if (answer === majorityAnswer) {
-                updatedPlayers[playerId].score += maxCount;
+                updatedPlayers[playerId].score += 1;
             }
         });
 
