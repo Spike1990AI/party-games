@@ -256,6 +256,12 @@ async function joinRoom() {
 }
 
 function listenToRoom(code) {
+    // Clean up any existing listener before creating new one
+    if (roomListener) {
+        roomListener();
+        roomListener = null;
+    }
+
     const roomRef = ref(database, `minefield/${code}`);
 
     roomListener = onValue(roomRef, (snapshot) => {
