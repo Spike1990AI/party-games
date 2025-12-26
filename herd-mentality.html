@@ -91,6 +91,22 @@
             </div>
         </div>
 
+        <!-- Waiting Screen (after submitting) -->
+        <div id="waitingScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeWaiting"></span></div>
+
+            <div class="waiting-animation">
+                <h1>⏳</h1>
+                <h2>Answer Submitted!</h2>
+                <p>Waiting for other players...</p>
+            </div>
+
+            <div class="submitted-status">
+                <p>Answers Submitted: <span id="waitingCountDisplay">1/4</span></p>
+                <div class="submitted-players" id="waitingPlayersList"></div>
+            </div>
+        </div>
+
         <!-- Results Screen -->
         <div id="resultsScreen" class="screen hidden">
             <div class="room-code-header">Room: <span id="roomCodeResults"></span></div>

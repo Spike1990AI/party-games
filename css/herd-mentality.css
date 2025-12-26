@@ -162,6 +162,34 @@
     margin-bottom: var(--space-md);
 }
 
+/* Waiting Animation */
+.waiting-animation {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+}
+
+.waiting-animation h1 {
+    font-size: 5em;
+    animation: rotate 2s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.waiting-animation h2 {
+    color: #27ae60;
+    margin-bottom: 10px;
+}
+
+.waiting-animation p {
+    color: #666;
+    font-size: 1.1em;
+}
+
 /* Submitted Status - Always visible */
 .submitted-status {
     text-align: center;

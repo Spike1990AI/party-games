@@ -257,47 +257,6 @@ function showQuestion(roomData) {
     // Reset submitted status
     document.getElementById('answerCountDisplay').textContent = `0/${Object.keys(players).length}`;
     document.getElementById('submittedPlayers').innerHTML = '';
-
-    // Listen for all answers submitted
-    const roomRef = ref(database, `rooms/${roomCode}`);
-    let lastAnswerCount = 0;
-
-    const unsubscribe = onValue(roomRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-
-        const answers = data.answers || {};
-        const players = data.players || {};
-        const playerCount = Object.keys(players).length;
-        const answerCount = Object.keys(answers).length;
-
-        // Only update if answer count changed (prevents flicker)
-        if (answerCount !== lastAnswerCount) {
-            lastAnswerCount = answerCount;
-
-            // Update answer count display
-            document.getElementById('answerCountDisplay').textContent = `${answerCount}/${playerCount}`;
-
-            // Update submitted players
-            const submittedList = document.getElementById('submittedPlayers');
-            submittedList.innerHTML = '';
-
-            if (answerCount > 0) {
-                Object.values(answers).forEach(answer => {
-                    const tag = document.createElement('span');
-                    tag.className = 'submitted-tag';
-                    tag.textContent = answer.playerName;
-                    submittedList.appendChild(tag);
-                });
-            }
-        }
-
-        // Show results when all answered
-        if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
-            unsubscribe(); // Clean up listener
-            setTimeout(() => showResults(data), 2000);
-        }
-    });
 }
 
 // Submit Answer
@@ -328,14 +287,67 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
     const success = await safeUpdate(roomRef, { answers });
     if (!success) return; // Don't disable input if update failed
 
-    // Disable input after submitting
-    document.getElementById('answerInput').disabled = true;
-    document.getElementById('submitAnswer').disabled = true;
+    // Show waiting screen
+    showWaitingScreen();
 });
+
+// Show Waiting Screen (after submitting)
+function showWaitingScreen() {
+    const questionScreen = document.getElementById('questionScreen');
+    const waitingScreen = document.getElementById('waitingScreen');
+
+    questionScreen.classList.add('hidden');
+    waitingScreen.classList.remove('hidden');
+
+    document.getElementById('roomCodeWaiting').textContent = roomCode;
+
+    // Listen for other players' answers
+    const roomRef = ref(database, `rooms/${roomCode}`);
+    let lastAnswerCount = 0;
+
+    const unsubscribe = onValue(roomRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        const answers = data.answers || {};
+        const players = data.players || {};
+        const playerCount = Object.keys(players).length;
+        const answerCount = Object.keys(answers).length;
+
+        // Only update if answer count changed
+        if (answerCount !== lastAnswerCount) {
+            lastAnswerCount = answerCount;
+
+            // Update count display
+            document.getElementById('waitingCountDisplay').textContent = `${answerCount}/${playerCount}`;
+
+            // Update submitted players list
+            const waitingList = document.getElementById('waitingPlayersList');
+            waitingList.innerHTML = '';
+
+            Object.values(answers).forEach(answer => {
+                const tag = document.createElement('span');
+                tag.className = 'submitted-tag';
+                tag.textContent = answer.playerName;
+                waitingList.appendChild(tag);
+            });
+        }
+
+        // Show results when all answered
+        if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
+            unsubscribe(); // Clean up listener
+            setTimeout(() => showResults(data), 2000);
+        }
+    });
+}
 
 // Show Results
 function showResults(roomData) {
+    const questionScreen = document.getElementById('questionScreen');
+    const waitingScreen = document.getElementById('waitingScreen');
+
     questionScreen.classList.add('hidden');
+    waitingScreen.classList.add('hidden');
     resultsScreen.classList.remove('hidden');
 
     document.getElementById('roomCodeResults').textContent = roomCode;
