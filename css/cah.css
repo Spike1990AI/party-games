@@ -1,18 +1,5 @@
 /* Cards Against Humanity Styling */
-
-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
-
-.container {
-    background: #000;
-    color: #fff;
-}
-
-.screen {
-    background: #000 !important;
-    color: #fff;
-}
+/* Uses base yellow/teal theme from variables.css */
 
 /* Card Styling */
 .card {
@@ -79,43 +66,46 @@ body {
 
 /* Game Settings */
 .game-settings {
-    background: #2d2d2d;
+    background: var(--color-bg-light);
     padding: 20px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md);
     margin: 20px 0;
     text-align: left;
+    border: var(--border-width) solid var(--color-primary-light);
 }
 
 .game-settings label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
+    color: var(--color-text);
 }
 
 .game-settings select {
     width: 100%;
     padding: 10px;
-    border-radius: 8px;
-    border: 2px solid #444;
-    background: #1a1a1a;
-    color: #fff;
+    border-radius: var(--border-radius-sm);
+    border: var(--border-width-thick) solid var(--color-primary);
+    background: var(--color-white);
+    color: var(--color-text);
     font-size: 1rem;
     cursor: pointer;
 }
 
 .game-settings select:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: var(--color-accent);
 }
 
 .game-settings-display {
-    background: #2d2d2d;
+    background: var(--gradient-primary);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     text-align: center;
     margin: 20px 0;
     font-size: 1.1rem;
     font-weight: 600;
+    color: white;
 }
 
 /* Header */
@@ -141,10 +131,11 @@ body {
 
 /* Scoreboard */
 .scoreboard {
-    background: #1a1a1a;
+    background: var(--gradient-card);
     padding: 15px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md);
     margin-bottom: 20px;
+    border: var(--border-width) solid var(--color-primary);
 }
 
 #scoreboardContent {
@@ -154,19 +145,22 @@ body {
 }
 
 .score-item {
-    background: #2d2d2d;
+    background: var(--color-white);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     text-align: center;
+    border: var(--border-width-thick) solid var(--color-primary-light);
 }
 
 .score-item.czar {
-    border: 2px solid #f39c12;
+    border: var(--border-width-thick) solid var(--color-accent);
+    background: var(--color-bg-light);
 }
 
 .score-item.leading {
-    background: #27ae60;
+    background: var(--gradient-accent);
     color: #fff;
+    border-color: var(--color-warning);
 }
 
 .score-name {
@@ -341,14 +335,16 @@ body {
 }
 
 .final-scores {
-    background: #1a1a1a;
+    background: var(--gradient-card);
     padding: 30px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md);
     margin-bottom: 30px;
+    border: var(--border-width) solid var(--color-primary);
 }
 
 .final-scores h3 {
     margin-bottom: 20px;
+    color: var(--color-text);
 }
 
 #finalScoresContent {
@@ -362,13 +358,17 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 10px 20px;
-    background: #2d2d2d;
-    border-radius: 8px;
+    background: var(--color-white);
+    border-radius: var(--border-radius-sm);
+    border: var(--border-width) solid var(--color-primary-light);
+    color: var(--color-text);
 }
 
 .final-score-item:first-child {
-    background: #27ae60;
+    background: var(--gradient-accent);
     font-weight: 700;
+    color: white;
+    border-color: var(--color-warning);
 }
 
 .btn-secondary {
