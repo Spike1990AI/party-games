@@ -45,9 +45,10 @@
             <h3>Waiting for Players</h3>
             <div id="playersList" class="players-list"></div>
 
-            <p class="info-text">Waiting for players to join... (1-4 players)</p>
+            <div id="lobbyHighScore" class="info-text"></div>
+            <p class="info-text">1-4 players • Solo mode tracks high score</p>
 
-            <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
+            <button id="startGameBtn" class="btn-primary">Start Game</button>
             <button id="leaveLobbyBtn" class="btn-secondary">Leave Room</button>
         </div>
     </div>
@@ -66,8 +67,6 @@
                 </div>
                 <div id="timer" class="timer">10</div>
             </div>
-
-            <div id="mineCount" class="mine-count">💣 Mines: 0</div>
 
             <div id="gameGrid" class="game-grid"></div>
 
@@ -107,6 +106,6 @@
     </div>
 
     <!-- Game Script (ES6 Module) -->
-    <script type="module" src="js/minefield.js"></script>
+    <script type="module" src="js/minefield.js?v=3"></script>
 </body>
 </html>

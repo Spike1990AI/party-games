@@ -34,6 +34,7 @@ const elements = {
 
     roomCode: document.getElementById('roomCode'),
     playersList: document.getElementById('playersList'),
+    lobbyHighScore: document.getElementById('lobbyHighScore'),
     startGameBtn: document.getElementById('startGameBtn'),
     leaveLobbyBtn: document.getElementById('leaveLobbyBtn'),
 
@@ -46,7 +47,6 @@ const elements = {
     moveUpLeftBtn: document.getElementById('moveUpLeftBtn'),
     moveUpBtn: document.getElementById('moveUpBtn'),
     moveUpRightBtn: document.getElementById('moveUpRightBtn'),
-    mineCount: document.getElementById('mineCount'),
     playersStatus: document.getElementById('playersStatus'),
 
     winnerName: document.getElementById('winnerName'),
@@ -70,6 +70,40 @@ elements.moveUpRightBtn.addEventListener('click', () => makeMove(1, 1));
 
 // Initialize
 loadPlayerName();
+
+// High Score Functions
+function getHighScore() {
+    const saved = localStorage.getItem('minefield_highScore');
+    return saved ? JSON.parse(saved) : null;
+}
+
+function saveHighScore(playerName, score, stats) {
+    const highScore = {
+        name: playerName,
+        score: score,
+        stats: stats,
+        date: Date.now()
+    };
+    localStorage.setItem('minefield_highScore', JSON.stringify(highScore));
+}
+
+function calculateScore(player, won) {
+    // Scoring formula:
+    // - Row reached: 100 points per row
+    // - Win bonus: +500
+    // - Mine penalty: -50 per mine
+    // - Move efficiency bonus: max 200 points (fewer moves = higher bonus)
+
+    const rowScore = (player.highestRow || 0) * 100;
+    const winBonus = won ? 500 : 0;
+    const minePenalty = (player.minesHit || 0) * -50;
+
+    // Move efficiency: 200 points if under 10 moves, scaled down
+    const moves = player.moves || 0;
+    const moveBonus = Math.max(0, 200 - (moves * 10));
+
+    return rowScore + winBonus + minePenalty + moveBonus;
+}
 
 // Hidden debug mode (dev only - press 'M' key to reveal mines)
 window.debugMines = false;
@@ -131,14 +165,17 @@ async function createRoom() {
             player1: {
                 name: name,
                 position: { row: 0, col: START_POSITIONS[0] },
-                ready: false
+                ready: false,
+                moves: 0,
+                minesHit: 0,
+                highestRow: 0
             }
         },
         playerOrder: ['player1'],
         currentTurn: 'player1',
         turnNumber: 1,
-        mines: [],
-        revealed: [],
+        mines: {},
+        revealed: {},
         winner: null
     };
 
@@ -196,7 +233,10 @@ async function joinRoom() {
     const playerData = {
         name: name,
         position: { row: 0, col: START_POSITIONS[playerNumber - 1] },
-        ready: false
+        ready: false,
+        moves: 0,
+        minesHit: 0,
+        highestRow: 0
     };
 
     await update(ref(database, `minefield/${code}`), {
@@ -244,8 +284,18 @@ function updateLobby(data) {
         playersList.appendChild(div);
     });
 
-    // Show start button only for player 1 and when at least 2 players
-    if (currentPlayer === 'player1' && data.playerOrder.length >= 2) {
+    // Show high score in lobby
+    const highScore = getHighScore();
+    if (highScore) {
+        elements.lobbyHighScore.innerHTML = `🏆 High Score: ${highScore.score} pts (${highScore.name})`;
+        elements.lobbyHighScore.style.fontWeight = '600';
+        elements.lobbyHighScore.style.color = '#fbbf24';
+    } else {
+        elements.lobbyHighScore.innerHTML = '';
+    }
+
+    // Always show start button for player 1 (1-4 players allowed)
+    if (currentPlayer === 'player1') {
         elements.startGameBtn.classList.remove('hidden');
     } else {
         elements.startGameBtn.classList.add('hidden');
@@ -257,13 +307,11 @@ async function startGame() {
 
     // Generate mines
     const mines = generateMines(currentRoom);
-    console.log(`💣 Generated ${mines.length} mines for room ${currentRoom}`);
-    console.log('Mine positions:', mines);
 
     await update(ref(database, `minefield/${currentRoom}`), {
         gameState: 'playing',
         mines: mines,
-        revealed: []
+        revealed: {}
     });
 
     showScreen('game');
@@ -271,48 +319,89 @@ async function startGame() {
 }
 
 function generateMines(seed) {
-    // Seeded random based on room code
-    let hash = 0;
-    for (let i = 0; i < seed.length; i++) {
-        hash = ((hash << 5) - hash) + seed.charCodeAt(i);
-        hash |= 0;
+    // Generate random mines with guaranteed path from bottom to top
+    let mines = {};
+    let attempts = 0;
+    const maxAttempts = 100;
+    const numMines = 12;
+
+    while (attempts < maxAttempts) {
+        mines = {};
+
+        // Place random mines in rows 1-6 (skip start row 0 and finish row 7)
+        while (Object.keys(mines).length < numMines) {
+            const row = Math.floor(Math.random() * 6) + 1;
+            const col = Math.floor(Math.random() * GRID_COLS);
+            const key = `${row}_${col}`;
+            mines[key] = true;
+        }
+
+        // Check if at least one path exists from bottom to top
+        if (hasValidPath(mines)) {
+            return mines;
+        }
+
+        attempts++;
     }
 
-    const seededRandom = () => {
-        hash = (hash * 1103515245 + 12345) & 0x7fffffff;
-        return hash / 0x7fffffff;
-    };
-
-    const mines = [];
-    const totalCells = GRID_ROWS * GRID_COLS;
-    const numMines = Math.floor(totalCells * MINE_DENSITY);
-
-    while (mines.length < numMines) {
-        const row = Math.floor(seededRandom() * GRID_ROWS);
-        const col = Math.floor(seededRandom() * GRID_COLS);
-
-        // Skip start and finish rows
-        if (row === 0 || row === GRID_ROWS - 1) continue;
-
-        // Skip if already a mine
-        if (mines.some(m => m[0] === row && m[1] === col)) continue;
-
-        mines.push([row, col]);
-    }
-
+    // Fallback: return mines anyway (shouldn't happen often)
     return mines;
+}
+
+function hasValidPath(mines) {
+    // BFS to check if any starting position can reach the top
+    for (let startCol = 0; startCol < GRID_COLS; startCol++) {
+        if (canReachTop(mines, 0, startCol)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function canReachTop(mines, startRow, startCol) {
+    const visited = new Set();
+    const queue = [[startRow, startCol]];
+    visited.add(`${startRow}_${startCol}`);
+
+    while (queue.length > 0) {
+        const [row, col] = queue.shift();
+
+        // Check if we reached the top
+        if (row === GRID_ROWS - 1) {
+            return true;
+        }
+
+        // Try all three upward moves: up-left, up, up-right
+        const moves = [
+            [row + 1, col - 1], // up-left
+            [row + 1, col],     // up
+            [row + 1, col + 1]  // up-right
+        ];
+
+        for (const [newRow, newCol] of moves) {
+            // Check bounds
+            if (newRow < 0 || newRow >= GRID_ROWS || newCol < 0 || newCol >= GRID_COLS) {
+                continue;
+            }
+
+            const key = `${newRow}_${newCol}`;
+
+            // Skip if mine or already visited
+            if (mines[key] || visited.has(key)) {
+                continue;
+            }
+
+            visited.add(key);
+            queue.push([newRow, newCol]);
+        }
+    }
+
+    return false;
 }
 
 function updateGame(data) {
     showScreen('game');
     elements.gameRoomCode.textContent = currentRoom;
-
-    // Update mine count display
-    const mineCount = data.mines?.length || 0;
-    const revealedCount = data.revealed?.length || 0;
-    elements.mineCount.textContent = `💣 ${mineCount} mines (${revealedCount} revealed)`;
-
-    console.log(`🎮 Game update - Mines: ${mineCount}, Revealed: ${revealedCount}`);
 
     // Update turn indicator
     const currentTurnPlayer = data.players[data.currentTurn];
@@ -338,7 +427,7 @@ function renderGrid(data) {
     const grid = elements.gameGrid;
     grid.innerHTML = '';
 
-    // Debug mode: hold Shift to see all mines
+    // Debug mode: press 'M' key to see all mines
     const debugMode = window.debugMines || false;
 
     for (let row = GRID_ROWS - 1; row >= 0; row--) {
@@ -348,17 +437,19 @@ function renderGrid(data) {
             cell.dataset.row = row;
             cell.dataset.col = col;
 
+            const cellKey = `${row}_${col}`;
+
             // Mark special rows
             if (row === 0) cell.classList.add('start-row');
             if (row === GRID_ROWS - 1) cell.classList.add('finish-row');
 
             // Show revealed mines
-            if (data.revealed && data.revealed.some(m => m[0] === row && m[1] === col)) {
+            if (data.revealed && data.revealed[cellKey]) {
                 cell.classList.add('revealed-mine');
             }
 
             // Debug: show all mines if debugMode is on
-            if (debugMode && data.mines.some(m => m[0] === row && m[1] === col)) {
+            if (debugMode && data.mines && data.mines[cellKey]) {
                 cell.classList.add('has-mine');
                 cell.style.opacity = '0.5';
             }
@@ -460,26 +551,30 @@ async function makeMove(rowDelta, colDelta) {
         return; // Silently ignore invalid moves
     }
 
-    // Check for mine
-    const hitMine = data.mines.some(m => m[0] === newRow && m[1] === newCol);
+    // Check for mine using object key lookup
+    const mineKey = `${newRow}_${newCol}`;
+    const hitMine = data.mines && data.mines[mineKey] === true;
+
+    const currentPlayerData = data.players[currentPlayer];
+    const newMoves = (currentPlayerData.moves || 0) + 1;
 
     if (hitMine) {
-        // Reveal mine
-        const newRevealed = [...(data.revealed || []), [newRow, newCol]];
+        // Reveal mine by adding to revealed object
+        await update(ref(database, `minefield/${currentRoom}/revealed/${mineKey}`), true);
 
-        // Update revealed mines list
-        await update(ref(database, `minefield/${currentRoom}`), {
-            revealed: newRevealed
-        });
-
-        // Reset player position to start
+        // Reset player position to start and increment mines hit
         await update(ref(database, `minefield/${currentRoom}/players/${currentPlayer}`), {
-            position: { row: 0, col: currentPos.col }
+            position: { row: 0, col: currentPos.col },
+            moves: newMoves,
+            minesHit: (currentPlayerData.minesHit || 0) + 1
         });
     } else {
-        // Move player
+        // Move player and update stats
+        const newHighestRow = Math.max(newRow, currentPlayerData.highestRow || 0);
         await update(ref(database, `minefield/${currentRoom}/players/${currentPlayer}`), {
-            position: { row: newRow, col: newCol }
+            position: { row: newRow, col: newCol },
+            moves: newMoves,
+            highestRow: newHighestRow
         });
     }
 
@@ -518,14 +613,41 @@ function updateResults(data) {
     const winnerPlayer = data.players[data.winner];
     elements.winnerName.textContent = winnerPlayer.name;
 
-    // Create rankings based on final row positions
+    // Calculate scores for all players
     const rankings = data.playerOrder
-        .map(playerId => ({
-            id: playerId,
-            player: data.players[playerId]
-        }))
-        .sort((a, b) => b.player.position.row - a.player.position.row);
+        .map(playerId => {
+            const player = data.players[playerId];
+            const won = playerId === data.winner;
+            const score = calculateScore(player, won);
+            return {
+                id: playerId,
+                player: player,
+                score: score,
+                won: won
+            };
+        })
+        .sort((a, b) => b.score - a.score);
 
+    // Check if this is a new high score (for winner in solo mode)
+    if (data.playerOrder.length === 1 && rankings.length > 0) {
+        const playerScore = rankings[0];
+        const currentHighScore = getHighScore();
+
+        if (!currentHighScore || playerScore.score > currentHighScore.score) {
+            saveHighScore(
+                playerScore.player.name,
+                playerScore.score,
+                {
+                    moves: playerScore.player.moves,
+                    minesHit: playerScore.player.minesHit,
+                    highestRow: playerScore.player.highestRow,
+                    won: playerScore.won
+                }
+            );
+        }
+    }
+
+    // Display rankings with scores
     elements.rankingsList.innerHTML = '';
     rankings.forEach((item, index) => {
         const div = document.createElement('div');
@@ -535,12 +657,35 @@ function updateResults(data) {
 
         div.innerHTML = `
             <div class="ranking-position ${positionClass}">${index + 1}</div>
-            <div class="ranking-player">${item.player.name}</div>
-            <div class="ranking-stats">Row ${item.player.position.row + 1}</div>
+            <div class="ranking-player">
+                <div style="font-weight: 600;">${item.player.name}</div>
+                <div style="font-size: 0.85rem; color: #a0aec0;">
+                    ${item.score} pts • Row ${(item.player.highestRow || 0) + 1} • ${item.player.moves || 0} moves • ${item.player.minesHit || 0} mines
+                </div>
+            </div>
         `;
 
         elements.rankingsList.appendChild(div);
     });
+
+    // Show high score for solo mode
+    if (data.playerOrder.length === 1) {
+        const highScore = getHighScore();
+        if (highScore) {
+            const highScoreDiv = document.createElement('div');
+            highScoreDiv.style.marginTop = '20px';
+            highScoreDiv.style.padding = '15px';
+            highScoreDiv.style.background = 'rgba(251, 191, 36, 0.1)';
+            highScoreDiv.style.borderRadius = '8px';
+            highScoreDiv.style.border = '1px solid rgba(251, 191, 36, 0.3)';
+            highScoreDiv.innerHTML = `
+                <div style="text-align: center; color: #fbbf24; font-weight: 700; margin-bottom: 5px;">🏆 HIGH SCORE</div>
+                <div style="text-align: center; font-size: 1.5rem; font-weight: 700; color: #fff;">${highScore.score} pts</div>
+                <div style="text-align: center; font-size: 0.85rem; color: #a0aec0;">${highScore.name}</div>
+            `;
+            elements.rankingsList.appendChild(highScoreDiv);
+        }
+    }
 
     stopTurnTimer();
 }

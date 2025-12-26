@@ -118,14 +118,24 @@ function showQuestion() {
     answersContainer.innerHTML = '';
     feedback.classList.add('hidden');
 
-    // Create answer buttons
+    // Create answer buttons (multi-select enabled)
     q.answers.forEach(answer => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
         btn.textContent = answer;
-        btn.addEventListener('click', () => selectAnswer(answer, btn));
+        btn.dataset.answer = answer;
+        btn.addEventListener('click', () => toggleAnswer(btn));
         answersContainer.appendChild(btn);
     });
+
+    // Add submit button
+    const submitBtn = document.createElement('button');
+    submitBtn.id = 'submitAnswerBtn';
+    submitBtn.className = 'submit-answer-btn';
+    submitBtn.textContent = '✓ Submit Answer';
+    submitBtn.disabled = true;
+    submitBtn.addEventListener('click', submitAnswers);
+    answersContainer.appendChild(submitBtn);
 
     // Start timer
     timeLeft = 20;
@@ -152,17 +162,31 @@ function updateTimer() {
     }
 }
 
-// Handle answer selection
-function selectAnswer(selectedAnswer, selectedBtn) {
+// Toggle answer selection (multi-select)
+function toggleAnswer(btn) {
+    btn.classList.toggle('selected');
+
+    // Enable submit button if at least one answer selected
+    const selectedAnswers = answersContainer.querySelectorAll('.answer-btn.selected');
+    const submitBtn = document.getElementById('submitAnswerBtn');
+    submitBtn.disabled = selectedAnswers.length === 0;
+}
+
+// Submit selected answers
+function submitAnswers() {
     clearInterval(timerInterval);
 
     const answerTime = Math.round((Date.now() - questionStartTime) / 1000);
     answerTimes.push(answerTime);
 
     const q = questions[currentQuestion];
-    const isCorrect = selectedAnswer === q.correct;
+    const selectedBtns = answersContainer.querySelectorAll('.answer-btn.selected');
+    const selectedAnswers = Array.from(selectedBtns).map(btn => btn.dataset.answer);
 
-    // Disable all buttons
+    // Check if correct answer is selected
+    const isCorrect = selectedAnswers.includes(q.correct) && selectedAnswers.length === 1;
+
+    // Disable all buttons and submit button
     const allBtns = answersContainer.querySelectorAll('.answer-btn');
     allBtns.forEach(btn => {
         btn.disabled = true;
@@ -170,10 +194,16 @@ function selectAnswer(selectedAnswer, selectedBtn) {
             btn.classList.add('correct');
         }
     });
+    document.getElementById('submitAnswerBtn').disabled = true;
 
-    // Mark selected answer
+    // Mark selected answers
+    selectedBtns.forEach(btn => {
+        if (!btn.classList.contains('correct')) {
+            btn.classList.add('incorrect');
+        }
+    });
+
     if (isCorrect) {
-        selectedBtn.classList.add('correct');
         correctCount++;
 
         // Calculate points: base 100 + time bonus (max 100)
@@ -184,7 +214,6 @@ function selectAnswer(selectedAnswer, selectedBtn) {
         feedback.textContent = `✓ Correct! +${points} points`;
         feedback.className = 'feedback correct';
     } else {
-        selectedBtn.classList.add('incorrect');
         feedback.textContent = `✗ Wrong! The answer was: ${q.correct}`;
         feedback.className = 'feedback incorrect';
     }

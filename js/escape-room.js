@@ -165,8 +165,8 @@ function showLobby() {
             document.getElementById('roleAssignments').classList.remove('hidden');
         }
 
-        // Show start button for host when 4 players
-        if (isHost && playerCount === 4) {
+        // Show start button for host when 1+ players
+        if (isHost && playerCount >= 1) {
             document.getElementById('startGameBtn').classList.remove('hidden');
             document.getElementById('waitingMessage').classList.add('hidden');
         } else if (!isHost) {
@@ -199,7 +199,7 @@ document.getElementById('joinGameBtn').addEventListener('click', async () => {
     const players = data.players || {};
 
     if (Object.keys(players).length >= 4) {
-        alert('Room is full (4/4 players)');
+        alert('Room is full (4 players maximum)');
         return;
     }
 
@@ -252,9 +252,27 @@ function showGame(roomData) {
     document.getElementById('roomTitle').textContent = currentRoom.title;
     document.getElementById('roomDescription').textContent = currentRoom.description;
 
-    // Show player's clue
-    const myClue = currentRoom.clues[myPlayer.role];
-    document.getElementById('playerClue').innerHTML = `<p>${myClue}</p>`;
+    // Show player's clues (distribute roles among fewer players)
+    const playerArray = Object.values(players);
+    const playerCount = playerArray.length;
+    const myIndex = playerArray.findIndex(p => p.name === playerName);
+
+    // Safety check: if player not found, default to first player
+    const safeIndex = myIndex >= 0 ? myIndex : 0;
+
+    // Calculate which roles this player should see
+    const rolesPerPlayer = Math.ceil(ROLES.length / playerCount);
+    const startRole = safeIndex * rolesPerPlayer;
+    const endRole = Math.min(startRole + rolesPerPlayer, ROLES.length);
+    const myRoles = ROLES.slice(startRole, endRole);
+
+    // Display all clues for this player's roles
+    let clueHtml = '';
+    myRoles.forEach(role => {
+        clueHtml += `<div class="clue-item"><strong>${role.icon} ${role.name}:</strong> ${currentRoom.clues[role.id]}</div>`;
+    });
+
+    document.getElementById('playerClue').innerHTML = clueHtml;
 
     // Update hints
     const hintsRemaining = roomData.maxHints - roomData.hintsUsed;
@@ -333,18 +351,37 @@ function updateTimerDisplay(seconds) {
     }
 }
 
-// Update Team Clues
+// Update Team Clues (distribute roles among players)
 function updateTeamClues(players, currentRoom) {
     const teamDiv = document.getElementById('teamCluesShared');
     teamDiv.innerHTML = '';
 
-    Object.values(players).forEach(player => {
-        const clue = currentRoom.clues[player.role];
+    const playerArray = Object.values(players);
+    const playerCount = playerArray.length;
+    const rolesPerPlayer = Math.ceil(ROLES.length / playerCount);
+
+    playerArray.forEach((player, index) => {
+        // Calculate which roles this player has
+        const startRole = index * rolesPerPlayer;
+        const endRole = Math.min(startRole + rolesPerPlayer, ROLES.length);
+        const playerRoles = ROLES.slice(startRole, endRole);
+
+        // Safety check: skip if no roles assigned
+        if (playerRoles.length === 0) {
+            return;
+        }
+
+        // Build clue HTML for all roles
+        let clueText = '';
+        playerRoles.forEach(role => {
+            clueText += `<strong>${role.icon} ${role.name}:</strong> ${currentRoom.clues[role.id]}<br>`;
+        });
+
         const div = document.createElement('div');
         div.className = 'shared-clue';
         div.innerHTML = `
-            <div class="player-name">${ROLES.find(r => r.id === player.role).icon} ${player.name}</div>
-            <div class="clue-text">${clue}</div>
+            <div class="player-name">${playerRoles[0].icon} ${player.name}</div>
+            <div class="clue-text">${clueText}</div>
         `;
         teamDiv.appendChild(div);
     });
