@@ -54,6 +54,25 @@ const questionScreen = document.getElementById('questionScreen');
 const resultsScreen = document.getElementById('resultsScreen');
 const finalScreen = document.getElementById('finalScreen');
 
+// Centralized screen management
+let currentScreen = 'join';
+const screens = ['joinScreen', 'lobbyScreen', 'questionScreen', 'waitingScreen', 'resultsScreen', 'finalScreen'];
+
+function showScreen(screenId) {
+    if (currentScreen === screenId.replace('Screen', '')) return; // Prevent duplicate transitions
+
+    screens.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) screen.classList.add('hidden');
+    });
+
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.remove('hidden');
+        currentScreen = screenId.replace('Screen', '');
+    }
+}
+
 // Generate room code
 function generateRoomCode() {
     const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -72,6 +91,12 @@ function shuffleQuestions() {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.slice(0, TOTAL_ROUNDS);
+}
+
+// Capitalize first letter of string
+function capitalizeFirst(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // Create Room
@@ -129,8 +154,7 @@ function showLobby() {
         lobbyUnsubscribe = null;
     }
 
-    joinScreen.classList.add('hidden');
-    lobbyScreen.classList.remove('hidden');
+    showScreen('lobbyScreen');
 
     document.getElementById('roomCodeLobby').textContent = roomCode;
 
@@ -226,6 +250,13 @@ document.getElementById('joinGameBtn').addEventListener('click', async () => {
     // Mark as connected
     await update(playerRef, { connected: true });
 
+    // Verify host status from server (prevents race condition)
+    const verifySnapshot = await new Promise((resolve) => {
+        onValue(roomRef, resolve, { onlyOnce: true });
+    });
+    const verifiedData = verifySnapshot.val();
+    isHost = verifiedData.host === playerName;
+
     document.querySelector('.player-name-input').style.display = 'none';
 });
 
@@ -239,9 +270,7 @@ document.getElementById('startGameBtn').addEventListener('click', async () => {
 
 // Show Question
 function showQuestion(roomData) {
-    lobbyScreen.classList.add('hidden');
-    resultsScreen.classList.add('hidden');
-    questionScreen.classList.remove('hidden');
+    showScreen('questionScreen');
 
     document.getElementById('roomCodeQuestion').textContent = roomCode;
 
@@ -349,11 +378,7 @@ function displayScoreboard(players, answers, majorityAnswer) {
 
 // Show Waiting Screen (after submitting)
 function showWaitingScreen() {
-    const questionScreen = document.getElementById('questionScreen');
-    const waitingScreen = document.getElementById('waitingScreen');
-
-    questionScreen.classList.add('hidden');
-    waitingScreen.classList.remove('hidden');
+    showScreen('waitingScreen');
 
     document.getElementById('roomCodeWaiting').textContent = roomCode;
 
@@ -405,12 +430,7 @@ function showWaitingScreen() {
 
 // Show Results
 function showResults(roomData) {
-    const questionScreen = document.getElementById('questionScreen');
-    const waitingScreen = document.getElementById('waitingScreen');
-
-    questionScreen.classList.add('hidden');
-    waitingScreen.classList.add('hidden');
-    resultsScreen.classList.remove('hidden');
+    showScreen('resultsScreen');
 
     document.getElementById('roomCodeResults').textContent = roomCode;
 
@@ -570,9 +590,7 @@ document.getElementById('nextRoundBtn').addEventListener('click', async () => {
 
 // Show Final Results
 function showFinalResults(roomData) {
-    resultsScreen.classList.add('hidden');
-    questionScreen.classList.add('hidden');
-    finalScreen.classList.remove('hidden');
+    showScreen('finalScreen');
 
     const players = roomData.players || {};
     const sortedPlayers = Object.values(players).sort((a, b) => b.score - a.score);

@@ -46,6 +46,7 @@ const elements = {
     moveUpLeftBtn: document.getElementById('moveUpLeftBtn'),
     moveUpBtn: document.getElementById('moveUpBtn'),
     moveUpRightBtn: document.getElementById('moveUpRightBtn'),
+    mineCount: document.getElementById('mineCount'),
     playersStatus: document.getElementById('playersStatus'),
 
     winnerName: document.getElementById('winnerName'),
@@ -306,7 +307,12 @@ function updateGame(data) {
     showScreen('game');
     elements.gameRoomCode.textContent = currentRoom;
 
-    console.log(`🎮 Game update - Mines: ${data.mines?.length || 0}, Revealed: ${data.revealed?.length || 0}`);
+    // Update mine count display
+    const mineCount = data.mines?.length || 0;
+    const revealedCount = data.revealed?.length || 0;
+    elements.mineCount.textContent = `💣 ${mineCount} mines (${revealedCount} revealed)`;
+
+    console.log(`🎮 Game update - Mines: ${mineCount}, Revealed: ${revealedCount}`);
 
     // Update turn indicator
     const currentTurnPlayer = data.players[data.currentTurn];

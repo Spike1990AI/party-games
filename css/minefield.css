@@ -12,10 +12,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
+}
+
+.mine-count {
+    text-align: center;
+    padding: 8px;
+    margin-bottom: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .turn-indicator {
@@ -51,11 +63,12 @@
 .game-grid {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    gap: 4px;
-    margin: 20px auto;
-    max-width: 400px;
+    gap: 3px;
+    margin: 15px auto;
+    max-width: 100%;
+    width: 100%;
     background: rgba(0, 0, 0, 0.3);
-    padding: 8px;
+    padding: 6px;
     border-radius: 12px;
 }
 
@@ -311,37 +324,38 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .game-grid {
-        max-width: 100%;
-        gap: 3px;
-        padding: 6px;
-    }
-
     .grid-cell {
-        border-radius: 4px;
-        font-size: 1rem;
+        border-radius: 3px;
+        font-size: 0.9rem;
     }
 
     .player-marker {
-        width: 24px;
-        height: 24px;
-        font-size: 0.7rem;
+        width: 22px;
+        height: 22px;
+        font-size: 0.65rem;
+        border-width: 2px;
     }
 
     .move-btn {
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
         font-size: 1.8rem;
     }
 
     .game-status {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         text-align: center;
+        padding: 12px;
     }
 
     .winner-announcement h2 {
         font-size: 2rem;
+    }
+
+    .players-info {
+        margin-top: 15px;
+        padding: 12px;
     }
 }
 

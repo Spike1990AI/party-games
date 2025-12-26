@@ -6,6 +6,7 @@ let playerName = null;
 let playerRole = null;
 let isHost = false;
 let timerInterval = null;
+let lastRoomNumber = null; // Track current room to prevent input clearing
 const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
 
 // Player roles
@@ -268,9 +269,12 @@ function showGame(roomData) {
     // Show team clues
     updateTeamClues(players, currentRoom);
 
-    // Reset answer input
-    document.getElementById('answerInput').value = '';
-    document.getElementById('hintDisplay').classList.add('hidden');
+    // Only clear input when changing rooms, not on every update
+    if (lastRoomNumber !== roomData.currentRoom) {
+        document.getElementById('answerInput').value = '';
+        document.getElementById('hintDisplay').classList.add('hidden');
+        lastRoomNumber = roomData.currentRoom;
+    }
 
     // Listen for room updates
     const roomRef = ref(database, `rooms/${roomCode}`);
