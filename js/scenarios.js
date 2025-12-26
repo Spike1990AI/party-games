@@ -11,12 +11,12 @@ export const SCENARIOS = {
                 title: 'Security Office',
                 description: 'Entered through ventilation. Disable the cameras by finding the master code.',
                 answer: '7392',
-                hint: 'Each player has one digit. Combine in order: Scout → Hacker → Insider → Safecracker',
+                hint: 'Guard shift schedule - combine the numbers from different sources.',
                 clues: {
-                    scout: 'Note on desk: "Master code first digit: 7"',
-                    hacker: 'Screen shows: "Security digit 2 = 3"',
-                    insider: 'Sticky note: "Third digit is 9"',
-                    safecracker: 'Blueprint marks: "Final: 2"'
+                    scout: 'Shift schedule board shows guards change at 7:00, and there are 9 guards on rotation',
+                    hacker: 'Security log shows 3 incidents last month, master code is 4 digits',
+                    insider: 'Head guard\'s lucky number is 2 - he puts it at the end of everything',
+                    safecracker: 'Keypad shows wear on 7, 3, 9, 2 - in that order based on smudge patterns'
                 }
             },
             {
@@ -24,38 +24,38 @@ export const SCENARIOS = {
                 title: 'Guard Rotation Schedule',
                 description: 'Find when guards change shifts to know your window of opportunity.',
                 answer: 'MIDNIGHT',
-                hint: 'Each player has two letters. Combine them in role order.',
+                hint: 'The hour when guards are most tired - when wolves howl.',
                 clues: {
-                    scout: 'Patrol log shows: "MI" circled in red',
-                    hacker: 'Email fragment: "...shifts at DN..."',
-                    insider: 'Whispered gossip: "They say IG..."',
-                    safecracker: 'Old schedule torn: "...HT break"'
+                    scout: 'Patrol log shows gap in coverage - guards are tired at the hour wolves are said to howl',
+                    hacker: 'Schedule database: \'All guards off-duty for 15 min at 00:00 hours\'',
+                    insider: 'Overheard: \'The dead of night is our only window\' - 8 letters',
+                    safecracker: 'Clock on wall frozen at 12:00, but moon symbol showing - not noon'
                 }
             },
             {
                 id: 3,
                 title: 'Laser Grid Gallery',
                 description: 'Navigate the laser grid. Calculate safe path coordinates.',
-                answer: 'B4D2A3C1',
-                hint: 'Each player has two coordinates. Path spells ESCAPE when connected.',
+                answer: 'NORTH3WEST2SOUTH1',
+                hint: 'Directions and distances - combine the path coordinates with their numbers.',
                 clues: {
-                    scout: 'Map shows: "Start B4, move to D2"',
-                    hacker: 'Logs indicate: "D2 to A3 is safe"',
-                    insider: 'Guard notes: "A3 to C1 pattern"',
-                    safecracker: 'Blueprint: "C1 final position"'
+                    scout: 'Map shows safe path: go NORTH first, then WEST, then SOUTH to exit',
+                    hacker: 'Laser log shows 3 beams disabled in sector N, 2 in sector W, 1 in sector S',
+                    insider: 'Guard mentioned: \'Direction plus number, no spaces, all caps\'',
+                    safecracker: 'Floor tiles numbered by row - N row is 3, W is 2, S is 1'
                 }
             },
             {
                 id: 4,
                 title: 'Curator\'s Office',
                 description: 'The curator\'s safe contains the vault blueprints. Crack the combination.',
-                answer: '251990',
+                answer: '250190',
                 hint: 'Birth dates hidden in personal items. Format: DDMMYY',
                 clues: {
-                    scout: 'Family photo dated: "25th"',
-                    hacker: 'Email signature: "Since 1990"',
-                    insider: 'Overheard: "January is his favorite month"',
-                    safecracker: 'Safe dial shows wear at: 2, 5, 1, 9, 0'
+                    scout: 'Family photo caption: \'Born on the 25th\'',
+                    hacker: 'Personnel file: DOB in DDMMYY format, year is 1990',
+                    insider: 'Curator celebrates birthday in January - first month of the year',
+                    safecracker: 'Safe dial shows 6-digit combo: DD, then MM, then YY'
                 }
             },
             {
@@ -65,23 +65,23 @@ export const SCENARIOS = {
                 answer: 'REDGREENBLUEYELLOW',
                 hint: 'Wire colors must be entered in the order they connect to terminals A-D',
                 clues: {
-                    scout: 'Terminal A connects to RED wire',
-                    hacker: 'System diagram shows B→GREEN',
-                    insider: 'Electrician said: "C is always BLUE"',
-                    safecracker: 'Wiring schematic: D=YELLOW'
+                    scout: 'Terminal A has a crimson wire - color of blood, color of stop signs',
+                    hacker: 'Wiring diagram: B=opposite of red on traffic lights, D=bright like the sun',
+                    insider: 'Electrician said: C is the color of the ocean, all colors as words, no spaces',
+                    safecracker: 'Wire gauge labels: A=R, B=G, C=B, D=Y - but what colors?'
                 }
             },
             {
                 id: 6,
                 title: 'Vault Keypad',
                 description: 'The vault door requires a 6-digit code derived from historical dates.',
-                answer: '141789',
-                hint: 'French Revolution started it all. Day and month only.',
+                answer: '140789',
+                hint: 'French Revolution started it all. Bastille Day in DDMMYY format.',
                 clues: {
-                    scout: 'Plaque reads: "Bastille Day 14th"',
-                    hacker: 'Database shows: "July 1789"',
-                    insider: 'Curator obsessed with: "17..."',
-                    safecracker: 'Door inscription: "...89 Revolution"'
+                    scout: 'Plaque reads: \'Commemorating the 14th\'',
+                    hacker: 'Historical database: \'French Revolution year 1789, summer month\'',
+                    insider: 'Curator obsessed with Bastille Day - the storming was in July',
+                    safecracker: 'Keypad format: 6 digits, DDMMYY, related to French history'
                 }
             },
             {
@@ -89,12 +89,12 @@ export const SCENARIOS = {
                 title: 'Diamond Case Lock',
                 description: 'The diamond is behind a lock requiring the name of the stone.',
                 answer: 'HOPEDIAMOND',
-                hint: 'Famous cursed blue diamond. Combine the two-word name.',
+                hint: 'Famous cursed blue diamond. Combine the two-word name as one.',
                 clues: {
-                    scout: 'Placard shows: "The HOPE..."',
-                    hacker: 'Insurance doc: "...DIAMOND value"',
-                    insider: 'Heard whispers: "Blue curse of..."',
-                    safecracker: 'Case engraving: "H.D. 45.52 carats"'
+                    scout: 'Display card mentions \'a feeling of optimism\' and \'precious stone\' - combine them',
+                    hacker: 'Insurance records: 45.52 carats, allegedly cursed, two-word name as one',
+                    insider: 'Tour guide called it \'the most famous blue gem with an unlucky reputation\'',
+                    safecracker: 'Lock takes 11 characters - first 4 spell a positive emotion'
                 }
             },
             {
@@ -104,10 +104,10 @@ export const SCENARIOS = {
                 answer: 'EXIT2025',
                 hint: 'Emergency exits labeled by year of installation and function.',
                 clues: {
-                    scout: 'Sign says: "EXIT installed..."',
-                    hacker: 'Building permits: "2025 renovation"',
-                    insider: 'Manager mentioned: "New exits this year"',
-                    safecracker: 'Door model number: EX1T-2025'
+                    scout: 'Door labeled \'Emergency ____\' - 4 letters meaning \'way out\'',
+                    hacker: 'Building permits: All doors renovated this year, 2025',
+                    insider: 'Manager: \'New exits installed this year - code is the label plus the year\'',
+                    safecracker: 'Keypad accepts 8 characters: 4 letters + 4 numbers'
                 }
             }
         ]
@@ -123,12 +123,12 @@ export const SCENARIOS = {
                 title: 'Cell Block',
                 description: 'Find the master key code to unlock your cell door.',
                 answer: '8634',
-                hint: 'Guard rotation schedule digits. Each prisoner has one number.',
+                hint: 'Guard rotation schedule digits. Combine the numbers in the right order.',
                 clues: {
-                    scout: 'Scratched on wall: "8 guards"',
-                    hacker: 'Overhead PA: "Shift 6 reporting"',
-                    insider: 'Whisper from next cell: "3 o\'clock"',
-                    safecracker: 'Lock shows wear on: 4'
+                    scout: 'Wall scratches show 8 guards patrol this block, 4 are at the gate',
+                    hacker: 'Shift system: Station 6 covers our wing, 3 guards per shift',
+                    insider: 'Old prisoner whispered: \'Number of guards, number of station, number per shift, number at gate\'',
+                    safecracker: 'Lock tumblers worn at 8, 6, 3, 4 positions - that\'s the sequence'
                 }
             },
             {
@@ -138,10 +138,10 @@ export const SCENARIOS = {
                 answer: 'FREEDOM',
                 hint: 'Password is what every prisoner wants. 7 letters.',
                 clues: {
-                    scout: 'Poster on wall: "FRE..."',
-                    hacker: 'Sticky note: "...EDO..."',
-                    insider: 'Guard complained: "...DOM is overrated"',
-                    safecracker: 'Dictionary marked at: F-section'
+                    scout: 'Motivational poster has word blanked out: \'F______\' - 7 letters, what you\'re fighting for',
+                    hacker: 'Password hint in system: \'What do prisoners dream of? The opposite of captivity\'',
+                    insider: 'Guard complained: \'These prisoners and their constant talk about [REDACTED]\'',
+                    safecracker: 'Keyboard shows wear on F-R-E-D-O-M keys - but that\'s only 6 letters, missing one \'E\''
                 }
             },
             {
@@ -151,10 +151,10 @@ export const SCENARIOS = {
                 answer: 'MEATLOAF',
                 hint: 'Tuesday\'s dinner special. One word, no spaces.',
                 clues: {
-                    scout: 'Menu board: "Tuesday: MEAT..."',
-                    hacker: 'Inventory list: "...LOAF supplies"',
-                    insider: 'Cook muttered: "I hate making..."',
-                    safecracker: 'Recipe book marked: M.L. page 47'
+                    scout: 'Menu board: Tuesday = ground beef baked dish, 8 letters',
+                    hacker: 'Kitchen inventory: \'M.L. - 200 servings ordered for Tuesday\'',
+                    insider: 'Cook groaned: \'Not the Tuesday special again - rhymes with "beat loaf"\'',
+                    safecracker: 'Kitchen safe combo is the most hated dinner, all one word, all caps'
                 }
             },
             {
@@ -164,10 +164,10 @@ export const SCENARIOS = {
                 answer: '350ML',
                 hint: 'Prescription dosage for acid. Amount and unit.',
                 clues: {
-                    scout: 'Prescription reads: "350..."',
-                    hacker: 'Database shows: "...ML hydrochloric"',
-                    insider: 'Nurse said: "Milliliters, not grams"',
-                    safecracker: 'Bottle label: 3-5-0'
+                    scout: 'Prescription pad shows: \'Administer 350 of the liquid\'',
+                    hacker: 'Medical database: \'Dosage measured in milliliters, not grams\'',
+                    insider: 'Nurse said: \'Three-fifty of the solution, abbreviated unit\'',
+                    safecracker: 'Cabinet lock: 5 characters - 3 numbers followed by 2 letters for the unit'
                 }
             },
             {
@@ -177,10 +177,10 @@ export const SCENARIOS = {
                 answer: 'SHED3',
                 hint: 'Maintenance shed number where tools are stored.',
                 clues: {
-                    scout: 'Map shows: "SHED..."',
-                    hacker: 'Work order: "...3 repairs"',
-                    insider: 'Inmate tip: "Third shed, east side"',
-                    safecracker: 'Gate marked: S-3'
+                    scout: 'Map shows three maintenance buildings on east side - the third has tools',
+                    hacker: 'Work order #3: \'Wire cutters stored at maintenance structure\'',
+                    insider: 'Trustee whispered: \'Look in the SHED, but which one? The third\'',
+                    safecracker: 'Gate lock: 5 characters - building type (4 letters) plus number'
                 }
             },
             {
@@ -190,10 +190,10 @@ export const SCENARIOS = {
                 answer: '197845',
                 hint: 'Warden\'s badge number from his framed certificate.',
                 clues: {
-                    scout: 'Certificate shows: "197..."',
-                    hacker: 'Personnel file: "Badge 8..."',
-                    insider: 'Secretary gossiped: "...45 years service"',
-                    safecracker: 'Safe dial favorites: 1-9-7-8-4-5'
+                    scout: 'Certificate on wall: \'Warden since 1978, badge 197###\'',
+                    hacker: 'Personnel file: \'Badge suffix: year appointed (78) minus 33\'',
+                    insider: 'Secretary mentioned: \'45 years of service\' - that\'s the last two digits',
+                    safecracker: 'Safe dial: 6 digits, starts with 197, ends with 45, middle digit is 8'
                 }
             },
             {
@@ -201,12 +201,12 @@ export const SCENARIOS = {
                 title: 'Tunnel Entrance',
                 description: 'Old escape tunnel locked. Code is prisoner numbers.',
                 answer: '24601',
-                hint: 'Jean Valjean\'s famous prisoner number.',
+                hint: 'Jean Valjean\'s famous prisoner number from Les Miserables.',
                 clues: {
-                    scout: 'Book on desk: "Les Miserables"',
-                    hacker: 'Database search: "24601 historical"',
-                    insider: 'Old timer said: "Like Valjean..."',
-                    safecracker: 'Tunnel door engraved: 2-4-6-0-1'
+                    scout: 'Book on table: \'Les Miserables\' - the hero\'s number is the code',
+                    hacker: 'Historical database: \'Most famous fictional prisoner number from French literature\'',
+                    insider: 'Old timer said: \'Like Jean Valjean, we\'re all just numbers here\'',
+                    safecracker: 'Tunnel door: 5-digit code, starts with 2, ends with 1'
                 }
             },
             {
@@ -214,12 +214,12 @@ export const SCENARIOS = {
                 title: 'Perimeter Gate',
                 description: 'Final gate code is the prison\'s founding year.',
                 answer: '1876',
-                hint: 'Check the cornerstone of the main building.',
+                hint: 'Check the cornerstone of the main building - the centennial year.',
                 clues: {
-                    scout: 'Cornerstone reads: "Est. 18..."',
-                    hacker: 'Archives show: "...76 construction"',
-                    insider: 'Tour guide mentioned: "Over 140 years old"',
-                    safecracker: 'Gate mechanism stamped: 1-8-7-6'
+                    scout: 'Cornerstone reads: \'Established 18##\' - last two digits worn away',
+                    hacker: 'Archives: \'Construction completed in the American centennial year\'',
+                    insider: 'Tour guide: \'This prison is almost 150 years old\' (current year 2025)',
+                    safecracker: 'Gate lock: 4 digits, 18## - America was 100 years old that year'
                 }
             }
         ]
@@ -237,10 +237,10 @@ export const SCENARIOS = {
                 answer: '1933',
                 hint: 'Year the Nazi party took power in Germany.',
                 clues: {
-                    scout: 'Propaganda poster: "1933 Victory"',
-                    hacker: 'Telegraph dated: "33 regime"',
-                    insider: 'Guard bragged: "Since \'33..."',
-                    safecracker: 'Door marked: 19-33'
+                    scout: 'Propaganda poster: \'Year One of the Thousand Year Reich\' - but what year?',
+                    hacker: 'Telegraph: \'Power consolidated, thirties, before \'35, after \'32\'',
+                    insider: 'Guard bragged: \'The Führer became Chancellor that year - January\'',
+                    safecracker: 'Door lock: 4 digits, 19##, year Hitler became Chancellor of Germany'
                 }
             },
             {
@@ -250,10 +250,10 @@ export const SCENARIOS = {
                 answer: 'ENIGMA',
                 hint: 'Name of the encryption machine used by Germans.',
                 clues: {
-                    scout: 'Manual cover: "ENIG..."',
-                    hacker: 'Codebook: "...MA cipher"',
-                    insider: 'Operator cursed: "Damn ENIGMA again"',
-                    safecracker: 'Machine label: E-N-I-G-M-A'
+                    scout: 'Machine on desk has a Greek-sounding name meaning \'mystery\' or \'puzzle\'',
+                    hacker: 'Codebook reference: \'6-letter device name, Allies struggled to break this cipher\'',
+                    insider: 'Operator cursed: \'This damn riddle machine\' - but in Latin/Greek',
+                    safecracker: 'Machine label starts with E, ends with A, 6 letters total'
                 }
             },
             {
@@ -263,10 +263,10 @@ export const SCENARIOS = {
                 answer: 'BERLIN',
                 hint: 'Capital city where the bunker is located.',
                 clues: {
-                    scout: 'Map labeled: "BERL..."',
-                    hacker: 'Coordinates show: "...LIN center"',
-                    insider: 'Hitler ranted about: "My beloved..."',
-                    safecracker: 'Safe dial letters: B-E-R-L-I-N'
+                    scout: 'The map shows a red X on the German capital - that\'s where we are',
+                    hacker: 'Telegraph routing: \'BER-LIN sector\' - 6 letters total',
+                    insider: 'Hitler ranted: \'I will never leave my beloved capital\'',
+                    safecracker: 'Safe dial: 6 letters, German capital city, starts with B'
                 }
             },
             {
@@ -276,23 +276,23 @@ export const SCENARIOS = {
                 answer: 'PANZER',
                 hint: 'German word for tank. What\'s written on the crates.',
                 clues: {
-                    scout: 'Crates stenciled: "PAN..."',
-                    hacker: 'Inventory: "...ZER rounds"',
-                    insider: 'Soldier yelled: "More for the..."',
-                    safecracker: 'Lock dial shows: P-A-N-Z-E-R'
+                    scout: 'Crates labeled with German word for armored vehicle - like a tank',
+                    hacker: 'Inventory code: \'PZR\' expanded to 6 letters, German military term',
+                    insider: 'Soldier yelled: \'Load the tanks!\' but in German',
+                    safecracker: 'Lock dial: 6 letters, starts with P, German word meaning \'armor\''
                 }
             },
             {
                 id: 5,
                 title: 'Generator Room',
                 description: 'Power down sequence requires shutdown code.',
-                answer: '091939',
-                hint: 'Date WW2 started: Poland invasion, September 1st 1939.',
+                answer: '010939',
+                hint: 'Date WW2 started: Poland invasion, September 1st 1939 in DDMMYY format.',
                 clues: {
-                    scout: 'Calendar marked: "01 Sept"',
-                    hacker: 'Log entry: "War began 39"',
-                    insider: 'Officer remembered: "September \'39..."',
-                    safecracker: 'Panel shows: 09-19-39'
+                    scout: 'Calendar circled: \'Poland invaded - 1st day of the month\'',
+                    hacker: 'War log: \'September 1939, format DDMMYY\'',
+                    insider: 'Officer remembered: \'The war began the first of September, thirty-nine\'',
+                    safecracker: 'Panel format: 6 digits, DD-MM-YY, invasion of Poland date'
                 }
             },
             {
@@ -302,10 +302,10 @@ export const SCENARIOS = {
                 answer: 'MENGELE',
                 hint: 'Infamous Nazi doctor\'s surname.',
                 clues: {
-                    scout: 'Name tag: "Dr. MEN..."',
-                    hacker: 'File cabinet: "...GELE, Josef"',
-                    insider: 'Nurse whispered: "That monster..."',
-                    safecracker: 'Safe engraved: M-E-N-G-E-L-E'
+                    scout: 'Name tag shows \'Dr. M______\' - 7 letters, called the \'Angel of Death\'',
+                    hacker: 'Personnel file: \'Infamous doctor, first name Josef, surname 7 letters\'',
+                    insider: 'Nurse whispered about \'that monster\' - notorious for twin experiments',
+                    safecracker: 'Safe engraved: starts with M, ends with E, 7 letters'
                 }
             },
             {
@@ -315,10 +315,10 @@ export const SCENARIOS = {
                 answer: 'EVABRAUN',
                 hint: 'His mistress\'s name. No spaces.',
                 clues: {
-                    scout: 'Photo frame: "EVA..."',
-                    hacker: 'Letter signed: "...BRAUN"',
-                    insider: 'Aide mentioned: "The Führer\'s..."',
-                    safecracker: 'Safe dial: E-V-A-B-R-A-U-N'
+                    scout: 'Photo frame shows a woman - \'His love, 3 letters + 5 letters, no space\'',
+                    hacker: 'Marriage records: \'Wed in the bunker, her surname means \'brown\' in German\'',
+                    insider: 'Aide whispered: \'The Führer\'s woman - first name is EVA\'',
+                    safecracker: 'Safe dial: 8 characters, first name + last name combined'
                 }
             },
             {
@@ -328,10 +328,10 @@ export const SCENARIOS = {
                 answer: '020545',
                 hint: 'Day Berlin fell to Allies: May 2nd, 1945. Format: DDMMYY',
                 clues: {
-                    scout: 'Newspaper: "2nd May..."',
-                    hacker: 'Telegraph: "...45 surrender"',
-                    insider: 'Guard sobbed: "It\'s over, May..."',
-                    safecracker: 'Door scratched: 02-05-45'
+                    scout: 'Newspaper headline: \'Berlin falls on the 2nd day\'',
+                    hacker: 'Surrender records: \'May 1945, format DDMMYY\'',
+                    insider: 'Guard sobbed: \'It ended in May, the second day of the month\'',
+                    safecracker: 'Door code: 6 digits, DDMMYY, date Berlin surrendered'
                 }
             }
         ]
