@@ -46,6 +46,38 @@ let isHost = false;
 let currentRound = 0;
 const TOTAL_ROUNDS = 10;
 let lobbyUnsubscribe = null; // Track lobby listener for cleanup
+let answerTimeout = null; // Timeout for forcing results if not all players answer
+let skipButtonTimeout = null; // Timeout for showing skip button to host
+
+// Helper function to count only connected players
+function getConnectedPlayerCount(players) {
+    if (!players) return 0;
+    return Object.values(players).filter(p => p.connected !== false).length;
+}
+
+// Host migration - assign new host if current host disconnected
+async function checkAndMigrateHost(data) {
+    const players = data.players || {};
+    const currentHost = data.host;
+    const hostPlayer = Object.values(players).find(p => p.name === currentHost);
+
+    // If host disconnected or doesn't exist, migrate to first connected player
+    if (!hostPlayer || hostPlayer.connected === false) {
+        const connectedPlayers = Object.values(players).filter(p => p.connected !== false);
+        if (connectedPlayers.length > 0) {
+            // Sort by join time to get consistent host selection
+            connectedPlayers.sort((a, b) => (a.joinedAt || 0) - (b.joinedAt || 0));
+            const newHost = connectedPlayers[0];
+
+            if (newHost.name === playerName) {
+                // I'm the new host
+                isHost = true;
+                console.log('👑 You are now the host');
+                await update(ref(database, `rooms/${roomCode}`), { host: playerName });
+            }
+        }
+    }
+}
 
 // DOM Elements
 const joinScreen = document.getElementById('joinScreen');
@@ -166,12 +198,16 @@ function showLobby() {
 
     // Listen for player updates
     const roomRef = ref(database, `rooms/${roomCode}`);
-    lobbyUnsubscribe = onValue(roomRef, (snapshot) => {
+    lobbyUnsubscribe = onValue(roomRef, async (snapshot) => {
         if (!snapshot.exists()) return;
 
         const data = snapshot.val();
+
+        // Check for host migration
+        await checkAndMigrateHost(data);
+
         const players = data.players || {};
-        const playerCount = Object.keys(players).length;
+        const playerCount = getConnectedPlayerCount(players);
 
         document.getElementById('playerCount').textContent = playerCount;
 
@@ -309,7 +345,7 @@ function showQuestion(roomData) {
     document.getElementById('submitAnswer').disabled = false;
 
     // Reset submitted status
-    document.getElementById('answerCountDisplay').textContent = `0/${Object.keys(players).length}`;
+    document.getElementById('answerCountDisplay').textContent = `0/${getConnectedPlayerCount(players)}`;
     document.getElementById('submittedPlayers').innerHTML = '';
 }
 
@@ -388,17 +424,54 @@ function showWaitingScreen() {
 
     document.getElementById('roomCodeWaiting').textContent = roomCode;
 
+    // Clear any existing timeouts
+    if (answerTimeout) {
+        clearTimeout(answerTimeout);
+        answerTimeout = null;
+    }
+    if (skipButtonTimeout) {
+        clearTimeout(skipButtonTimeout);
+        skipButtonTimeout = null;
+    }
+
+    // Hide skip button initially
+    document.getElementById('skipToResultsBtn').classList.add('hidden');
+
     // Listen for other players' answers
     const roomRef = ref(database, `rooms/${roomCode}`);
     let lastAnswerCount = 0;
 
-    const unsubscribe = onValue(roomRef, (snapshot) => {
+    // Set 60-second timeout to force results if not all answer
+    if (isHost) {
+        answerTimeout = setTimeout(async () => {
+            console.log('⏱️ Answer timeout - forcing results with available answers');
+            unsubscribe(); // Clean up listener
+            const freshSnapshot = await new Promise((resolve) => {
+                onValue(roomRef, resolve, { onlyOnce: true });
+            });
+            showResults(freshSnapshot.val());
+        }, 60000);
+
+        // Set 30-second timeout to show skip button
+        skipButtonTimeout = setTimeout(() => {
+            const skipBtn = document.getElementById('skipToResultsBtn');
+            // Only show if we're still on waiting screen
+            if (document.getElementById('waitingScreen').classList.contains('active')) {
+                skipBtn.classList.remove('hidden');
+            }
+        }, 30000);
+    }
+
+    const unsubscribe = onValue(roomRef, async (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
+        // Check for host migration
+        await checkAndMigrateHost(data);
+
         const answers = data.answers || {};
         const players = data.players || {};
-        const playerCount = Object.keys(players).length;
+        const playerCount = getConnectedPlayerCount(players); // Only count connected players
         const answerCount = Object.keys(answers).length;
 
         // Only update display if answer count changed
@@ -420,9 +493,15 @@ function showWaitingScreen() {
             });
         }
 
-        // ALWAYS check if all answered (moved outside the count change block)
+        // ALWAYS check if all CONNECTED players answered (moved outside the count change block)
         // This fixes race condition where last player's answer might not trigger count change
+        // Now also handles disconnected players by only counting connected ones
         if (answerCount === playerCount && answerCount > 0 && data.gameState === 'playing') {
+            // Clear timeout since all answered
+            if (answerTimeout) {
+                clearTimeout(answerTimeout);
+                answerTimeout = null;
+            }
             unsubscribe(); // Clean up listener
             // Fetch fresh data to avoid stale closure
             setTimeout(async () => {
@@ -547,10 +626,16 @@ function showResults(roomData) {
     const roomRef = ref(database, `rooms/${roomCode}`);
     const currentRoundNum = roomData.currentRound;
 
-    const unsubscribe = onValue(roomRef, (snapshot) => {
+    const unsubscribe = onValue(roomRef, async (snapshot) => {
         if (!snapshot.exists()) return;
 
         const data = snapshot.val();
+
+        // Check for host migration
+        await checkAndMigrateHost(data);
+
+        // Update Next Round button visibility based on current host status
+        document.getElementById('nextRoundBtn').style.display = isHost ? 'block' : 'none';
 
         // Next round started (round number increased)
         if (data.gameState === 'playing' && data.currentRound > currentRoundNum) {
