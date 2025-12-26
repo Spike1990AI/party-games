@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herd Mentality</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/herd-mentality.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen">
+            <h1>🐮 Herd Mentality</h1>
+            <p class="subtitle">Think like the herd!</p>
+
+            <div class="room-section">
+                <div class="create-room">
+                    <h3>Create New Game</h3>
+                    <button id="createRoomBtn" class="btn-primary">Create Room (4 players)</button>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <div class="join-room">
+                    <h3>Join Existing Game</h3>
+                    <input type="text" id="roomCodeInput" placeholder="Enter 4-letter code" maxlength="4">
+                    <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+                </div>
+            </div>
+
+            <div id="roomCode" class="room-code hidden">
+                <p>Room Code:</p>
+                <h2 id="codeDisplay"></h2>
+                <p class="small">Share this with other players</p>
+            </div>
+
+            <div class="info">
+                <p>🎯 Match the majority answer to score!</p>
+                <p>🐮 Unique answer? You get the Pink Cow!</p>
+                <p>🏆 Most points after 10 rounds wins!</p>
+            </div>
+        </div>
+
+        <!-- Lobby Screen -->
+        <div id="lobbyScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeLobby"></span></div>
+            <h1>🐮 Waiting Room</h1>
+
+            <div class="player-name-input">
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="12">
+                <button id="joinGameBtn" class="btn-primary">Join Game</button>
+            </div>
+
+            <div class="players-list">
+                <h3>Players (<span id="playerCount">0</span>/4)</h3>
+                <div id="playersList"></div>
+            </div>
+
+            <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
+            <p id="waitingMessage" class="hidden">Waiting for host to start...</p>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="questionScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeQuestion"></span></div>
+
+            <div class="game-header">
+                <div class="player-info">
+                    <span id="playerNameDisplay"></span>
+                    <span id="scoreDisplay">0 pts</span>
+                </div>
+                <div class="question-info">
+                    <span id="roundNumber">1/10</span>
+                    <span id="pinkCow" class="pink-cow hidden">🐮</span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="question"></h2>
+            </div>
+
+            <div class="answer-input">
+                <input type="text" id="answerInput" placeholder="Type your answer..." maxlength="30">
+                <button id="submitAnswer" class="btn-primary">Submit</button>
+            </div>
+
+            <div id="waitingForAnswers" class="hidden">
+                <p>Waiting for other players...</p>
+                <div class="submitted-players" id="submittedPlayers"></div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen hidden">
+            <div class="room-code-header">Room: <span id="roomCodeResults"></span></div>
+
+            <h2>Round Results</h2>
+
+            <div class="majority-answer">
+                <p>Herd Answer:</p>
+                <h1 id="majorityAnswer"></h1>
+            </div>
+
+            <div class="all-answers" id="allAnswers"></div>
+
+            <div id="pinkCowAward" class="pink-cow-award hidden">
+                <h3>🐮 Pink Cow goes to:</h3>
+                <p id="pinkCowPlayer"></p>
+            </div>
+
+            <button id="nextRoundBtn" class="btn-primary">Next Round</button>
+        </div>
+
+        <!-- Final Results Screen -->
+        <div id="finalScreen" class="screen hidden">
+            <h1>🏆 Game Over!</h1>
+
+            <div class="final-scores" id="finalScores"></div>
+
+            <button id="playAgainBtn" class="btn-primary">Play Again</button>
+            <button id="homeBtn" class="btn-secondary">Home</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/herd-mentality.js"></script>
+</body>
+</html>

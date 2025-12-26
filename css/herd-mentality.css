@@ -1,0 +1,329 @@
+/* Herd Mentality Specific Styles */
+
+.room-code-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 15px;
+    margin: -25px -25px 20px -25px;
+    border-radius: 20px 20px 0 0;
+    font-weight: 700;
+    font-size: 0.95em;
+    text-align: center;
+}
+
+.room-code-header span {
+    font-size: 1.3em;
+    letter-spacing: 3px;
+    margin-left: 5px;
+}
+
+/* Lobby */
+.players-list {
+    margin: 30px 0;
+}
+
+.players-list h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+#playersList {
+    display: grid;
+    gap: 10px;
+}
+
+.player-item {
+    padding: 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 20%);
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-item.host {
+    border-left-color: #764ba2;
+    background: linear-gradient(135deg, #f3e7ff 0%, #d4b3ff 20%);
+}
+
+.player-item .badge {
+    font-size: 0.8em;
+    padding: 4px 10px;
+    background: #667eea;
+    color: white;
+    border-radius: 12px;
+}
+
+#waitingMessage {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* Game Header */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-info span:first-child {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #667eea;
+}
+
+#scoreDisplay {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #333;
+}
+
+.question-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#roundNumber {
+    font-size: 0.9em;
+    color: #999;
+}
+
+.pink-cow {
+    font-size: 2.5em;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Question */
+.question-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+#question {
+    font-size: 1.5em;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Answer Input */
+.answer-input {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+#answerInput {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    border: 3px solid #667eea;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+
+#answerInput:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+}
+
+#answerInput:disabled {
+    background: #f5f5f5;
+    border-color: #ddd;
+}
+
+/* Waiting */
+#waitingForAnswers {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+#waitingForAnswers p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.submitted-players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.submitted-tag {
+    padding: 6px 12px;
+    background: #4caf50;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+/* Results */
+.majority-answer {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.majority-answer p {
+    font-size: 0.9em;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.majority-answer h1 {
+    font-size: 2.5em;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.all-answers {
+    margin-bottom: 25px;
+}
+
+.answer-group {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.answer-group.majority {
+    background: #e8f5e9;
+    border-left-color: #4caf50;
+}
+
+.answer-group.unique {
+    background: #fff3e0;
+    border-left-color: #ff9800;
+}
+
+.answer-group h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.answer-group .players {
+    color: #666;
+    font-size: 0.95em;
+}
+
+.answer-group .score-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #4caf50;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-left: 10px;
+}
+
+.pink-cow-award {
+    text-align: center;
+    padding: 20px;
+    background: #ffe0f0;
+    border-radius: 12px;
+    border: 3px dashed #ff69b4;
+    margin-bottom: 25px;
+}
+
+.pink-cow-award h3 {
+    color: #d81b60;
+    margin-bottom: 10px;
+}
+
+.pink-cow-award p {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Final Scores */
+.final-scores {
+    margin: 30px 0;
+}
+
+.final-player {
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 20%);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.final-player.winner {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border: 3px solid #ffa000;
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+}
+
+.final-player.winner::before {
+    content: '👑 ';
+}
+
+.final-player .name {
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.final-player .score {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.final-player.winner .score {
+    color: #ff6f00;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .screen {
+        padding: 15px;
+    }
+
+    #question {
+        font-size: 1.2em;
+    }
+
+    .majority-answer h1 {
+        font-size: 2em;
+    }
+
+    .pink-cow {
+        font-size: 2em;
+    }
+}
