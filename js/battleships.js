@@ -107,6 +107,10 @@ function showPlayerSelect() {
     // Hide team selection, show player names only
     document.querySelector('.team-select').style.display = 'none';
 
+    // Show 1v1 join button
+    const joinGameBtn = document.getElementById('joinGameBtn');
+    joinGameBtn.style.display = 'block';
+
     const playerInput = document.getElementById('playerName');
     playerInput.placeholder = 'Enter your name';
 
@@ -142,23 +146,33 @@ function showPlayerSelect() {
     // Enter key to join
     playerInput.addEventListener('keypress', async (e) => {
         if (e.key === 'Enter') {
-            const name = playerInput.value.trim();
-            if (!name) {
-                alert('Please enter your name');
-                return;
-            }
-            playerName = name;
-
-            const snapshot = await new Promise((resolve) => {
-                onValue(ref(database, `rooms/${roomCode}`), resolve, { onlyOnce: true });
-            });
-            const data = snapshot.val();
-            const currentPlayers = data[playerTeam].players;
-            currentPlayers.push(playerName);
-            await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
-            showSetupScreen();
+            await join1v1Game();
         }
     });
+
+    // Join button click handler
+    joinGameBtn.addEventListener('click', async () => {
+        await join1v1Game();
+    });
+
+    // Shared 1v1 join logic
+    async function join1v1Game() {
+        const name = playerInput.value.trim();
+        if (!name) {
+            alert('Please enter your name');
+            return;
+        }
+        playerName = name;
+
+        const snapshot = await new Promise((resolve) => {
+            onValue(ref(database, `rooms/${roomCode}`), resolve, { onlyOnce: true });
+        });
+        const data = snapshot.val();
+        const currentPlayers = data[playerTeam].players;
+        currentPlayers.push(playerName);
+        await set(ref(database, `rooms/${roomCode}/${playerTeam}/players`), currentPlayers);
+        showSetupScreen();
+    }
 }
 
 // Show team select

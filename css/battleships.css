@@ -100,6 +100,11 @@ input[type="text"] {
     text-transform: uppercase;
     text-align: center;
     font-weight: 700;
+    color: #333;
+}
+
+input[type="text"]::placeholder {
+    color: #999;
 }
 
 input[type="text"]:focus {
@@ -130,6 +135,45 @@ input[type="text"]:focus {
 .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.btn-back {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: 2px solid #666;
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-back:hover {
+    background: #f0f0f0;
+    border-color: #333;
+    color: #333;
+}
+
+.btn-danger {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    background: transparent;
+    color: #dc3545;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    margin-top: 15px;
+}
+
+.btn-danger:hover {
+    background: #dc3545;
+    color: white;
 }
 
 .room-code {

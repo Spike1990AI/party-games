@@ -1,5 +1,5 @@
 // Minefield Race Game Logic
-const { database, ref, set, onValue, update, remove, get } = window.firebase;
+import { database, ref, set, onValue, update, remove, get } from './firebase-minefield.js';
 
 // Game Configuration
 const GRID_ROWS = 8;

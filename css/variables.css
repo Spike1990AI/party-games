@@ -1,0 +1,90 @@
+/**
+ * Party Games - Design System Variables
+ * Unified navy theme across all games
+ */
+
+:root {
+  /* ========================================
+     COLORS - UNIFIED NAVY THEME
+     ======================================== */
+  --color-primary: #1e3c72;
+  --color-primary-light: #2a5298;
+  --color-primary-dark: #152a52;
+  --color-accent: #4fc3f7;  /* Light blue accent for contrast */
+  --color-success: #4caf50;
+  --color-error: #f44336;
+  --color-warning: #ff9800;
+  --color-team-blue: #2196f3;
+  --color-team-red: #f44336;
+  --color-text: #333;
+  --color-text-light: #666;
+  --color-text-muted: #999;
+  --color-white: #ffffff;
+  --color-bg-light: #f5f7fa;
+  --color-bg-dark: #c3cfe2;
+
+  /* ========================================
+     GRADIENTS
+     ======================================== */
+  --gradient-primary: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --gradient-card: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.5rem;       /* 24px */
+  --font-size-2xl: 2rem;        /* 32px */
+  --font-size-3xl: 2.5rem;      /* 40px */
+  --font-size-4xl: 3rem;        /* 48px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ========================================
+     SPACING (8px grid system)
+     ======================================== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ========================================
+     LAYOUT
+     ======================================== */
+  --container-max: 600px;
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+  --border-width: 2px;
+  --border-width-thick: 3px;
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  --shadow-sm: 0 4px 15px rgba(0,0,0,0.1);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.2);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.3);
+  --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.1);
+
+  /* ========================================
+     TOUCH TARGETS & ACCESSIBILITY
+     ======================================== */
+  --touch-min: 44px;  /* WCAG 2.1 minimum touch target */
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+}
