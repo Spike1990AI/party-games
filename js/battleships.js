@@ -464,11 +464,17 @@ document.getElementById('readyBtn').addEventListener('click', async () => {
     readyBtn.classList.add('hidden');
     document.getElementById('waitingMessage').classList.remove('hidden');
 
+    // Clean up any existing game start listener BEFORE creating new one
+    if (gameStartUnsubscribe) {
+        gameStartUnsubscribe();
+        gameStartUnsubscribe = null;
+    }
+
     // Listen for game start
     const roomRef = ref(database, `rooms/${roomCode}`);
     gameStartUnsubscribe = onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
-        if (data.team1.ready && data.team2.ready) {
+        if (data && data.team1.ready && data.team2.ready) {
             // Clean up listener before transition
             if (gameStartUnsubscribe) {
                 gameStartUnsubscribe();

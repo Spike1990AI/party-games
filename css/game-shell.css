@@ -8,6 +8,58 @@
  */
 
 /* ========================================
+   NAVIGATION - TOP RIGHT OF VIEWPORT
+   ======================================== */
+.nav-back,
+.nav-home {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    z-index: 1000;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-back:hover,
+.nav-home:hover,
+.nav-back:active,
+.nav-home:active {
+    background: rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-icon {
+    font-size: 18px;
+}
+
+/* Light variant for dark backgrounds */
+.nav-back.nav-light,
+.nav-home.nav-light {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--color-white);
+}
+
+.nav-back.nav-light:hover,
+.nav-home.nav-light:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
    LOADING SCREEN
    ======================================== */
 #loadingScreen {
@@ -515,6 +567,18 @@
 }
 
 @media (max-width: 480px) {
+    .nav-back,
+    .nav-home {
+        top: 10px;
+        right: 10px;
+        padding: 10px 16px;
+        font-size: var(--font-size-sm);
+    }
+
+    .nav-icon {
+        font-size: 16px;
+    }
+
     .room-code-header {
         margin-top: -60px;
         margin-left: calc(var(--space-md) * -1);
