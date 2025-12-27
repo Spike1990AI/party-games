@@ -74,10 +74,22 @@ function generateRoomCode() {
 }
 
 // Create Room - 1v1
-document.getElementById('create1v1Btn').addEventListener('click', () => createRoom('1v1'));
+document.getElementById('create1v1Btn').addEventListener('click', async () => {
+    const btn = document.getElementById('create1v1Btn');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    document.getElementById('create2v2Btn').disabled = true;
+    await createRoom('1v1');
+});
 
 // Create Room - 2v2
-document.getElementById('create2v2Btn').addEventListener('click', () => createRoom('2v2'));
+document.getElementById('create2v2Btn').addEventListener('click', async () => {
+    const btn = document.getElementById('create2v2Btn');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    document.getElementById('create1v1Btn').disabled = true;
+    await createRoom('2v2');
+});
 
 async function createRoom(mode) {
     // Clean up old rooms before creating new one
