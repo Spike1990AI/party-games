@@ -91,6 +91,37 @@ document.getElementById('create2v2Btn').addEventListener('click', async () => {
     await createRoom('2v2');
 });
 
+// Practice Mode
+document.getElementById('practiceBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('practiceBtn');
+    if (btn.disabled) return;
+    btn.disabled = true;
+
+    await cleanupOldRooms();
+
+    playerName = 'You';
+    playerTeam = 'team1';
+    roomCode = 'PRACTICE';
+    gameMode = '1v1';
+
+    // Generate random enemy ships
+    const enemyShips = generateRandomShips();
+
+    const roomData = {
+        code: 'PRACTICE',
+        gameMode: '1v1',
+        created: Date.now(),
+        team1: { players: ['You'], ready: false, ships: [], hits: [] },
+        team2: { players: ['Bot'], ready: true, ships: enemyShips, hits: [] },
+        gameState: 'setup',
+        currentTurn: 'team1',
+        practiceMode: true
+    };
+
+    await set(ref(database, `rooms/PRACTICE`), roomData);
+    showSetupScreen();
+});
+
 async function createRoom(mode) {
     // Clean up old rooms before creating new one
     await cleanupOldRooms();
@@ -461,6 +492,32 @@ function placeShip(index, length, orientation) {
     });
 }
 
+// Generate random ships for AI
+function generateRandomShips() {
+    const ships = [];
+    const occupied = new Set();
+
+    for (const ship of SHIPS) {
+        let placed = false;
+        let attempts = 0;
+
+        while (!placed && attempts < 100) {
+            attempts++;
+            const orientation = Math.random() > 0.5 ? 'horizontal' : 'vertical';
+            const startCell = Math.floor(Math.random() * 100);
+            const cells = getShipCells(startCell, ship.length, orientation);
+
+            if (cells && !cells.some(c => occupied.has(c))) {
+                cells.forEach(c => occupied.add(c));
+                ships.push({ name: ship.name, length: ship.length, cells, orientation });
+                placed = true;
+            }
+        }
+    }
+
+    return ships;
+}
+
 // Ready button
 document.getElementById('readyBtn').addEventListener('click', async () => {
     const readyBtn = document.getElementById('readyBtn');
@@ -577,6 +634,41 @@ function updateBattleScreen(roomData) {
     } else if (myShips === 0) {
         showVictory(false);
     }
+
+    // AI attack in practice mode
+    if (roomData.practiceMode && roomData.currentTurn === 'team2' && !isMyTurn) {
+        setTimeout(() => performAIAttack(roomData), 1000);
+    }
+}
+
+// AI attack for practice mode
+async function performAIAttack(roomData) {
+    // Find all cells that haven't been attacked yet
+    const team2Hits = roomData.team2.hits || [];
+    const attackedCells = new Set(team2Hits.map(h => h.index));
+    const availableCells = [];
+
+    for (let i = 0; i < 100; i++) {
+        if (!attackedCells.has(i)) {
+            availableCells.push(i);
+        }
+    }
+
+    if (availableCells.length === 0) return;
+
+    // Pick random cell
+    const targetCell = availableCells[Math.floor(Math.random() * availableCells.length)];
+
+    // Check if hit
+    const team1Ships = roomData.team1.ships;
+    const isHit = team1Ships.some(ship => ship.cells.includes(targetCell));
+
+    // Update hits
+    team2Hits.push({ index: targetCell, result: isHit ? 'hit' : 'miss' });
+
+    // Update database
+    await update(ref(database, `rooms/PRACTICE/team2`), { hits: team2Hits });
+    await update(ref(database, `rooms/PRACTICE`), { currentTurn: 'team1' });
 }
 
 // Handle attack
