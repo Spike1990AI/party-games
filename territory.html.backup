@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minefield Race - Party Games</title>
+    <title>Territory Wars - Party Games</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/minefield.css">
+    <link rel="stylesheet" href="css/territory.css">
 </head>
 <body>
+    <a href="index.html" class="nav-home">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+
     <div class="container">
         <!-- Loading Screen -->
         <div id="loadingScreen" class="screen">
@@ -17,8 +22,8 @@
 
         <!-- Join Screen -->
         <div id="joinScreen" class="screen hidden">
-            <h1>💣 Minefield Race</h1>
-            <p class="game-description">Navigate through the minefield to reach the top. Hit a mine and restart!</p>
+            <h1>🏰 Territory Wars</h1>
+            <p class="game-description">Capture territory by placing tiles. Surround opponents to flip their tiles!</p>
 
             <div class="input-group">
                 <label for="playerName">Your Name</label>
@@ -39,7 +44,7 @@
         </div>
 
         <!-- Lobby Screen -->
-        <div id="lobbyScreen" class="screen hidden">
+    <div id="lobbyScreen" class="screen hidden">
             <div class="room-code-header">
                 <span>Room Code</span>
                 <h2 id="roomCode">----</h2>
@@ -48,15 +53,14 @@
             <h3>Waiting for Players</h3>
             <div id="playersList" class="players-list"></div>
 
-            <div id="lobbyHighScore" class="info-text"></div>
-            <p class="info-text">1-4 players • Solo mode tracks high score</p>
+            <p class="info-text">Waiting for players to join... (2-4 players)</p>
 
-            <button id="startGameBtn" class="btn-primary">Start Game</button>
+            <button id="startGameBtn" class="btn-primary hidden">Start Game</button>
             <button id="leaveLobbyBtn" class="btn-secondary">Leave Room</button>
         </div>
 
         <!-- Game Screen -->
-        <div id="gameScreen" class="screen hidden">
+    <div id="gameScreen" class="screen hidden">
             <div class="room-code-header">
                 <span>Room</span>
                 <h3 id="gameRoomCode">----</h3>
@@ -66,44 +70,41 @@
                 <div id="turnIndicator" class="turn-indicator">
                     <span id="currentPlayerName">Player 1</span>'s Turn
                 </div>
-                <div id="timer" class="timer">10</div>
+                <div id="timer" class="timer">15</div>
             </div>
 
-            <div id="gameGrid" class="game-grid"></div>
-
-            <div id="moveButtons" class="move-buttons">
-                <button id="moveUpLeftBtn" class="move-btn">↖</button>
-                <button id="moveUpBtn" class="move-btn">↑</button>
-                <button id="moveUpRightBtn" class="move-btn">↗</button>
+            <div class="scores-container">
+                <div id="scoresDisplay"></div>
             </div>
 
-            <div class="players-info">
-                <h4>Players</h4>
-                <div id="playersStatus"></div>
+            <div id="territoryGrid" class="territory-grid"></div>
+
+            <div class="game-info">
+                <p class="info-text">Tap an empty cell to place your tile. Surround opponents to capture!</p>
+                <div id="debugLog" style="margin-top: 1rem; padding: 0.5rem; background: #f8f9fa; border-radius: 8px; font-size: 0.75rem; max-height: 100px; overflow-y: auto; font-family: monospace;"></div>
             </div>
         </div>
 
         <!-- Results Screen -->
-        <div id="resultsScreen" class="screen hidden">
+    <div id="resultsScreen" class="screen hidden">
             <h1>🏆 Game Over!</h1>
 
             <div class="winner-announcement">
                 <h2 id="winnerName">Winner</h2>
-                <p>reached the top!</p>
+                <p>conquered the territory!</p>
             </div>
 
-            <div class="rankings">
-                <h3>Final Standings</h3>
-                <div id="rankingsList"></div>
+            <div class="final-scores">
+                <h3>Final Scores</h3>
+                <div id="finalScoresList"></div>
             </div>
 
             <div class="button-group">
                 <button id="playAgainBtn" class="btn-primary">Play Again</button>
             </div>
-        </div>
     </div>
 
     <!-- Game Script (ES6 Module) -->
-    <script type="module" src="js/minefield.js?v=6"></script>
+    <script type="module" src="js/territory.js"></script>
 </body>
 </html>
