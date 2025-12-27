@@ -23,6 +23,8 @@ const elements = {
     playerName: document.getElementById('playerName'),
     grid: document.getElementById('territoryGrid'),
     roomCode: document.getElementById('gameRoomCode'),
+    turnIndicator: document.getElementById('currentPlayerName'),
+    scoresDisplay: document.getElementById('scoresDisplay'),
     debug: document.getElementById('debugLog')
 };
 
@@ -61,11 +63,16 @@ async function startPractice() {
         currentRoom = 'PRACTICE';
         myPlayerNumber = 1;
 
-        // Create practice room in Firebase
+        // Create practice room in Firebase (2 players for practice)
         const roomData = {
             code: 'PRACTICE',
             created: Date.now(),
-            grid: {}  // Empty grid to start
+            grid: {},  // Empty grid to start
+            currentTurn: 1,  // Start with player 1
+            players: {
+                1: { name: 'Player 1', score: 0 },
+                2: { name: 'Player 2 (AI)', score: 0 }
+            }
         };
 
         debug('💾 Creating Firebase room...');
@@ -127,6 +134,12 @@ async function handleCellClick(row, col) {
             return;
         }
 
+        // Check if it's current player's turn
+        if (data.currentTurn !== myPlayerNumber) {
+            debug(`❌ Not your turn (current: ${data.currentTurn})`);
+            return;
+        }
+
         // Check if cell is already occupied
         if (data.grid && data.grid[key]) {
             debug(`❌ Cell ${key} already occupied`);
@@ -137,18 +150,77 @@ async function handleCellClick(row, col) {
         const newGrid = { ...data.grid };
         newGrid[key] = myPlayerNumber;
 
-        debug(`✅ Placing tile at ${key}`);
+        debug(`✅ Placed tile at ${key}`);
+
+        // Check for captures
+        const captures = findCaptures(row, col, myPlayerNumber, newGrid);
+        debug(`🎯 Found ${captures.length} captures`);
+
+        // Apply captures
+        captures.forEach(captureKey => {
+            newGrid[captureKey] = myPlayerNumber;
+            debug(`  💥 Captured ${captureKey}`);
+        });
+
+        // Calculate next turn (alternate between 1 and 2 in practice)
+        const nextTurn = data.currentTurn === 1 ? 2 : 1;
+
+        // Check if grid is full
+        const gridFull = Object.keys(newGrid).length >= (GRID_SIZE * GRID_SIZE);
 
         // Update Firebase
         await update(ref(database, `territory/${currentRoom}`), {
-            grid: newGrid
+            grid: newGrid,
+            currentTurn: nextTurn,
+            gameOver: gridFull
         });
 
-        debug(`💾 Firebase updated with ${Object.keys(newGrid).length} tiles`);
+        debug(`💾 Firebase updated: ${Object.keys(newGrid).length} tiles, turn ${nextTurn}`);
 
     } catch (error) {
         debug('❌ Error placing tile: ' + error.message);
     }
+}
+
+// Find captures (Reversi-style: surround opponent tiles)
+function findCaptures(row, col, player, grid) {
+    const captures = [];
+    const directions = [
+        [-1, 0],  // Up
+        [1, 0],   // Down
+        [0, -1],  // Left
+        [0, 1]    // Right
+    ];
+
+    directions.forEach(([dRow, dCol]) => {
+        const tilesToFlip = [];
+        let r = row + dRow;
+        let c = col + dCol;
+
+        // Walk in this direction
+        while (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) {
+            const key = `${r}_${c}`;
+            const owner = grid[key];
+
+            if (!owner) {
+                // Hit empty cell - no captures in this direction
+                break;
+            }
+
+            if (owner === player) {
+                // Hit our own tile - capture everything in between
+                captures.push(...tilesToFlip);
+                break;
+            }
+
+            // Hit opponent tile - add to potential captures
+            tilesToFlip.push(key);
+            r += dRow;
+            c += dCol;
+        }
+    });
+
+    return captures;
 }
 
 // Listen to room changes
@@ -167,8 +239,69 @@ function listenToRoom() {
 
         debug(`🔄 Room update: ${Object.keys(data.grid || {}).length} tiles`);
 
+        // Update turn indicator
+        updateTurnDisplay(data);
+
+        // Update scores
+        updateScores(data);
+
         // Update grid display
         updateGridDisplay(data.grid || {});
+
+        // Check game over
+        if (data.gameOver) {
+            debug('🏆 Game Over!');
+        }
+    });
+}
+
+// Update turn indicator
+function updateTurnDisplay(data) {
+    if (!elements.turnIndicator) return;
+
+    const currentPlayer = data.players[data.currentTurn];
+    if (currentPlayer) {
+        elements.turnIndicator.textContent = currentPlayer.name;
+        elements.turnIndicator.style.color = data.currentTurn === 1 ? '#e74c3c' : '#3498db';
+    }
+}
+
+// Update scores
+function updateScores(data) {
+    if (!elements.scoresDisplay) return;
+
+    elements.scoresDisplay.innerHTML = '';
+
+    // Calculate scores
+    const scores = {};
+    Object.keys(data.players || {}).forEach(playerId => {
+        const playerNum = parseInt(playerId);
+        scores[playerNum] = 0;
+    });
+
+    // Count tiles for each player
+    Object.values(data.grid || {}).forEach(owner => {
+        scores[owner] = (scores[owner] || 0) + 1;
+    });
+
+    // Display scores
+    Object.keys(data.players || {}).forEach(playerId => {
+        const playerNum = parseInt(playerId);
+        const player = data.players[playerId];
+        const score = scores[playerNum] || 0;
+
+        const div = document.createElement('div');
+        div.className = `player-score player-${playerNum}`;
+        if (data.currentTurn === playerNum) {
+            div.classList.add('active');
+        }
+
+        div.innerHTML = `
+            <div class="player-score-name">${player.name}</div>
+            <div class="player-score-tiles">${score}</div>
+        `;
+
+        elements.scoresDisplay.appendChild(div);
     });
 }
 
