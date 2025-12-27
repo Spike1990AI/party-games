@@ -599,35 +599,59 @@ function showScreen(screenName) {
 
 // Practice Mode - Solo testing
 async function startPracticeMode() {
-    const name = elements.playerName.value.trim() || 'You';
-    savePlayerName();
+    try {
+        alert('Practice mode clicked!'); // Immediate feedback
+        debugLog('🎯 Practice mode button clicked!');
 
-    const code = 'PRACTICE';
-    currentRoom = code;
-    playerNumber = 1;
-    currentPlayer = 'player1';
+        const name = elements.playerName.value.trim() || 'You';
+        debugLog('Player name: ' + name);
 
-    const roomData = {
-        code: code,
-        created: Date.now(),
-        gameState: 'playing',
-        players: {
-            player1: { name: name, score: 0 }
-        },
-        playerOrder: ['player1'],
-        currentTurn: 'player1',
-        turnNumber: 1,
-        grid: {},
-        winner: null,
-        lastMove: null,
-        practiceMode: true
-    };
+        savePlayerName();
+        debugLog('Player name saved');
 
-    await set(ref(database, `territory/${code}`), roomData);
-    showScreen('game');
-    elements.gameRoomCode.textContent = 'PRACTICE';
-    listenToRoom(code);
-    debugLog('🎯 PRACTICE MODE - Test tile placement!');
+        const code = 'PRACTICE';
+        currentRoom = code;
+        playerNumber = 1;
+        currentPlayer = 'player1';
+        debugLog('Practice room variables set');
+
+        const roomData = {
+            code: code,
+            created: Date.now(),
+            gameState: 'playing',
+            players: {
+                player1: { name: name, score: 0 }
+            },
+            playerOrder: ['player1'],
+            currentTurn: 'player1',
+            turnNumber: 1,
+            grid: {},
+            winner: null,
+            lastMove: null,
+            practiceMode: true
+        };
+        debugLog('Room data created');
+
+        debugLog('Writing to Firebase...');
+        await set(ref(database, `territory/${code}`), roomData);
+        debugLog('Firebase write complete');
+
+        debugLog('Showing game screen...');
+        showScreen('game');
+        debugLog('Game screen shown');
+
+        elements.gameRoomCode.textContent = 'PRACTICE';
+        debugLog('Room code set to PRACTICE');
+
+        debugLog('Starting room listener...');
+        listenToRoom(code);
+        debugLog('🎯 PRACTICE MODE READY - Test tile placement!');
+
+    } catch (error) {
+        alert('❌ Practice Mode Error: ' + error.message);
+        debugLog('❌ ERROR: ' + error.message);
+        console.error('Practice mode error:', error);
+    }
 }
 
 // Add practice button listener
