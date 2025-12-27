@@ -74,7 +74,7 @@
             <h1>Place Your Ships</h1>
             <div class="setup-info">
                 <p>Team <span id="yourTeam"></span></p>
-                <p class="small">Tap to rotate, drag to place</p>
+                <p class="small">Select ship, rotate, then place on grid</p>
             </div>
 
             <div class="ships-to-place">
@@ -84,6 +84,10 @@
                 <div class="ship-item" data-length="3">Submarine (3)</div>
                 <div class="ship-item" data-length="2">Destroyer (2)</div>
             </div>
+
+            <button id="rotateBtn" class="btn-secondary" style="margin: 10px 0;">
+                🔄 Rotate (<span id="orientationDisplay">Horizontal</span>)
+            </button>
 
             <div id="setupBoard" class="board"></div>
 

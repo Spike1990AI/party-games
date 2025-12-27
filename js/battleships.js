@@ -405,6 +405,13 @@ function showSetupScreen() {
             currentShip = SHIPS.find(s => s.length === length && !shipsPlaced.some(sp => sp.name === s.name));
         });
     });
+
+    // Rotate button
+    document.getElementById('rotateBtn').addEventListener('click', () => {
+        shipOrientation = shipOrientation === 'horizontal' ? 'vertical' : 'horizontal';
+        document.getElementById('orientationDisplay').textContent =
+            shipOrientation.charAt(0).toUpperCase() + shipOrientation.slice(1);
+    });
 }
 
 // Create board
