@@ -298,6 +298,7 @@ function updateScores(data) {
 }
 
 function calculatePlayerScore(grid, playerId) {
+    if (!grid) return 0;  // FIX: Handle null/undefined grid
     return Object.values(grid).filter(owner => owner === playerId).length;
 }
 
