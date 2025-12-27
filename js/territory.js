@@ -596,3 +596,41 @@ function showScreen(screenName) {
     Object.values(screens).forEach(screen => screen.classList.add('hidden'));
     screens[screenName].classList.remove('hidden');
 }
+
+// Practice Mode - Solo testing
+async function startPracticeMode() {
+    const name = elements.playerName.value.trim() || 'You';
+    savePlayerName();
+
+    const code = 'PRACTICE';
+    currentRoom = code;
+    playerNumber = 1;
+    currentPlayer = 'player1';
+
+    const roomData = {
+        code: code,
+        created: Date.now(),
+        gameState: 'playing',
+        players: {
+            player1: { name: name, score: 0 }
+        },
+        playerOrder: ['player1'],
+        currentTurn: 'player1',
+        turnNumber: 1,
+        grid: {},
+        winner: null,
+        lastMove: null,
+        practiceMode: true
+    };
+
+    await set(ref(database, `territory/${code}`), roomData);
+    showScreen('game');
+    elements.gameRoomCode.textContent = 'PRACTICE';
+    listenToRoom(code);
+    debugLog('🎯 PRACTICE MODE - Test tile placement!');
+}
+
+// Add practice button listener
+if (document.getElementById('practiceBtn')) {
+    document.getElementById('practiceBtn').addEventListener('click', startPracticeMode);
+}
