@@ -177,6 +177,52 @@ function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// Get bot answer for a question
+function getBotAnswer(question) {
+    const commonAnswers = {
+        "Where do you pick your nose": ["car", "bathroom", "bedroom", "shower"],
+        "What you blame a fart on": ["dog", "chair", "brother", "sister"],
+        "What you do with a booger when there's no tissue": ["wipe", "flick", "eat", "pocket"],
+        "Worst time to get the hiccups": ["test", "exam", "presentation", "quiet"],
+        "How do you check if your breath smells bad": ["hand", "sniff", "ask", "smell"],
+        "What you do when you need to burp in public": ["swallow", "hold it", "cover mouth", "leave"],
+        "Worst place to have an itchy bum": ["class", "meeting", "date", "exam"],
+        "What body part do you crack most": ["knuckles", "neck", "back", "fingers"],
+        "Food you eat straight from the container": ["ice cream", "cereal", "chips", "cheese"],
+        "What you do after dropping food on the floor": ["eat it", "five second rule", "bin", "throw away"],
+        "App you spend the most time on": ["tiktok", "instagram", "youtube", "snapchat"],
+        "What you Google when bored": ["memes", "news", "games", "videos"],
+        "Worst excuse you've used to skip school": ["sick", "headache", "stomach ache", "fever"],
+        "Worst chore at home": ["dishes", "cleaning", "vacuum", "laundry"],
+        "First thing you do when you get home": ["shoes off", "sit down", "eat", "phone"]
+    };
+
+    // Get question-specific answers or default
+    const answers = commonAnswers[question] || ["dunno", "idk", "not sure", "pass"];
+    return answers[Math.floor(Math.random() * answers.length)];
+}
+
+// Submit bot answers in practice mode
+async function submitBotAnswers(roomData) {
+    const currentQuestion = roomData.questions[roomData.currentRound - 1];
+    const roomRef = ref(database, `rooms/PRACTICE`);
+
+    // Submit answer for each bot
+    const botAnswers = {
+        'bot1': getBotAnswer(currentQuestion),
+        'bot2': getBotAnswer(currentQuestion)
+    };
+
+    for (const [botId, answer] of Object.entries(botAnswers)) {
+        await set(ref(database, `rooms/PRACTICE/answers/${botId}`), {
+            playerId: botId,
+            playerName: roomData.players[botId].name,
+            answer: answer,
+            timestamp: Date.now()
+        });
+    }
+}
+
 // Create Room
 document.getElementById('createRoomBtn').addEventListener('click', async () => {
     // Clean up old rooms before creating new one
@@ -228,6 +274,40 @@ document.getElementById('joinRoomBtn').addEventListener('click', async () => {
             alert('Room not found!');
         }
     }, { onlyOnce: true });
+});
+
+// Practice Mode
+document.getElementById('practiceBtn').addEventListener('click', async () => {
+    await cleanupOldRooms();
+
+    playerName = 'You';
+    roomCode = 'PRACTICE';
+    isHost = true;
+
+    const gameQuestions = shuffleQuestions();
+
+    // Create room with player + 2 bots
+    const roomData = {
+        code: 'PRACTICE',
+        host: 'You',
+        created: Date.now(),
+        players: {
+            'player1': { id: 'player1', name: 'You', score: 0, connected: true, isHost: true },
+            'bot1': { id: 'bot1', name: 'Bot 1', score: 0, connected: true, isHost: false, isBot: true },
+            'bot2': { id: 'bot2', name: 'Bot 2', score: 0, connected: true, isHost: false, isBot: true }
+        },
+        gameState: 'playing',
+        currentRound: 1,
+        questions: gameQuestions,
+        answers: {},
+        pinkCowHolder: null,
+        practiceMode: true
+    };
+
+    await set(ref(database, `rooms/PRACTICE`), roomData);
+
+    // Go straight to question
+    showQuestion(roomData);
 });
 
 // Show Lobby
@@ -445,6 +525,11 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
 
     // Show waiting screen (inputs stay disabled)
     showWaitingScreen();
+
+    // Auto-submit bot answers in practice mode
+    if (data.practiceMode) {
+        setTimeout(() => submitBotAnswers(data), 1500);
+    }
 });
 
 // Display Scoreboard
