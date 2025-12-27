@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tavern Kitchen - Party Games</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tavern-kitchen.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="screen">
+            <div class="loader"></div>
+            <p>Heating up the kitchen...</p>
+        </div>
+
+        <!-- Join Screen -->
+        <div id="joinScreen" class="screen hidden">
+            <h1>🍲 Tavern Kitchen</h1>
+            <p class="game-description">Work together to cook and serve dishes before time runs out!</p>
+
+            <div class="input-group">
+                <label for="playerName">Your Name</label>
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="12">
+            </div>
+
+            <div class="button-group">
+                <button id="createRoomBtn" class="btn-primary">Create Room</button>
+                <button id="joinRoomBtn" class="btn-secondary">Join Room</button>
+            </div>
+
+            <div id="joinRoomInput" class="input-group hidden">
+                <label for="roomCodeInput">Room Code</label>
+                <input type="text" id="roomCodeInput" placeholder="ABCD" maxlength="4" style="text-transform: uppercase;">
+                <button id="joinRoomConfirmBtn" class="btn-primary">Join</button>
+            </div>
+
+        </div>
+
+        <!-- Lobby Screen -->
+        <div id="lobbyScreen" class="screen hidden">
+            <div class="room-code-header">
+                <span>Room Code</span>
+                <h2 id="roomCode">----</h2>
+            </div>
+
+            <h3>Kitchen Staff</h3>
+            <div id="playersList" class="players-list"></div>
+
+            <p class="info-text">Waiting for chefs... (2-4 players)</p>
+
+            <button id="startGameBtn" class="btn-primary hidden">Start Cooking!</button>
+            <button id="leaveLobbyBtn" class="btn-secondary">Leave Kitchen</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen hidden">
+            <div class="room-code-header">
+                <span>Room</span>
+                <h3 id="gameRoomCode">----</h3>
+            </div>
+
+            <!-- Orders Queue -->
+            <div id="ordersContainer" class="orders-container">
+                <h4>📋 Orders</h4>
+                <div id="ordersQueue" class="orders-queue"></div>
+            </div>
+
+            <!-- Kitchen Grid -->
+            <div id="kitchenGrid" class="kitchen-grid"></div>
+
+            <!-- Score and Timer -->
+            <div class="game-status">
+                <div class="score-display">
+                    <span>Score: </span>
+                    <span id="scoreValue">0</span>
+                </div>
+                <div id="timer" class="timer">180</div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen hidden">
+            <h1>🏆 Kitchen Closed!</h1>
+
+            <div class="results-summary">
+                <h2 id="finalScore">0 Points</h2>
+                <p id="ordersCompleted">0 orders completed</p>
+                <p id="ordersFailed">0 orders failed</p>
+            </div>
+
+            <div class="final-rating">
+                <h3 id="rating">⭐⭐⭐</h3>
+                <p id="ratingText">Great work!</p>
+            </div>
+
+            <div class="button-group">
+                <button id="playAgainBtn" class="btn-primary">Cook Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Script (ES6 Module) -->
+    <script type="module" src="js/tavern-kitchen.js"></script>
+</body>
+</html>

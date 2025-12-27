@@ -1,0 +1,289 @@
+/* Tavern Kitchen - Game Specific Styles */
+@import 'variables.css';
+
+/* Orders Container */
+.orders-container {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.orders-container h4 {
+  margin: 0 0 var(--space-sm) 0;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+}
+
+.orders-queue {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  padding: var(--space-xs) 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.order-card {
+  min-width: 120px;
+  background: var(--gradient-yellow);
+  border-radius: var(--border-radius);
+  padding: var(--space-sm);
+  text-align: center;
+  border: 2px solid var(--color-accent);
+  flex-shrink: 0;
+}
+
+.order-card .dish-name {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-size-sm);
+}
+
+.order-card .time-remaining {
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+}
+
+.order-card.urgent {
+  animation: pulse 1s infinite;
+  border-color: var(--color-error);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Kitchen Grid */
+.kitchen-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 2px;
+  background: #8B4513;
+  padding: 2px;
+  border-radius: var(--border-radius);
+  margin: var(--space-md) 0;
+  aspect-ratio: 4 / 3;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid-cell {
+  background: #D2691E;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.grid-cell:hover {
+  filter: brightness(1.1);
+}
+
+.grid-cell.wall {
+  background: #4A4A4A;
+  cursor: not-allowed;
+}
+
+.grid-cell.floor {
+  background: #D2B48C;
+}
+
+/* Stations */
+.station {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  position: relative;
+}
+
+.station.barrel {
+  filter: brightness(0.9);
+}
+
+.station.barrel.meat {
+  filter: hue-rotate(0deg) saturate(1.5);
+}
+
+.station.barrel.vegetables {
+  filter: hue-rotate(90deg) saturate(1.5);
+}
+
+.station.barrel.bread {
+  filter: hue-rotate(45deg) saturate(1.2);
+}
+
+.station.campfire {
+  animation: flicker 2s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.2); }
+}
+
+.station .progress-bar {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.station .progress-bar-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: width 0.3s;
+}
+
+/* Players */
+.player-sprite {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  position: relative;
+  z-index: 2;
+}
+
+.player-sprite.player-1 {
+  filter: hue-rotate(0deg);
+}
+
+.player-sprite.player-2 {
+  filter: hue-rotate(180deg);
+}
+
+.player-sprite.player-3 {
+  filter: hue-rotate(90deg);
+}
+
+.player-sprite.player-4 {
+  filter: hue-rotate(270deg);
+}
+
+.player-sprite .holding-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: var(--color-white);
+  border-radius: 50%;
+  border: 2px solid var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+/* Game Status */
+.game-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-md);
+}
+
+.score-display {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.timer {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  min-width: 80px;
+  text-align: center;
+}
+
+.timer.warning {
+  color: var(--color-warning);
+  animation: pulse 1s infinite;
+}
+
+.timer.danger {
+  color: var(--color-error);
+  animation: pulse 0.5s infinite;
+}
+
+/* Results Screen */
+.results-summary {
+  text-align: center;
+  margin: var(--space-lg) 0;
+}
+
+.results-summary h2 {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.results-summary p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  margin: var(--space-xs) 0;
+}
+
+.final-rating {
+  text-align: center;
+  margin: var(--space-lg) 0;
+  padding: var(--space-lg);
+  background: var(--gradient-yellow);
+  border-radius: var(--border-radius);
+}
+
+.final-rating h3 {
+  font-size: var(--font-size-4xl);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.final-rating p {
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  .kitchen-grid {
+    gap: 1px;
+    padding: 1px;
+  }
+
+  .orders-queue {
+    gap: var(--space-xs);
+  }
+
+  .order-card {
+    min-width: 100px;
+    padding: var(--space-xs);
+  }
+
+  .player-sprite {
+    font-size: 1.5rem;
+  }
+
+  .station {
+    font-size: 1.2rem;
+  }
+}
