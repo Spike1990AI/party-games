@@ -322,9 +322,17 @@ function renderGrid(data) {
             if (owner) {
                 // Cell is occupied
                 const ownerIndex = data.playerOrder.indexOf(owner);
-                debugLog(`  📍 ${key}=${owner} → player-${ownerIndex + 1}`);
-                cell.classList.add(`player-${ownerIndex + 1}`);
+                const playerNum = ownerIndex + 1;
+                debugLog(`  📍 ${key}=${owner} → player-${playerNum}`);
+                cell.classList.add(`player-${playerNum}`);
                 cell.classList.add('occupied');
+
+                // ADD TEXT SO WE CAN SEE TILES EVEN IF COLORS FAIL
+                cell.textContent = `P${playerNum}`;
+                cell.style.color = 'white';
+                cell.style.fontWeight = 'bold';
+                cell.style.fontSize = '1.2rem';
+                debugLog(`  ✅ Added P${playerNum} text to cell`);
 
                 // Mark last move
                 if (data.lastMove && data.lastMove.row === row && data.lastMove.col === col) {
