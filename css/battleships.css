@@ -475,7 +475,12 @@ input[type="text"]:focus {
     }
 
     .screen {
-        padding: var(--space-md);
+        padding: var(--space-sm);
+    }
+
+    .room-code-header {
+        /* Adjust negative margins for reduced padding */
+        margin: calc(var(--space-sm) * -1) calc(var(--space-sm) * -1) var(--space-md) calc(var(--space-sm) * -1);
     }
 
     .subtitle {
@@ -511,12 +516,17 @@ input[type="text"]:focus {
     }
 
     .board {
+        grid-template-columns: repeat(10, 1fr);  /* No minimum, pure fraction for scaling */
         gap: 1px;
+        padding: 1px;
         margin: var(--space-md) auto;
+        max-width: 100%;
     }
 
     .cell {
-        min-height: var(--touch-min);
+        min-width: unset;  /* Remove 44px minimum to allow scaling */
+        min-height: unset;
+        /* aspect-ratio: 1 keeps cells square */
     }
 
     .cell.hit::after,
@@ -551,12 +561,17 @@ input[type="text"]:focus {
 
 /* Extra small mobile - Battleships specific */
 @media (max-width: 360px) {
-    .cell {
-        min-height: var(--touch-min);
+    .board {
+        gap: 0px;  /* Remove gaps entirely for maximum space */
+        padding: 0;
+    }
+
+    .ships-to-place {
+        gap: 4px;
     }
 
     .ship-item {
-        padding: var(--space-xs);
+        padding: 6px 8px;
         font-size: 0.7rem;
     }
 
