@@ -286,19 +286,22 @@ input[type="text"]:focus {
 
 .ships-to-place {
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
     margin-bottom: 20px;
-    overflow-x: auto;
 }
 
 .ship-item {
-    padding: 12px 18px;
-    background: #f0f7ff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: white;
     border: 2px solid #2196f3;
     border-radius: 8px;
-    font-size: 0.85em;
-    font-weight: 600;
-    white-space: nowrap;
     cursor: grab;
     transition: all 0.2s;
     box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
@@ -309,14 +312,48 @@ input[type="text"]:focus {
     box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
 }
 
+.ship-item:active {
+    cursor: grabbing;
+}
+
 .ship-item.placed {
     opacity: 0.4;
     cursor: not-allowed;
+    pointer-events: none;
+}
+
+.ship-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
 }
 
 .ship-item.active {
     background: #2196f3;
     color: white;
+}
+
+/* Visual ship representation */
+.ship-visual {
+    display: flex;
+    gap: 2px;
+}
+
+.ship-visual .ship-cell {
+    width: 24px;
+    height: 24px;
+    background: #2196f3;
+    border-radius: 3px;
+}
+
+.ship-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9em;
+}
+
+/* Touch dragging clone */
+.touch-dragging {
+    opacity: 0.8;
 }
 
 #waitingMessage {
@@ -396,6 +433,19 @@ input[type="text"]:focus {
 .cell.disabled {
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+/* Preview during drag */
+.cell.preview-valid {
+    background: rgba(33, 150, 243, 0.5) !important;
+    border-color: #2196f3 !important;
+    border-width: 2px;
+}
+
+.cell.preview-invalid {
+    background: rgba(244, 67, 54, 0.5) !important;
+    border-color: #f44336 !important;
+    border-width: 2px;
 }
 
 /* Battle Screen */

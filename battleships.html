@@ -78,11 +78,48 @@
             </div>
 
             <div class="ships-to-place">
-                <div class="ship-item" data-length="5">Carrier (5)</div>
-                <div class="ship-item" data-length="4">Battleship (4)</div>
-                <div class="ship-item" data-length="3">Cruiser (3)</div>
-                <div class="ship-item" data-length="3">Submarine (3)</div>
-                <div class="ship-item" data-length="2">Destroyer (2)</div>
+                <div class="ship-item" data-ship="carrier" data-length="5" draggable="true">
+                    <div class="ship-visual">
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                    </div>
+                    <span class="ship-label">Carrier</span>
+                </div>
+                <div class="ship-item" data-ship="battleship" data-length="4" draggable="true">
+                    <div class="ship-visual">
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                    </div>
+                    <span class="ship-label">Battleship</span>
+                </div>
+                <div class="ship-item" data-ship="cruiser" data-length="3" draggable="true">
+                    <div class="ship-visual">
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                    </div>
+                    <span class="ship-label">Cruiser</span>
+                </div>
+                <div class="ship-item" data-ship="submarine" data-length="3" draggable="true">
+                    <div class="ship-visual">
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                    </div>
+                    <span class="ship-label">Submarine</span>
+                </div>
+                <div class="ship-item" data-ship="destroyer" data-length="2" draggable="true">
+                    <div class="ship-visual">
+                        <div class="ship-cell"></div>
+                        <div class="ship-cell"></div>
+                    </div>
+                    <span class="ship-label">Destroyer</span>
+                </div>
             </div>
 
             <button id="rotateBtn" class="btn-secondary" style="margin: 10px 0;">

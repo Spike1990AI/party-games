@@ -15,6 +15,12 @@ let currentShip = null;
 let shipOrientation = 'horizontal';
 let shipsPlaced = [];
 
+// Drag-and-drop state
+let draggedShip = null;
+let previewCells = [];
+let touchDragShip = null;
+let touchClone = null;
+
 // Firebase listener tracking for cleanup
 let playerSelectUnsubscribe = null;
 let teamSelectUnsubscribe = null;
@@ -392,9 +398,11 @@ function showSetupScreen() {
     document.getElementById('yourTeam').textContent = playerTeam === 'team1' ? '🔵 1' : '🔴 2';
 
     createBoard('setupBoard', 10, handleSetupCellClick);
+    setupDropZone();
 
     // Ship selection
     document.querySelectorAll('.ship-item').forEach(item => {
+        // Click to select (fallback)
         item.addEventListener('click', function() {
             if (this.classList.contains('placed')) return;
 
@@ -404,6 +412,15 @@ function showSetupScreen() {
             const length = parseInt(this.dataset.length);
             currentShip = SHIPS.find(s => s.length === length && !shipsPlaced.some(sp => sp.name === s.name));
         });
+
+        // Drag events
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+
+        // Touch events for mobile
+        item.addEventListener('touchstart', handleTouchStart, { passive: false });
+        item.addEventListener('touchmove', handleTouchMove, { passive: false });
+        item.addEventListener('touchend', handleTouchEnd);
     });
 
     // Rotate button
@@ -497,6 +514,210 @@ function placeShip(index, length, orientation) {
     cells.forEach(cellIndex => {
         board.children[cellIndex].classList.add('ship');
     });
+}
+
+// ======================================
+// DRAG-AND-DROP FUNCTIONALITY
+// ======================================
+
+// Setup drop zone on grid
+function setupDropZone() {
+    const board = document.getElementById('setupBoard');
+
+    board.addEventListener('dragover', handleDragOver);
+    board.addEventListener('dragleave', handleDragLeave);
+    board.addEventListener('drop', handleDrop);
+
+    // Add hover preview to each cell
+    Array.from(board.children).forEach(cell => {
+        cell.addEventListener('dragenter', handleCellDragEnter);
+    });
+}
+
+// Drag start handler
+function handleDragStart(e) {
+    if (this.classList.contains('placed')) {
+        e.preventDefault();
+        return;
+    }
+
+    const shipName = this.dataset.ship.charAt(0).toUpperCase() + this.dataset.ship.slice(1);
+
+    draggedShip = {
+        name: shipName,
+        length: parseInt(this.dataset.length),
+        element: this
+    };
+
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.dataset.ship);
+}
+
+// Drag end handler
+function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    clearPreview();
+    draggedShip = null;
+}
+
+// Drag over handler (required for drop to work)
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+// Drag leave handler
+function handleDragLeave(e) {
+    // Only clear if leaving the board entirely
+    const board = document.getElementById('setupBoard');
+    if (!e.relatedTarget || !board.contains(e.relatedTarget)) {
+        clearPreview();
+    }
+}
+
+// Cell drag enter - show preview
+function handleCellDragEnter(e) {
+    if (!draggedShip) return;
+
+    const index = parseInt(e.target.dataset.index);
+    showPreview(index, draggedShip.length, shipOrientation);
+}
+
+// Drop handler
+function handleDrop(e) {
+    e.preventDefault();
+    if (!draggedShip) return;
+
+    const cell = e.target.closest('.cell');
+    if (!cell) return;
+
+    const index = parseInt(cell.dataset.index);
+
+    if (canPlaceShip(index, draggedShip.length, shipOrientation)) {
+        placeShipFromDrag(index, draggedShip);
+    }
+
+    clearPreview();
+}
+
+// Show preview during drag
+function showPreview(startIndex, length, orientation) {
+    clearPreview();
+
+    const cells = getShipCells(startIndex, length, orientation);
+    const board = document.getElementById('setupBoard');
+    const isValid = cells && canPlaceShip(startIndex, length, orientation);
+
+    if (!cells) return;
+
+    cells.forEach(cellIndex => {
+        const cell = board.children[cellIndex];
+        if (cell) {
+            cell.classList.add(isValid ? 'preview-valid' : 'preview-invalid');
+            previewCells.push(cell);
+        }
+    });
+}
+
+// Clear preview
+function clearPreview() {
+    previewCells.forEach(cell => {
+        cell.classList.remove('preview-valid', 'preview-invalid');
+    });
+    previewCells = [];
+}
+
+// Place ship from drag
+function placeShipFromDrag(index, ship) {
+    const cells = getShipCells(index, ship.length, shipOrientation);
+    const board = document.getElementById('setupBoard');
+
+    cells.forEach(cellIndex => {
+        board.children[cellIndex].classList.add('ship');
+    });
+
+    shipsPlaced.push({
+        name: ship.name,
+        cells: cells
+    });
+
+    ship.element.classList.add('placed');
+
+    if (shipsPlaced.length === SHIPS.length) {
+        document.getElementById('readyBtn').disabled = false;
+    }
+}
+
+// ======================================
+// TOUCH SUPPORT FOR MOBILE
+// ======================================
+
+function handleTouchStart(e) {
+    if (this.classList.contains('placed')) return;
+
+    e.preventDefault();
+
+    const shipName = this.dataset.ship.charAt(0).toUpperCase() + this.dataset.ship.slice(1);
+
+    touchDragShip = {
+        name: shipName,
+        length: parseInt(this.dataset.length),
+        element: this
+    };
+
+    // Create visual clone that follows finger
+    touchClone = this.cloneNode(true);
+    touchClone.classList.add('touch-dragging');
+    touchClone.style.position = 'fixed';
+    touchClone.style.pointerEvents = 'none';
+    touchClone.style.zIndex = '1000';
+    document.body.appendChild(touchClone);
+
+    updateTouchPosition(e.touches[0]);
+}
+
+function handleTouchMove(e) {
+    if (!touchDragShip) return;
+    e.preventDefault();
+
+    updateTouchPosition(e.touches[0]);
+
+    // Show preview under finger
+    const cell = getCellUnderTouch(e.touches[0]);
+    if (cell) {
+        const index = parseInt(cell.dataset.index);
+        showPreview(index, touchDragShip.length, shipOrientation);
+    }
+}
+
+function handleTouchEnd(e) {
+    if (!touchDragShip) return;
+
+    const cell = getCellUnderTouch(e.changedTouches[0]);
+    if (cell) {
+        const index = parseInt(cell.dataset.index);
+        if (canPlaceShip(index, touchDragShip.length, shipOrientation)) {
+            placeShipFromDrag(index, touchDragShip);
+        }
+    }
+
+    clearPreview();
+    if (touchClone) touchClone.remove();
+    touchClone = null;
+    touchDragShip = null;
+}
+
+function getCellUnderTouch(touch) {
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    return element?.closest('.cell');
+}
+
+function updateTouchPosition(touch) {
+    if (touchClone) {
+        touchClone.style.left = (touch.clientX - 50) + 'px';
+        touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
 }
 
 // Generate random ships for AI
