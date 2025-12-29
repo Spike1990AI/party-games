@@ -139,6 +139,16 @@
                 </div>
             </div>
 
+            <!-- Phase Progress (NEW - for multi-phase scenarios) -->
+            <div class="phase-progress hidden">
+                <span>Phase <span id="currentPhase">1</span>/3</span>
+                <div class="phase-dots">
+                    <span class="phase-dot active"></span>
+                    <span class="phase-dot"></span>
+                    <span class="phase-dot"></span>
+                </div>
+            </div>
+
             <div class="room-info">
                 <h2 id="roomTitle">Security Office</h2>
                 <p id="roomDescription">You've entered through the ventilation shaft. Find the security code to disable the cameras.</p>
@@ -205,6 +215,14 @@
 
             <button id="retryBtn" class="btn-primary">Try Again</button>
             <button id="homeBtn2" class="btn-secondary">Home</button>
+        </div>
+
+        <!-- Narrative Overlay (NEW - for multi-phase scenarios) -->
+        <div id="narrativeOverlay" class="narrative-overlay hidden">
+            <div class="narrative-box">
+                <p id="narrativeText"></p>
+                <button id="continueBtn" class="btn-primary">Continue</button>
+            </div>
         </div>
     </div>
 

@@ -13,10 +13,12 @@ let playerRole = null;
 let isHost = false;
 let timerInterval = null;
 let lastRoomNumber = null; // Track current room to prevent input clearing
+let lastPhaseNumber = null; // Track current phase to prevent duplicate narratives
 let selectedScenario = null; // Currently selected scenario
 let ROOMS = []; // Will be loaded from selected scenario
 const GAME_DURATION = 35 * 60; // 35 minutes in seconds (mobile-friendly timing)
 const TOTAL_ROOMS = 8; // 8 rooms per scenario
+const PHASES_PER_ROOM = 3; // 3 phases per room for enhanced scenarios
 
 // Firebase listener tracking for cleanup
 let lobbyUnsubscribe = null;
@@ -44,6 +46,58 @@ function showScreen(screenId) {
         targetScreen.classList.remove('hidden');
         currentScreen = screenId.replace('Screen', '');
     }
+}
+
+// Show narrative overlay
+function showNarrative(text) {
+    const overlay = document.getElementById('narrativeOverlay');
+    const narrativeText = document.getElementById('narrativeText');
+    const continueBtn = document.getElementById('continueBtn');
+
+    if (!overlay || !narrativeText || !continueBtn) return;
+
+    narrativeText.textContent = text;
+    overlay.classList.remove('hidden');
+
+    // Remove old listener and add new one
+    const newBtn = continueBtn.cloneNode(true);
+    continueBtn.parentNode.replaceChild(newBtn, continueBtn);
+
+    newBtn.addEventListener('click', () => {
+        overlay.classList.add('hidden');
+        markNarrativeShown();
+    });
+}
+
+// Mark narrative as shown in Firebase
+async function markNarrativeShown() {
+    if (!roomCode) return;
+    try {
+        await update(ref(database, `rooms/${roomCode}`), {
+            narrativeShown: true
+        });
+    } catch (error) {
+        console.error('Failed to mark narrative shown:', error);
+    }
+}
+
+// Update phase indicator
+function updatePhaseIndicator(currentPhase) {
+    const phaseNumEl = document.getElementById('currentPhase');
+    const phaseDots = document.querySelectorAll('.phase-dot');
+
+    if (phaseNumEl) {
+        phaseNumEl.textContent = currentPhase;
+    }
+
+    phaseDots.forEach((dot, index) => {
+        dot.classList.remove('active', 'complete');
+        if (index + 1 < currentPhase) {
+            dot.classList.add('complete');
+        } else if (index + 1 === currentPhase) {
+            dot.classList.add('active');
+        }
+    });
 }
 
 // Player roles
@@ -112,6 +166,8 @@ document.getElementById('createRoomBtn').addEventListener('click', async () => {
             players: {},
             gameState: 'lobby',
             currentRoom: 1,
+            currentPhase: 1,  // NEW: Track phase within room
+            narrativeShown: false,  // NEW: Track if narrative displayed
             timeRemaining: GAME_DURATION,
             hintsUsed: 0,
             maxHints: 5, // Increased for mobile play
@@ -339,10 +395,39 @@ function showGame(roomData) {
     const players = roomData.players || {};
     const myPlayer = Object.values(players).find(p => p.name === playerName);
 
+    // NEW: Handle multi-phase rooms
+    const currentPhase = roomData.currentPhase || 1;
+    const isMultiPhase = currentRoom.phases && Array.isArray(currentRoom.phases);
+
+    // Get phase-specific data (or use legacy single-answer format)
+    const phaseData = isMultiPhase ? currentRoom.phases[currentPhase - 1] : currentRoom;
+
     // Update room info
     document.getElementById('currentRoom').textContent = roomData.currentRoom;
     document.getElementById('roomTitle').textContent = currentRoom.title;
-    document.getElementById('roomDescription').textContent = currentRoom.description;
+
+    // NEW: Show description from narrative or legacy description
+    if (isMultiPhase && currentRoom.narrative) {
+        // For multi-phase rooms, description comes from narrative context
+        const narrativeContext = currentRoom.narrative.phases[currentPhase - 1]?.context || currentRoom.narrative.intro;
+        document.getElementById('roomDescription').textContent = narrativeContext;
+
+        // Show narrative intro on first phase, if not shown yet
+        if (currentPhase === 1 && !roomData.narrativeShown) {
+            showNarrative(currentRoom.narrative.intro);
+        }
+    } else {
+        // Legacy single-phase rooms
+        document.getElementById('roomDescription').textContent = currentRoom.description;
+    }
+
+    // NEW: Update phase indicator (if multi-phase)
+    if (isMultiPhase) {
+        updatePhaseIndicator(currentPhase);
+        document.querySelector('.phase-progress')?.classList.remove('hidden');
+    } else {
+        document.querySelector('.phase-progress')?.classList.add('hidden');
+    }
 
     // Show player's clues (distribute roles among fewer players)
     const playerArray = Object.values(players);
@@ -358,10 +443,10 @@ function showGame(roomData) {
     const endRole = Math.min(startRole + rolesPerPlayer, ROLES.length);
     const myRoles = ROLES.slice(startRole, endRole);
 
-    // Display all clues for this player's roles
+    // Display all clues for this player's roles (using phase-specific data)
     let clueHtml = '';
     myRoles.forEach(role => {
-        clueHtml += `<div class="clue-item"><strong>${role.icon} ${role.name}:</strong> ${currentRoom.clues[role.id]}</div>`;
+        clueHtml += `<div class="clue-item"><strong>${role.icon} ${role.name}:</strong> ${phaseData.clues[role.id]}</div>`;
     });
 
     document.getElementById('playerClue').innerHTML = clueHtml;
@@ -378,10 +463,12 @@ function showGame(roomData) {
 
     // Show team clues
 
-    if (lastRoomNumber !== roomData.currentRoom) {
+    // Clear input when room OR phase changes
+    if (lastRoomNumber !== roomData.currentRoom || lastPhaseNumber !== currentPhase) {
         document.getElementById('answerInput').value = '';
         document.getElementById('hintDisplay').classList.add('hidden');
         lastRoomNumber = roomData.currentRoom;
+        lastPhaseNumber = currentPhase;
     }
 
     // Clean up any existing game listener
@@ -396,10 +483,17 @@ function showGame(roomData) {
         const data = snapshot.val();
         if (!data) return;
 
-        // CRITICAL: Detect room change - reload screen for ALL players
-        // This keeps everyone in sync when someone solves a room
-        if (data.currentRoom !== lastRoomNumber && data.currentRoom <= TOTAL_ROOMS) {
-            console.log(`Room changed: ${lastRoomNumber} → ${data.currentRoom}`);
+        // CRITICAL: Detect room OR phase change - reload screen for ALL players
+        // This keeps everyone in sync when someone solves a phase/room
+        const phaseChanged = data.currentPhase !== lastPhaseNumber;
+        const roomChanged = data.currentRoom !== lastRoomNumber && data.currentRoom <= TOTAL_ROOMS;
+
+        if (roomChanged || phaseChanged) {
+            if (roomChanged) {
+                console.log(`Room changed: ${lastRoomNumber} → ${data.currentRoom}`);
+            } else {
+                console.log(`Phase changed: ${lastPhaseNumber} → ${data.currentPhase}`);
+            }
 
             // Clean up current listener before reloading
             if (gameUnsubscribe) {
@@ -407,7 +501,7 @@ function showGame(roomData) {
                 gameUnsubscribe = null;
             }
 
-            // Reload game screen with new room for EVERYONE
+            // Reload game screen with new phase/room for EVERYONE
             showGame(data);
             return;  // Exit early - showGame creates new listener
         }
@@ -569,24 +663,67 @@ document.getElementById('submitAnswer').addEventListener('click', async () => {
         const data = snapshot.val();
         const currentRoom = ROOMS[data.currentRoom - 1];
 
-        if (answer === currentRoom.answer.toUpperCase()) {
-            // Correct answer!
-            if (data.currentRoom >= TOTAL_ROOMS) {
-                // Victory!
-                await update(roomRef, {
-                    gameState: 'victory',
-                    currentRoom: TOTAL_ROOMS + 1,  // Fixed: was 4, now 9
-                    isSubmitting: false  // Release lock
-                });
-            } else {
-                // Next room
-                await update(roomRef, {
-                    currentRoom: data.currentRoom + 1,
-                    isSubmitting: false  // Release lock
-                });
+        // NEW: Handle multi-phase rooms
+        const currentPhase = data.currentPhase || 1;
+        const isMultiPhase = currentRoom.phases && Array.isArray(currentRoom.phases);
 
-                // Note: showGame() is called automatically for ALL players
-                // (including submitter) by the listener when it detects room change
+        // Get phase-specific answer (or legacy single answer)
+        const phaseData = isMultiPhase ? currentRoom.phases[currentPhase - 1] : currentRoom;
+
+        if (answer === phaseData.answer.toUpperCase()) {
+            // Correct answer!
+            if (isMultiPhase) {
+                // Multi-phase room logic
+                if (currentPhase < PHASES_PER_ROOM) {
+                    // Not final phase - show success narrative and advance phase
+                    if (currentRoom.narrative?.phases[currentPhase - 1]?.success) {
+                        showNarrative(currentRoom.narrative.phases[currentPhase - 1].success);
+                    }
+
+                    await update(roomRef, {
+                        currentPhase: currentPhase + 1,
+                        narrativeShown: false,
+                        isSubmitting: false
+                    });
+                } else {
+                    // Final phase complete
+                    if (currentRoom.narrative?.conclusion) {
+                        showNarrative(currentRoom.narrative.conclusion);
+                    }
+
+                    if (data.currentRoom >= TOTAL_ROOMS) {
+                        // Victory!
+                        await update(roomRef, {
+                            gameState: 'victory',
+                            currentRoom: TOTAL_ROOMS + 1,
+                            isSubmitting: false
+                        });
+                    } else {
+                        // Next room
+                        await update(roomRef, {
+                            currentRoom: data.currentRoom + 1,
+                            currentPhase: 1,
+                            narrativeShown: false,
+                            isSubmitting: false
+                        });
+                    }
+                }
+            } else {
+                // Legacy single-phase room logic
+                if (data.currentRoom >= TOTAL_ROOMS) {
+                    // Victory!
+                    await update(roomRef, {
+                        gameState: 'victory',
+                        currentRoom: TOTAL_ROOMS + 1,
+                        isSubmitting: false
+                    });
+                } else {
+                    // Next room
+                    await update(roomRef, {
+                        currentRoom: data.currentRoom + 1,
+                        isSubmitting: false
+                    });
+                }
             }
         } else {
             // Incorrect answer - release lock
@@ -637,7 +774,12 @@ document.getElementById('useHintBtn').addEventListener('click', async () => {
 
         const currentRoom = ROOMS[data.currentRoom - 1];
 
-        document.getElementById('hintText').textContent = currentRoom.hint;
+        // NEW: Get phase-specific hint (or legacy single hint)
+        const currentPhase = data.currentPhase || 1;
+        const isMultiPhase = currentRoom.phases && Array.isArray(currentRoom.phases);
+        const phaseData = isMultiPhase ? currentRoom.phases[currentPhase - 1] : currentRoom;
+
+        document.getElementById('hintText').textContent = phaseData.hint;
         document.getElementById('hintDisplay').classList.remove('hidden');
 
         await update(roomRef, {

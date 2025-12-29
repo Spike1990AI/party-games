@@ -653,3 +653,125 @@ select:focus {
         padding: var(--space-sm);
     }
 }
+
+/* ========================================
+   MULTI-PHASE ESCAPE ROOMS - NEW
+   ======================================== */
+
+/* Phase Progress Indicator */
+.phase-progress {
+    text-align: center;
+    margin: var(--space-md) 0;
+    padding: var(--space-sm);
+    background: var(--color-bg-light);
+    border-radius: var(--border-radius-md);
+    border: var(--border-width) solid var(--color-primary-light);
+}
+
+.phase-progress > span {
+    display: block;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+    font-size: var(--font-size-lg);
+}
+
+.phase-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+}
+
+.phase-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: all 0.3s ease;
+}
+
+.phase-dot.active {
+    background: var(--color-accent);
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    transform: scale(1.2);
+}
+
+.phase-dot.complete {
+    background: var(--color-success);
+}
+
+/* Narrative Overlay */
+.narrative-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-lg);
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.narrative-box {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 3px solid var(--color-accent);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-2xl);
+    max-width: 650px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(251, 191, 36, 0.3);
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.narrative-box p {
+    font-size: var(--font-size-xl);
+    line-height: 1.8;
+    color: #eee;
+    margin-bottom: var(--space-xl);
+    font-weight: var(--font-weight-medium);
+}
+
+.narrative-box .btn-primary {
+    min-width: 200px;
+    font-size: var(--font-size-lg);
+    padding: var(--space-md) var(--space-xl);
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .narrative-box {
+        padding: var(--space-xl);
+        max-width: 90%;
+    }
+
+    .narrative-box p {
+        font-size: var(--font-size-lg);
+        line-height: 1.6;
+    }
+}

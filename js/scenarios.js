@@ -345,28 +345,110 @@ export const SCENARIOS = {
             {
                 id: 1,
                 title: 'Airlock',
-                description: 'Asteroid impact compromised the station. Override the emergency lockdown code.',
-                answer: '91620',
-                hint: 'Pressure readings from different modules. Combine the numbers.',
-                clues: {
-                    scout: 'Module A pressure gauge shows 9 PSI, Module B shows 16 PSI',
-                    hacker: 'System log: "Emergency override: 5 digit code, starts with pressure readings"',
-                    insider: 'Engineer mentioned: "Always 20 at the end for the escape sequence"',
-                    safecracker: 'Keypad wear pattern: 9-1-6-2-0 in that exact order'
-                }
+                narrative: {
+                    intro: "The impact alarm blares. Emergency lights flash red across the damaged airlock. Debris floats past the cracked viewport - the asteroid strike breached the outer hull. Oxygen levels are dropping. You have to get through this airlock before the station loses pressure entirely.",
+                    phases: [
+                        {
+                            context: "The inner airlock door is sealed tight. You need to override the emergency lockdown system. The control panel is damaged but still functional.",
+                            success: "The lockdown releases with a hiss of escaping air. Green lights flicker on across the panel."
+                        },
+                        {
+                            context: "The door is unlocked, but the manual release mechanism is jammed. You need to find the mechanical override code to open it by force.",
+                            success: "Hydraulics groan as the massive door slowly slides open. The corridor beyond is dark."
+                        },
+                        {
+                            context: "The outer airlock must be sealed before you can proceed safely. Enter the final seal authorization code.",
+                            success: "The bulkhead door slams shut behind you. The corridor pressurizes with a loud whoosh. You're through the airlock."
+                        }
+                    ],
+                    conclusion: "You step through into the main corridor. The station groans ominously. Time is running out."
+                },
+                phases: [
+                    {
+                        answer: '916',
+                        hint: 'Pressure readings from Modules A and B shown on the gauges.',
+                        clues: {
+                            scout: 'Module A gauge shows 9 PSI, Module B gauge shows 16 PSI',
+                            hacker: 'System log: "Override code: Combine module pressure readings"',
+                            insider: 'Engineer notes: "Lockdown uses 3-digit pressure code"',
+                            safecracker: 'Panel wear shows digits 9, 1, and 6 used most recently'
+                        }
+                    },
+                    {
+                        answer: 'LEVER3',
+                        hint: 'Emergency manual release - lever position number.',
+                        clues: {
+                            scout: 'Diagram shows 4 levers, number 3 is highlighted in red',
+                            hacker: 'Override protocol: "Pull LEVER, then enter number"',
+                            insider: 'Maintenance log: "Position 3 is manual door release"',
+                            safecracker: '6 characters: word LEVER plus a single digit'
+                        }
+                    },
+                    {
+                        answer: 'SEAL',
+                        hint: 'What you need to do to the airlock - 4 letters.',
+                        clues: {
+                            scout: 'Warning sign: "__ E A L outer door before proceeding"',
+                            hacker: 'Final step in protocol: "Authorization word for closure"',
+                            insider: 'Safety officer always said: "__ __ __ __ it tight!"',
+                            safecracker: '4 letters, rhymes with "deal", means to close securely'
+                        }
+                    }
+                ]
             },
             {
                 id: 2,
                 title: 'Control Room',
-                description: 'Re-route power to life support. Find the circuit board code.',
-                answer: 'ALPHA7',
-                hint: 'Circuit designation on the main panel. Letter plus number.',
-                clues: {
-                    scout: 'Schematic shows primary life support on circuit "ALPHA"',
-                    hacker: 'Power logs: "Life support designation: Greek letter A, bay 7"',
-                    insider: 'Captain\'s log: "Always use the ALPHA circuits for critical systems"',
-                    safecracker: 'Panel format: 6 characters, first is Greek A, ends with circuit number 7'
-                }
+                narrative: {
+                    intro: "The station's main control room is in chaos. Screens flicker with error messages. The life support system is offline. You can hear the air recyclers grinding to a halt. Without power, you have minutes before the oxygen runs out completely.",
+                    phases: [
+                        {
+                            context: "First, you need to identify which circuit board controls life support. The labels are partially destroyed.",
+                            success: "You locate the ALPHA circuit board. It's scorched but functional."
+                        },
+                        {
+                            context: "The circuit board needs a power bypass. Find the correct power junction to reroute energy from non-critical systems.",
+                            success: "Power surges through the board. Lights flicker back on. The air recyclers hum back to life."
+                        },
+                        {
+                            context: "Lock in the emergency power configuration to prevent automatic shutdown.",
+                            success: "The system stabilizes. Green indicators show life support is now online. You can breathe easier."
+                        }
+                    ],
+                    conclusion: "Life support is restored, but the station is still in critical condition. You need to keep moving."
+                },
+                phases: [
+                    {
+                        answer: 'ALPHA',
+                        hint: 'Greek letter designation for primary systems.',
+                        clues: {
+                            scout: 'Schematic shows circuit labeled with first Greek letter',
+                            hacker: 'System priority list: "A_ _ _ A circuits are life-critical"',
+                            insider: 'Captain always said: "The first shall be first - Greek style"',
+                            safecracker: '5 letters, starts and ends with A, Greek alphabet'
+                        }
+                    },
+                    {
+                        answer: 'BAY7',
+                        hint: 'Power junction location - area plus number.',
+                        clues: {
+                            scout: 'Junction map shows 10 bays, number 7 has the power icon',
+                            hacker: 'Routing log: "Transfer power from B A Y 7 to ALPHA"',
+                            insider: 'Electrician wrote: "Lucky number 7 bay has the juice"',
+                            safecracker: '4 characters: 3 letters spelling storage area, then digit 7'
+                        }
+                    },
+                    {
+                        answer: 'LOCK',
+                        hint: 'What you do to prevent changes - 4 letters.',
+                        clues: {
+                            scout: 'Final step on checklist: "_ O C K configuration"',
+                            hacker: 'Command prompt: "Enter security action to prevent override"',
+                            insider: 'Engineer always said: "Set it and __ __ __ __ it!"',
+                            safecracker: '4 letters, opposite of unlock, secures settings'
+                        }
+                    }
+                ]
             },
             {
                 id: 3,
