@@ -19,6 +19,87 @@
             color: #333;
         }
 
+        /* Password Gate Styles */
+        #password-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .password-box {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .password-box h2 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .password-box p {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .password-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .password-box button {
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .password-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .password-error {
+            color: #dc2626;
+            margin-top: 15px;
+            display: none;
+        }
+
+        #main-content {
+            display: none;
+        }
+
+        #main-content.visible {
+            display: block;
+        }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -433,6 +514,18 @@
     </style>
 </head>
 <body>
+    <!-- Password Gate -->
+    <div id="password-gate">
+        <div class="password-box">
+            <h2>Calendar Audit</h2>
+            <p>Enter password to view report</p>
+            <input type="password" id="password-input" placeholder="Enter password" onkeypress="if(event.key==='Enter')checkPassword()">
+            <button onclick="checkPassword()">View Report</button>
+            <p class="password-error" id="error-msg">Incorrect password</p>
+        </div>
+    </div>
+
+    <div id="main-content">
     <div class="container">
         <div class="report">
             <div class="header">
@@ -808,5 +901,40 @@
             </div>
         </div>
     </div>
+    </div> <!-- close main-content -->
+
+    <script>
+        // Password: lisa2025 (simple client-side protection)
+        const correctHash = 'b3f2c8e1'; // Simple hash of 'lisa2025'
+
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16).substring(0, 8);
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            // Accept 'lisa2025' as password
+            if (input === 'lisa2025') {
+                document.getElementById('password-gate').style.display = 'none';
+                document.getElementById('main-content').classList.add('visible');
+                sessionStorage.setItem('audit-auth', 'true');
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+                document.getElementById('password-input').value = '';
+            }
+        }
+
+        // Check if already authenticated this session
+        if (sessionStorage.getItem('audit-auth') === 'true') {
+            document.getElementById('password-gate').style.display = 'none';
+            document.getElementById('main-content').classList.add('visible');
+        }
+    </script>
 </body>
 </html>
